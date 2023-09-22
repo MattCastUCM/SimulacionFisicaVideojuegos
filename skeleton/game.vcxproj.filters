@@ -21,10 +21,16 @@
     </ClInclude>
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="callbacks.hpp" />
+    <ClInclude Include="P1\Particle.h">
+      <Filter>Prácticas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
       <UniqueIdentifier>{d04b4f9f-5a69-465e-8070-25c6d0bcd3c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Prácticas">
+      <UniqueIdentifier>{74e5a9a3-afd2-43e7-ab03-0623a4e5370c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
