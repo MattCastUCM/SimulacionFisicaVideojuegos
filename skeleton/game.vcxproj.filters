@@ -10,6 +10,9 @@
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="P1\SceneManager.cpp">
+      <Filter>Prácticas</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -22,6 +25,9 @@
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="P1\Particle.h">
+      <Filter>Prácticas</Filter>
+    </ClInclude>
+    <ClInclude Include="P1\SceneManager.h">
       <Filter>Prácticas</Filter>
     </ClInclude>
   </ItemGroup>

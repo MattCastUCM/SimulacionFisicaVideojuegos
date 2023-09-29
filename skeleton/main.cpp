@@ -32,9 +32,8 @@ ContactReportCallback gContactReportCallback;
 
 
 
-#include "P1/Particle.h"
-Particle* part_;
-
+#include "P1/SceneManager.h"
+SceneManager* scMngr = nullptr;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -61,21 +60,7 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 
-
-	
-	// PRÁCTICAS: Crear instancias de objetos
-	Camera* cam = GetCamera();
-	Vector3 pos = {-50,0,-100} /*cam->getEye()*/;
-	Vector3 vel = {1, 0, 0} /*cam->getDir()*/;
-	Vector3 acc = { 0.0f, -0.098f, 0.0f };
-
-	float realMass = 5.4f;
-	float realSpd = 350.0f;
-	float damp = 0.998f;
-
-	part_ = new Particle(pos, realMass, vel, realSpd, acc, damp);
-		//new Particle(Vector3(-50.0f, 30.0f, 0.0f), 2.0f, Vector3(1.0f, 0.0f, 0.0f), 3.0f, Vector3(1.0f, 0.0f, 0.0f), 1.0f);
-
+	scMngr = new SceneManager();
 }
 
 
@@ -91,8 +76,8 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 
-	// PRÁCTICAS: Hacer updates/integrates
-	part_->update(t);
+	
+	scMngr->update(t);
 }
 
 // Function to clean data
@@ -115,8 +100,7 @@ void cleanupPhysics(bool interactive)
 
 
 
-	// PRÁCTICAS: Borrar instancias de objetos
-	delete part_;
+	delete scMngr;
 }
 
 // Function called when a key is pressed
@@ -135,6 +119,9 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	default:
 		break;
 	}
+
+
+	scMngr->keyPress(key);
 }
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
