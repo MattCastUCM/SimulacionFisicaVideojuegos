@@ -62,9 +62,19 @@ void initPhysics(bool interactive)
 
 
 
-
+	
 	// PRÁCTICAS: Crear instancias de objetos
-	part_ = new Particle(Vector3(0.0f, 0.0f, 0.0f));
+	Camera* cam = GetCamera();
+	Vector3 pos = {-50,0,-100} /*cam->getEye()*/;
+	Vector3 vel = {1, 0, 0} /*cam->getDir()*/;
+	Vector3 acc = { 0.0f, -0.098f, 0.0f };
+
+	float realMass = 5.4f;
+	float realSpd = 350.0f;
+	float damp = 0.998f;
+
+	part_ = new Particle(pos, realMass, vel, realSpd, acc, damp);
+		//new Particle(Vector3(-50.0f, 30.0f, 0.0f), 2.0f, Vector3(1.0f, 0.0f, 0.0f), 3.0f, Vector3(1.0f, 0.0f, 0.0f), 1.0f);
 
 }
 
