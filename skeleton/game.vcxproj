@@ -255,7 +255,10 @@
   <ItemGroup>
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="P1\SceneManager.cpp" />
+    <ClCompile Include="P1\Particle.cpp" />
+    <ClCompile Include="P1\SceneP1.cpp" />
+    <ClCompile Include="P2\ParticleGenerator.cpp" />
+    <ClCompile Include="P2\ParticleSystem.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
@@ -264,7 +267,9 @@
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="P1\Particle.h" />
-    <ClInclude Include="P1\SceneManager.h" />
+    <ClInclude Include="P1\SceneP1.h" />
+    <ClInclude Include="P2\ParticleGenerator.h" />
+    <ClInclude Include="P2\ParticleSystem.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />

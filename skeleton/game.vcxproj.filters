@@ -10,9 +10,14 @@
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="callbacks.cpp" />
-    <ClCompile Include="P1\SceneManager.cpp">
-      <Filter>Prácticas</Filter>
+    <ClCompile Include="P1\SceneP1.cpp">
+      <Filter>P1</Filter>
     </ClCompile>
+    <ClCompile Include="P2\ParticleGenerator.cpp">
+      <Filter>P2</Filter>
+    </ClCompile>
+    <ClCompile Include="P2\ParticleSystem.cpp" />
+    <ClCompile Include="P1\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -25,18 +30,27 @@
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="P1\Particle.h">
-      <Filter>Prácticas</Filter>
+      <Filter>P1</Filter>
     </ClInclude>
-    <ClInclude Include="P1\SceneManager.h">
-      <Filter>Prácticas</Filter>
+    <ClInclude Include="P1\SceneP1.h">
+      <Filter>P1</Filter>
+    </ClInclude>
+    <ClInclude Include="P2\ParticleGenerator.h">
+      <Filter>P2</Filter>
+    </ClInclude>
+    <ClInclude Include="P2\ParticleSystem.h">
+      <Filter>P2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
       <UniqueIdentifier>{d04b4f9f-5a69-465e-8070-25c6d0bcd3c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Prácticas">
+    <Filter Include="P1">
       <UniqueIdentifier>{74e5a9a3-afd2-43e7-ab03-0623a4e5370c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="P2">
+      <UniqueIdentifier>{b958eb94-ddda-4104-a2d3-7e29ff670af3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

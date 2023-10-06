@@ -32,8 +32,8 @@ ContactReportCallback gContactReportCallback;
 
 
 
-#include "P1/SceneManager.h"
-SceneManager* scMngr = nullptr;
+#include "P1/SceneP1.h"
+SceneP1* scMngr = nullptr;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -60,7 +60,7 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 
-	scMngr = new SceneManager();
+	scMngr = new SceneP1();
 }
 
 

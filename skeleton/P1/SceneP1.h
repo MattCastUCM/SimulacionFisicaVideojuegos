@@ -2,7 +2,7 @@
 
 #include "Particle.h"
 
-class SceneManager {
+class SceneP1 {
 private:
 	const Vector4 FLOOR_COLOR_ = Vector4(0.0f, 1.0f, 1.0f, 1.0f);
 	const physx::PxTransform* FLOOR_TR_ = new physx::PxTransform(0, -10, 0);
@@ -12,8 +12,8 @@ private:
 	Camera* cam;
 
 public:
-	SceneManager();
-	~SceneManager();
+	SceneP1();
+	~SceneP1();
 
 	void update(float t);
 	void keyPress(unsigned char key);
