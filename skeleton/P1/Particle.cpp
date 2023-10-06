@@ -1,10 +1,10 @@
 #include "Particle.h"
 
 Particle::Particle(visual visuals, physics phys, float maxLifetime)
-	: phys_(phys), maxLifetime_(maxLifetime), lifetime_(0), alive_(true)
+	: vis_(visuals), phys_(phys), maxLifetime_(maxLifetime), lifetime_(0), alive_(true)
 {
 	tr_ = new physx::PxTransform(phys.pos);
-	renderItem_ = new RenderItem(CreateShape(visuals.geometry), tr_, visuals.color);
+	renderItem_ = new RenderItem(CreateShape(vis_.geometry), tr_, visuals.color);
 
 	// Masa simulada
 	float coefMass = phys.vel.magnitude() / phys.simSpd;

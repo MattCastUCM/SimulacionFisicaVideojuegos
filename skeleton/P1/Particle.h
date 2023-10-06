@@ -9,11 +9,12 @@ class Particle {
 public:
 	struct visual {
 		float size;
-		const physx::PxGeometry& geometry;
+		physx::PxGeometry& geometry;
 		Vector4 color;
 
-		visual();
+		visual() : size(1.0f), geometry(physx::PxSphereGeometry(size)), color({ 1.0f, 0.0f, 0.0f, 1.0f }) {	};
 	};
+
 	struct physics {
 		Vector3 pos,
 			vel,	// Dirección/velocidad (vector)
@@ -21,8 +22,6 @@ public:
 		float damp,		// Rozamiento (magnitud)
 			mass,		// Masa (magnitud) en kg
 			simSpd;
-
-		physics();
 	};
 
 
@@ -32,6 +31,7 @@ private:
 	physx::PxTransform* tr_;		// Transform de la esfera
 	RenderItem* renderItem_;		// Objeto renderizable
 
+	visual vis_;
 	physics phys_;
 
 	float maxLifetime_;
@@ -41,8 +41,6 @@ private:
 
 
 public:
-	
-
 	Particle(visual visuals, physics phys, float maxLifetime = 5.0f);
 	~Particle();
 
@@ -55,5 +53,8 @@ public:
 	inline bool isAlive() { return alive_; }
 	inline void changeLifetime(float t) { maxLifetime_ = t; }
 	
+	inline Particle* clone() {
+		return new Particle(vis_, phys_, maxLifetime_);
+	}
 };
 

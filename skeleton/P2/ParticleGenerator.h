@@ -2,6 +2,7 @@
 
 #include <list>
 #include "../P1/Particle.h"
+#include <random>
 
 class ParticleGenerator {
 protected:
@@ -11,8 +12,8 @@ protected:
 	Particle* modelPart_;		// Guarda los atributos de la partícula a generar (damping, tiempo de vida, etc.)
 	Vector3 origin_, vel_;		// Origen y velocidad de las partículas que se crean
 
-	//std::mt19937 _mt;
-	//std::uniform_real_distribution<double> _u{ 0, 1 };
+	std::mt19937 _mt;
+	std::uniform_real_distribution<double> _u{ 0, 1 };
 
 
 public:
@@ -23,8 +24,11 @@ public:
 		std::list<Particle*> generated;
 		Particle* p;
 		for (int i = 0; i < generateN_; i++) {
-			//p = modelPart_.clone();
+			p = modelPart_->clone();
+			generated.push_back(p);
 		}
+
+		return generated;
 	};
 
 	inline void setOrigin(const Vector3& p) { origin_ = p; }
@@ -36,12 +40,12 @@ public:
 	
 	inline void changeModelPart(Particle* p, bool modifyPosVel = true) {
 		delete modelPart_;
-		//modelPart_ = p->clone();
+		modelPart_ = p->clone();
 		if (modifyPosVel) {
 			origin_ = p->getPos();
 			vel_ = p->getVel();
 		}
-		//modelPart_->setPos({ -1000.0f, -1000.0f, -1000.0f });
+		// ??? modelPart_->setPos({ -1000.0f, -1000.0f, -1000.0f });
 	}
 
 

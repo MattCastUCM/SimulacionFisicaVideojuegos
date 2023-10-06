@@ -56,6 +56,7 @@ void SceneP1::keyPress(unsigned char key) {
 void SceneP1::addParticle(unsigned char key) {
 	Particle::visual v;
 	v.size = 1.0f;
+	v.geometry = physx::PxSphereGeometry(2.0f);
 
 	Particle::physics p;
 	p.damp = 0.998f;
@@ -68,7 +69,7 @@ void SceneP1::addParticle(unsigned char key) {
 	// Bola de cañón
 	if (key == tolower('q')) {
 		p.vel *= 350.0f;
-		p.acc = { 0.0f, -4.0f, 0.0f };
+		p.acc = { 0.0f, -0.5f, 0.0f };
 		p.mass = 5.4f;
 		p.simSpd = 50.0f;
 		v.color = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -76,7 +77,7 @@ void SceneP1::addParticle(unsigned char key) {
 	// Misil de un tanque
 	else if (key == tolower('e')) {
 		p.vel *= 1800.0f;
-		p.acc = { 0.0f, -4.0f, 0.0f };
+		p.acc = { 0.0f, -0.01f, 0.0f };
 		p.mass = 15.0f;
 		p.simSpd = 70.0f;
 		v.color = { 0.0f, 1.0f, 0.0f, 1.0f };
@@ -84,9 +85,9 @@ void SceneP1::addParticle(unsigned char key) {
 	// Bala de pistola
 	else {
 		p.vel *= 330.0f;
-		p.acc = { 0.0f, -1.0f, 0.0f };
+		p.acc = { 0.0f, -0.098f, 0.0f };
 		p.mass = 0.055f;
-		p.simSpd = 60.0f;
+		p.simSpd = 100.0f;
 		v.color = { 0.0f, 0.0f, 0.98f, 1.0f };
 	}
 
