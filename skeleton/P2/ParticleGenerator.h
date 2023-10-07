@@ -20,6 +20,7 @@ public:
 	ParticleGenerator(const std::string& name) 
 		: name_(name), generateN_(3), genProb_(1.0), modelPart_(nullptr) { };
 
+
 	virtual std::list<Particle*> generateParticles() { 
 		std::list<Particle*> generated;
 		Particle* p;

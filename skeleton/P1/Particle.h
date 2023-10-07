@@ -7,18 +7,17 @@
 
 class Particle {
 public:
+	// Tamaño, forma y color
 	struct visual {
-		float size;
-		physx::PxGeometry& geometry;
-		Vector4 color;
-
-		visual() : size(1.0f), geometry(physx::PxSphereGeometry(size)), color({ 1.0f, 0.0f, 0.0f, 1.0f }) {	};
+		float size = 1.0f;
+		physx::PxGeometry* geometry;
+		Vector4 color = { 1.0f, 0.0f, 0.0f, 1.0f };
 	};
 
 	struct physics {
-		Vector3 pos,
-			vel,	// Dirección/velocidad (vector)
-			acc;	// Aceleración (vector) en m/s^2
+		Vector3 pos,	// Posición
+			vel,		// Dirección/velocidad (vector)
+			acc;		// Aceleración (vector) en m/s^2
 		float damp,		// Rozamiento (magnitud)
 			mass,		// Masa (magnitud) en kg
 			simSpd;

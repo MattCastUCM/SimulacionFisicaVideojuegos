@@ -56,7 +56,9 @@ void SceneP1::keyPress(unsigned char key) {
 void SceneP1::addParticle(unsigned char key) {
 	Particle::visual v;
 	v.size = 1.0f;
-	v.geometry = physx::PxSphereGeometry(2.0f);
+	//v.geometry = &physx::PxSphereGeometry(2.0f);
+	v.geometry = &physx::PxBoxGeometry(2.0f, 2.0f, 2.0f);
+
 
 	Particle::physics p;
 	p.damp = 0.998f;
