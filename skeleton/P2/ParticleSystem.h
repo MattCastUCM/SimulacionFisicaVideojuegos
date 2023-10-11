@@ -2,17 +2,21 @@
 
 #include <list>
 #include "../P1/Particle.h"
+#include "ParticleGenerator.h"
 
 class ParticleSystem {
 protected:
+	const double PART_TIME_ = 1.0f;
+	double time;
 	std::list<Particle*> particles_;
-	//std::list<ParticleGenerator*> generators_;
+	std::list<ParticleGenerator*> generators_;
 
 	Vector3 gravity_;
 	void refresh();
 
 public:
-	ParticleSystem(const Vector3& g = { 0.0f, -9.8f, 0.0f });
+	// Se usa -10.0f como gravedad por defecto
+	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f });
 	~ParticleSystem();
 	
 	virtual void update(double t);

@@ -90,7 +90,7 @@ void SceneP1::addParticle(unsigned char key) {
 		p.acc = { 0.0f, -0.098f, 0.0f };
 		p.mass = 0.055f;
 		p.simSpd = 100.0f;
-		v.color = { 0.0f, 0.0f, 0.98f, 1.0f };
+		v.color = { 0.0f, 0.0f, 1.0f, 1.0f };
 	}
 
 
