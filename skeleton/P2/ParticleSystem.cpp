@@ -3,23 +3,26 @@
 ParticleSystem::ParticleSystem(const Vector3& g) : particles_(), gravity_(g), time(0) {
 	Particle::visual v;
 	v.size = 1.0f;
-	v.geometry = &physx::PxBoxGeometry(2.0f, 2.0f, 2.0f);
+	v.geometry = &physx::PxSphereGeometry(v.size);
 	v.color = { 0.0f, 0.0f, 1.0f, 1.0f };
 	
 	Particle::physics p;
 	p.damp = 0.998f;
-	p.pos = { 0, 0, 0 };
-	p.vel = { 0,0,0 };
-	p.acc = { 0, 0, 0};
-	p.mass = 5.0f;
-	p.simSpd = 50.0f;
-	Particle* part = new Particle(v, p);
-
+	p.pos = { 0.0f, 0.0f, -30.0f };
+	p.vel = { 1.0f, 1.0f, -1.0f };
+	p.vel *= 350;
+	p.acc = { 0.0f, -0.25f, 0.0f };
+	p.mass = 5.4f;
+	p.simSpd = 40.0f;
+	Particle part(v, p);
+	//particles_.push_back(part);
 
 	ParticleGenerator* gen = new ParticleGenerator("fuente");
-	gen->changeModelPart(part);
-	gen->setOrigin({ 0,0,0 });
-	gen->setVel({ 0, 10, 0 });
+	gen->changeGenerateN(1);
+	gen->changeModelPart(&part);
+	//gen->setOrigin({ 0,0,0 });
+	//gen->setVel({ 10, 10, 10 });
+	//gen->setAcc(g);
 	gen->changeLifetime(PART_TIME_);
 	generators_.push_back(gen);
 }
@@ -33,13 +36,20 @@ void ParticleSystem::refresh() {
 	for (auto p : particles_) {
 		particles_.erase(
 			remove_if(particles_.begin(), particles_.end(), [](Particle* p) {
-				if (p->isAlive() /* || p->outOfBounds(bounds)*/) return false;
+				if (p->isAlive()) return false;
 				else {
 					delete p;
 					return true;
 				}
 			}), particles_.end()
 		);
+	}
+}
+void ParticleSystem::generateParticles() {
+	for (auto pg : generators_) {
+		auto parts = pg->generateParticles();
+		for (auto p : parts)
+			particles_.push_back(p);
 	}
 }
 
@@ -55,15 +65,9 @@ void ParticleSystem::update(double t) {
 	// Elimina las partículas muertas
 	refresh();
 
-	if(time >= PART_TIME_){
-		// Recorrer generadores ( generar partículas nuevas y añadirlas a la lista)
-		for (auto pg : generators_) {
-			auto parts = pg->generateParticles();
-
-			for (auto p : parts)
-				particles_.push_back(p);
-		}
-
+	// Recorrer generadores ( generar partículas nuevas y añadirlas a la lista)
+	if (time >= PART_TIME_) {
+		generateParticles();
 		time = 0;
 	}
 	

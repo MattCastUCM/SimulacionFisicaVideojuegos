@@ -17,6 +17,8 @@ Particle::Particle(visual visuals, physics phys, float maxLifetime)
 	phys_.vel /= coefMass;
 	phys_.mass = simMass;
 	phys_.acc = simAcc;
+
+	vel = phys_.vel;
 }
 
 Particle::~Particle() {
@@ -25,7 +27,7 @@ Particle::~Particle() {
 }
 
 
-
+#include <iostream>
 void Particle::update(double t) {
 	// Si está viva, se actualiza
 	if (alive_) {
@@ -40,9 +42,11 @@ void Particle::update(double t) {
 
 			//MRUA	
 			// (v * t + 1/2 acc * t * t) <- NO FUNCIONA porque la velocidad no se actualiza :[
-			phys_.vel += phys_.acc * t;			// Actualizar vel según acc
-			phys_.vel *= pow(phys_.damp, t);		// Actualizar vel según damp
-			tr_->p += phys_.vel * t;			// Actualizar pos
+			vel += phys_.acc * t;			// Actualizar vel según acc
+			vel *= pow(phys_.damp, t);		// Actualizar vel según damp
+			tr_->p += vel * t;			// Actualizar pos
+
+			std::cout << this << ' ' << tr_->p.x << ' ' << tr_->p.y << ' ' << tr_->p.z << '\n';
 		}
 	}
 }

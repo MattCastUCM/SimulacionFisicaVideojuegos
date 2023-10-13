@@ -33,7 +33,10 @@ ContactReportCallback gContactReportCallback;
 
 
 #include "P1/SceneP1.h"
-SceneP1* scMngr = nullptr;
+#include "P2/SceneP2.h"
+
+//SceneP1* scMngr = nullptr;
+SceneP2* scMngr = nullptr;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -60,7 +63,8 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 
-	scMngr = new SceneP1();
+	//scMngr = new SceneP1();
+	scMngr = new SceneP2();
 }
 
 
@@ -121,7 +125,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	}
 
 
-	scMngr->keyPress(key);
+	//scMngr->keyPress(key);
 }
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)

@@ -6,13 +6,15 @@
 
 class ParticleSystem {
 protected:
-	const double PART_TIME_ = 1.0f;
+	const double PART_TIME_ = 2.0f;
 	double time;
-	std::list<Particle*> particles_;
+	Vector3 gravity_;
+
+	std::vector<Particle*> particles_;
 	std::list<ParticleGenerator*> generators_;
 
-	Vector3 gravity_;
 	void refresh();
+	void generateParticles();
 
 public:
 	// Se usa -10.0f como gravedad por defecto

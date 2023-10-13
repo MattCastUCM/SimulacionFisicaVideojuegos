@@ -12,7 +12,7 @@ SceneP1::~SceneP1() {
 	for (auto p : particles_) delete p;
 }
 
-void SceneP1::update(float t) {
+void SceneP1::update(double t) {
 	// Actualiza las partículas
 	for (auto p : particles_)		
 		p->update(t);
