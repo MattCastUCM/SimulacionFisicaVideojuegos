@@ -272,7 +272,7 @@
     <ClInclude Include="P2\ParticleGenerator.h" />
     <ClInclude Include="P2\ParticleSystem.h" />
     <ClInclude Include="P2\SceneP2.h" />
-    <ClInclude Include="P2\SimpleParticleGenerator.h" />
+    <ClInclude Include="P2\UniformParticleGenerator.h" />
     <ClInclude Include="P2\Water.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />

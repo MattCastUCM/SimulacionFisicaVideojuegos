@@ -1,13 +1,15 @@
 #include "ParticleSystem.h"
+
 #include "Water.h"
+#include "UniformParticleGenerator.h"
 
 ParticleSystem::ParticleSystem(const Vector3& g) : particles_(), gravity_(g), time(0) {
 	Water* part = new Water(g);
 
-	ParticleGenerator* gen = new ParticleGenerator("fuente");
+	UniformParticleGenerator* gen = new UniformParticleGenerator("fuente");
 	gen->changeModelPart(part);
-	gen->changeGenerateN(20);
-	gen->changeLifetime(PART_TIME_);
+	gen->changeGenerateN(50);
+	gen->changeLifetime(PART_TIME_ * 10);
 
 	generators_.push_back(gen);
 

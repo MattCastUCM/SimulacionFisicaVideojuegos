@@ -2,7 +2,7 @@
 
 #include "ParticleGenerator.h"
 
-class GaussianParticleGenerator : ParticleGenerator {
+class GaussianParticleGenerator : public ParticleGenerator {
 protected:
 	Vector3 desvEstpos_, desvEstvel_;
 	double desvEstT_;

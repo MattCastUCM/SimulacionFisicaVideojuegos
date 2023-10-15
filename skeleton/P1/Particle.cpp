@@ -19,19 +19,24 @@ void Particle::init(visual vis, physics phys, float maxLifetime) {
 	lifetime_ = 0;
 	alive_ = true;
 
-	tr_ = new physx::PxTransform(phys.pos);
-	renderItem_ = new RenderItem(CreateShape(*vis.geometry), tr_, vis.color);
+	tr_ = new physx::PxTransform(phys_.pos);
+	renderItem_ = new RenderItem(CreateShape(*vis_.geometry), tr_, vis_.color);
 
-	vel = phys.vel;
-	acc = phys.acc;
-	mass = phys.mass;
+	vel = phys_.vel;
+	acc = phys_.acc;
+	mass = phys_.mass;
 
+	simulatePhys();
+}
+
+
+void Particle::simulatePhys() {
 	// Masa simulada
-	float coefMass = phys.vel.magnitude() / phys.simSpd;
-	float simMass = phys.mass * coefMass * coefMass;
+	float coefMass = phys_.vel.magnitude() / phys_.simSpd;
+	float simMass = phys_.mass * coefMass * coefMass;
 	// Aceleración simulada
-	float coefAcc = phys.simSpd / phys.vel.magnitude();
-	Vector3 simAcc = phys.acc / (coefAcc * coefAcc);
+	float coefAcc = phys_.simSpd / phys_.vel.magnitude();
+	Vector3 simAcc = phys_.acc / (coefAcc * coefAcc);
 
 	// Hace que la velocidad y aceleración pasen a ser las simuladas
 	vel /= coefMass;

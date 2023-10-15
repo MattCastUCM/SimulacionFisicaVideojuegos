@@ -42,12 +42,14 @@ protected:
 	bool alive_;
 
 
+	void init(visual vis, physics phys, float maxLifetime = 1.0f);
+	void simulatePhys();
 
 public:
 	Particle();
 	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
 	~Particle();
-	void init(visual vis, physics phys, float maxLifetime = 1.0f);
+	
 
 	void update(double t);
 
@@ -60,18 +62,26 @@ public:
 
 
 	// Obtener o cambiar velociad (inicial o actual/simulada)
-	inline void setInitVel(Vector3 vel) { phys_.vel = vel; }
+	inline void setInitVel(Vector3 v) { phys_.vel = v; }
 	inline Vector3 getInitVel() { return phys_.vel; }
 
-	inline Vector3 getVel() { return phys_.vel; }
-	inline void setVel(Vector3 vel) { phys_.vel = vel; }
+	inline void setVel(Vector3 v) {
+		vel = v; 
+		simulatePhys();
+	}
+	inline Vector3 getVel() { return vel; }
 
 
 	// Obtener o cambiar velocidad (inicial o actual/simulada)
-	inline Vector3 getInitAcc() { return phys_.acc; }
 	void setInitAcc(Vector3 a) { phys_.acc = a; }
+	inline Vector3 getInitAcc() { return phys_.acc; }
+	
+	void setAcc(Vector3 a) { 
+		acc = a; 
+		simulatePhys();
+	}
 	inline Vector3 getAcc() { return acc; }
-	void setAcc(Vector3 a) { acc = acc; }
+
 
 
 	inline bool isAlive() { return alive_; }

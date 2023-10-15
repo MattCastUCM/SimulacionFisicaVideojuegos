@@ -12,8 +12,8 @@ protected:
 	Particle* modelPart_;		// Guarda los atributos de la partícula a generar (damping, tiempo de vida, etc.)
 	Vector3 origin_, vel_;		// Origen y velocidad de las partículas que se crean
 
-	std::mt19937 _mt;
-	std::uniform_real_distribution<double> _u{ 0, 1 };
+	std::mt19937 mt_;
+	std::uniform_real_distribution<double> distrUnif_ { 0, 1 };
 
 
 public:

@@ -40,7 +40,7 @@
       <Filter>P2</Filter>
     </ClInclude>
     <ClInclude Include="P2\SceneP2.h" />
-    <ClInclude Include="P2\SimpleParticleGenerator.h" />
+    <ClInclude Include="P2\UniformParticleGenerator.h" />
     <ClInclude Include="P2\GaussianParticleGenerator.h" />
     <ClInclude Include="P2\Water.h" />
   </ItemGroup>

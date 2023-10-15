@@ -6,7 +6,7 @@
 
 class ParticleSystem {
 protected:
-	const double PART_TIME_ = 2.0f;
+	const double PART_TIME_ = 0.1f;
 	double time;
 	Vector3 gravity_;
 
