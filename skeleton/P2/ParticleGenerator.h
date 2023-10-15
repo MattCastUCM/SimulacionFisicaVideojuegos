@@ -20,13 +20,13 @@ public:
 	ParticleGenerator(const std::string& name) 
 		: name_(name), generateN_(3), genProb_(1.0), modelPart_(nullptr) { };
 
-	virtual std::list<Particle*> generateParticles() { 
+	virtual std::list<Particle*> generateParticles() {
 		std::list<Particle*> generated;
 		Particle* p;
 		for (int i = 0; i < generateN_; i++) {
 			p = modelPart_->clone();
 			generated.push_back(p);
-		}
+	}
 
 		return generated;
 	};
@@ -40,7 +40,7 @@ public:
 		vel_ = v; 
 	}
 	inline void setAcc(const Vector3& acc) {
-		modelPart_->setAcc(acc);
+		modelPart_->setInitAcc(acc);
 	}
 	inline Vector3 getVel() const { return vel_; }
 	
@@ -55,10 +55,8 @@ public:
 			origin_ = p->getPos();
 			vel_ = p->getVel();
 		}
-		// ??? modelPart_->setPos({ -1000.0f, -1000.0f, -1000.0f });
+		modelPart_->setPos({ -1000.0f, -1000.0f, -1000.0f });
 	}
-
-
 
 	
 };

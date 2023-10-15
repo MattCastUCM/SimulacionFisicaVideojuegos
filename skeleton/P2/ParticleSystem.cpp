@@ -1,30 +1,17 @@
 #include "ParticleSystem.h"
+#include "Water.h"
 
 ParticleSystem::ParticleSystem(const Vector3& g) : particles_(), gravity_(g), time(0) {
-	Particle::visual v;
-	v.size = 1.0f;
-	v.geometry = &physx::PxSphereGeometry(v.size);
-	v.color = { 0.0f, 0.0f, 1.0f, 1.0f };
-	
-	Particle::physics p;
-	p.damp = 0.998f;
-	p.pos = { 0.0f, 0.0f, -30.0f };
-	p.vel = { 1.0f, 1.0f, -1.0f };
-	p.vel *= 350;
-	p.acc = { 0.0f, -0.25f, 0.0f };
-	p.mass = 5.4f;
-	p.simSpd = 40.0f;
-	Particle part(v, p);
-	//particles_.push_back(part);
+	Water* part = new Water(g);
 
 	ParticleGenerator* gen = new ParticleGenerator("fuente");
-	gen->changeGenerateN(1);
-	gen->changeModelPart(&part);
-	//gen->setOrigin({ 0,0,0 });
-	//gen->setVel({ 10, 10, 10 });
-	//gen->setAcc(g);
+	gen->changeModelPart(part);
+	gen->changeGenerateN(20);
 	gen->changeLifetime(PART_TIME_);
+
 	generators_.push_back(gen);
+
+	delete part;
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -36,7 +23,7 @@ void ParticleSystem::refresh() {
 	for (auto p : particles_) {
 		particles_.erase(
 			remove_if(particles_.begin(), particles_.end(), [](Particle* p) {
-				if (p->isAlive()) return false;
+				if (p->isAlive() /* || p->outOfBounds */) return false;
 				else {
 					delete p;
 					return true;

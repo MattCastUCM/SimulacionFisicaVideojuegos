@@ -13,9 +13,6 @@
     <ClCompile Include="P1\SceneP1.cpp">
       <Filter>P1</Filter>
     </ClCompile>
-    <ClCompile Include="P2\ParticleGenerator.cpp">
-      <Filter>P2</Filter>
-    </ClCompile>
     <ClCompile Include="P2\ParticleSystem.cpp" />
     <ClCompile Include="P1\Particle.cpp" />
     <ClCompile Include="P2\SceneP2.cpp" />
@@ -43,6 +40,9 @@
       <Filter>P2</Filter>
     </ClInclude>
     <ClInclude Include="P2\SceneP2.h" />
+    <ClInclude Include="P2\SimpleParticleGenerator.h" />
+    <ClInclude Include="P2\GaussianParticleGenerator.h" />
+    <ClInclude Include="P2\Water.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

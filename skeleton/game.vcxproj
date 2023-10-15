@@ -257,7 +257,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="P1\Particle.cpp" />
     <ClCompile Include="P1\SceneP1.cpp" />
-    <ClCompile Include="P2\ParticleGenerator.cpp" />
     <ClCompile Include="P2\ParticleSystem.cpp" />
     <ClCompile Include="P2\SceneP2.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
@@ -269,9 +268,12 @@
     <ClInclude Include="core.hpp" />
     <ClInclude Include="P1\Particle.h" />
     <ClInclude Include="P1\SceneP1.h" />
+    <ClInclude Include="P2\GaussianParticleGenerator.h" />
     <ClInclude Include="P2\ParticleGenerator.h" />
     <ClInclude Include="P2\ParticleSystem.h" />
     <ClInclude Include="P2\SceneP2.h" />
+    <ClInclude Include="P2\SimpleParticleGenerator.h" />
+    <ClInclude Include="P2\Water.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />
