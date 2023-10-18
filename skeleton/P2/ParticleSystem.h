@@ -1,12 +1,17 @@
 #pragma once
 
-#include <list>
 #include "../P1/Particle.h"
 #include "ParticleGenerator.h"
 
+#include <list>
+
 class ParticleSystem {
 protected:
-	const double PART_TIME_ = 0.1f;
+	/*const double PART_SPAWN_TIME_ = 0.1;
+	const double PART_LIFETIME = 2.0;*/
+	const double PART_SPAWN_TIME_ = 1;
+	const double PART_LIFETIME = 2.0;
+
 	double time;
 	Vector3 gravity_;
 
@@ -23,7 +28,7 @@ public:
 	
 	virtual void update(double t);
 
-	//ParticleGenerator* getParticleGenerator(const std::string& name);
+	ParticleGenerator* getParticleGenerator(const std::string& name);
 
 
 };

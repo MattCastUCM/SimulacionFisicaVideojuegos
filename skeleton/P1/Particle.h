@@ -51,7 +51,7 @@ public:
 	~Particle();
 	
 
-	void update(double t);
+	virtual void update(double t);
 
 	// Obtener o cambiar posición (inicial o actual)
 	inline void setInitPos(Vector3 pos) { phys_.pos = pos; }

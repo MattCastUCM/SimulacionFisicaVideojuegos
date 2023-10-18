@@ -1,15 +1,16 @@
 #pragma once
 
 #include "ParticleGenerator.h"
-#include<iostream>
 class UniformParticleGenerator : public ParticleGenerator {
-private:
+protected:
 	//Vector3 velWidth_, posWidth_;
+	std::uniform_real_distribution<double> distrUnif_{ 0, 1 };
+
 
 public:
-	UniformParticleGenerator(const std::string& name) : ParticleGenerator(name) { 
+	UniformParticleGenerator(const std::string& name, double min, double max) : ParticleGenerator(name) { 
 		
-		distrUnif_.param(std::uniform_real_distribution<double>::param_type(-0.2, 0.2));
+		distrUnif_.param(std::uniform_real_distribution<double>::param_type(min, max));
 	};
 
 	std::list<Particle*> generateParticles() override {

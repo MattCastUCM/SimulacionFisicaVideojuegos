@@ -1,12 +1,10 @@
 #pragma once
 
 #include "../P1/Particle.h"
-#include <iostream>
 
 class Water : public Particle {
 public:
-	Water(const Vector3& g, double lifetime = 1.0f) : Particle()
-	{
+	Water(const Vector3& g, double lifetime = 1.0f) : Particle() {
 		Particle::visual v;
 		v.size = 1.0f;
 		v.geometry = new physx::PxSphereGeometry(v.size);
@@ -15,12 +13,12 @@ public:
 
 		Particle::physics p;
 		p.damp = 0.998f;
-		p.pos = { 0.0f, 0.0f, -100.0f };
-		p.vel = { 0.4f, 1.0f, -0.4f };
-		p.vel *= 300;
+		p.pos = { 0.0f, -20.0f, -100.0f };
+		p.vel = { 1.0f, 1.0f, 1.0f };
+		p.vel *= 75;
 		p.acc = g;
 		p.mass = 5.4f;
-		p.simSpd = 100.0f;
+		p.simSpd = 70.0f;
 
 		init(v, p, lifetime);
 	}
