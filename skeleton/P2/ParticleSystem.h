@@ -3,23 +3,16 @@
 #include "../P1/Particle.h"
 #include "ParticleGenerator.h"
 
-#include <list>
+#include <unordered_map>
 
 class ParticleSystem {
 protected:
-	/*const double PART_SPAWN_TIME_ = 0.1;
-	const double PART_LIFETIME = 2.0;*/
-	const double PART_SPAWN_TIME_ = 1;
-	const double PART_LIFETIME = 2.0;
-
-	double time;
 	Vector3 gravity_;
 
 	std::vector<Particle*> particles_;
-	std::list<ParticleGenerator*> generators_;
+	std::unordered_map<std::string, ParticleGenerator*> generators_;
 
 	void refresh();
-	void generateParticles();
 
 public:
 	// Se usa -10.0f como gravedad por defecto

@@ -1,29 +1,34 @@
 #include "ParticleSystem.h"
 
-#include "Water.h"
 #include "Firework.h"
 #include "UniformParticleGenerator.h"
-#include "GaussianParticleGenerator.h"
+#include "CircleGenerator.h"
 
-ParticleSystem::ParticleSystem(const Vector3& g) : particles_(), gravity_(g), time(0) {
-	/*Water* part = new Water(g, PART_LIFETIME);
-	GaussianParticleGenerator* gen = new GaussianParticleGenerator("fountain", 0, 0.08);
-	gen->changeModelPart(part);
-	gen->changeGenerateN(1);
-	generators_.push_back(gen);*/
+ParticleSystem::ParticleSystem(const Vector3& g) : particles_(), gravity_(g) {
+	
 
-	Firework* part = new Firework(g, PART_LIFETIME);
-	GaussianParticleGenerator* gen = new GaussianParticleGenerator("fireworks", 0, 0.08);
-	gen->changeModelPart(part);
-	gen->changeGenerateN(1);
-	generators_.push_back(gen);
 
-	delete part;
+	Firework* explF = new Firework(g, 1, nullptr, 2.0);
+	CircleGenerator* fireworks = new CircleGenerator(0, 0, 1);
+	fireworks->changeModelPart(explF);
+	fireworks->changeGenerateN(10);
+	generators_.insert({ "fireworks", fireworks });
+
+	Firework* shotF = new Firework(g, 0, fireworks, 3.0);
+	GaussianParticleGenerator* fireworkShooter = new GaussianParticleGenerator(5.0, 0, 0.08);
+	fireworkShooter->changeModelPart(shotF);
+	fireworkShooter->changeGenerateN(1);
+	generators_.insert({ "fireworkShooter", fireworkShooter });
+
+
+	//delete w;
+	delete explF;
+	delete shotF;
 }
 
 ParticleSystem::~ParticleSystem() {
 	for (auto p : particles_) delete p;
-	for (auto g : generators_) delete g;
+	for (auto g : generators_) delete g.second;
 }
 
 
@@ -41,15 +46,6 @@ void ParticleSystem::refresh() {
 	}
 }
 
-void ParticleSystem::generateParticles() {
-	for (auto pg : generators_) {
-		auto parts = pg->generateParticles();
-		for (auto p : parts)
-			particles_.push_back(p);
-	}
-}
-
-
 
 void ParticleSystem::update(double t) {
 	// Recorre la lista de partículas para llamar a su update. 
@@ -61,20 +57,19 @@ void ParticleSystem::update(double t) {
 	// Elimina las partículas muertas
 	refresh();
 
-	// Recorrer generadores ( generar partículas nuevas y añadirlas a la lista)
-	if (time >= PART_SPAWN_TIME_) {
-		generateParticles();
-		time = 0;
+	// Recorrer generadores (generar partículas nuevas y añadirlas a la lista)
+	for (auto pg : generators_) {
+		// El update se encarga de generar las partículas
+		// según el tiempo de generación de cada generador
+		auto parts = pg.second->update(t);
+		for (auto p : parts)
+			particles_.push_back(p);
 	}
-	
-	time += t;
 }
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(const std::string& name) {
-	for (auto g : generators_) {
-		if (g->getName() == name) return g;
-	}
-	return nullptr;
+	if (generators_.find(name) != generators_.end()) return generators_[name];
+	else return nullptr;
 }
 
 

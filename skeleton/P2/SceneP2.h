@@ -8,7 +8,7 @@ private:
 	const physx::PxTransform* FLOOR_TR_ = new physx::PxTransform(0, -10, 0);
 	RenderItem* floor_;
 
-	ParticleSystem* partSys_;
+	ParticleSystem* waterSystem_;
 
 
 public:

@@ -268,13 +268,16 @@
     <ClInclude Include="core.hpp" />
     <ClInclude Include="P1\Particle.h" />
     <ClInclude Include="P1\SceneP1.h" />
+    <ClInclude Include="P2\CircleGenerator.h" />
     <ClInclude Include="P2\Firework.h" />
     <ClInclude Include="P2\GaussianParticleGenerator.h" />
     <ClInclude Include="P2\ParticleGenerator.h" />
     <ClInclude Include="P2\ParticleSystem.h" />
     <ClInclude Include="P2\SceneP2.h" />
+    <ClInclude Include="P2\Systems\FireworksSystem.h" />
     <ClInclude Include="P2\UniformParticleGenerator.h" />
     <ClInclude Include="P2\Water.h" />
+    <ClInclude Include="P2\WaterSystem.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />

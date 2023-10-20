@@ -44,6 +44,9 @@
     <ClInclude Include="P2\GaussianParticleGenerator.h" />
     <ClInclude Include="P2\Water.h" />
     <ClInclude Include="P2\Firework.h" />
+    <ClInclude Include="P2\CircleGenerator.h" />
+    <ClInclude Include="P2\WaterSystem.h" />
+    <ClInclude Include="P2\Systems\FireworksSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
