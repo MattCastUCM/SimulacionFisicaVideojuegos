@@ -4,7 +4,6 @@
 #include "../core.hpp"
 #include "../RenderUtils.hpp"
 
-
 class Particle {
 public:
 	// Tamaño, forma y color
@@ -49,6 +48,7 @@ public:
 	Particle() { };
 	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
 	virtual ~Particle();
+	virtual void onDeath() { };
 
 	void update(double t);
 

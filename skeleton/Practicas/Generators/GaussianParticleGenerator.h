@@ -30,23 +30,18 @@ public:
 
 
 	virtual inline void setVelocities(Particle* p) {
-		auto pos = p->getInitPos();
-		float posX = p->getInitPos().x,
-			posY = p->getInitPos().y, 
-			posZ = p->getInitPos().z;
-		if (changeX_) posX = normDistr_(mt_) + p->getInitPos().x;
-		if (changeY_) posY = normDistr_(mt_) + p->getInitPos().y;
-		if (changeZ_) posZ = normDistr_(mt_) + p->getInitPos().z;
-		p->setInitPos({posX, posY, posZ});
+		auto pos = origin_;
+		if (changeX_) pos.x += normDistr_(mt_);
+		if (changeY_) pos.y += normDistr_(mt_);
+		if (changeZ_) pos.z += normDistr_(mt_);
+		p->setInitPos(pos);
 
 
-		auto velMagn = p->getInitVel().magnitude();
-		float velX = p->getInitVel().x,
-			 velY = p->getInitVel().y,
-			 velZ = p->getInitVel().z;
-		if (changeX_) velX = normDistr_(mt_) * velMagn;
-		if (changeY_) velY = normDistr_(mt_) * velMagn;
-		if (changeZ_) velZ = normDistr_(mt_) * velMagn;
-		p->setVel({ velX, velY, velZ});
+		auto velMagn = vel_.magnitude();
+		auto vel = vel_;
+		if (changeX_) vel.x = normDistr_(mt_) * velMagn;
+		if (changeY_) vel.y = normDistr_(mt_) * velMagn;
+		if (changeZ_) vel.z = normDistr_(mt_) * velMagn;
+		p->setVel(vel);
 	}
 };

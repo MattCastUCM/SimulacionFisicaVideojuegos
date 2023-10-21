@@ -1,8 +1,9 @@
 #include "Particle.h"
 
-
+#include<iostream>
 Particle::Particle(visual vis, physics phys, float maxLifetime) {
 	init(vis, phys, maxLifetime);
+	
 }
 
 Particle::~Particle() {

@@ -10,6 +10,8 @@ ParticleSystem::~ParticleSystem() {
 
 void ParticleSystem::refresh() {
 	for (auto p : particles_) {
+		if(!p->isAlive()) p->onDeath();
+
 		particles_.erase(
 			remove_if(particles_.begin(), particles_.end(), [](Particle* p) {
 				if (p->isAlive() /* || p->outOfBounds */) return false;

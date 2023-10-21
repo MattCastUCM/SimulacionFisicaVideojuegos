@@ -6,8 +6,8 @@
 #include "../ParticleGenerator.h"
 #include "../Generators/CircleGenerator.h"
 
-#include <iostream>
 
+#include <iostream>
 class Firework : public Particle {
 protected:
 	unsigned type_;
@@ -37,22 +37,22 @@ public:
 		init(v, p, lifetime);
 	}
 
-	~Firework() override {
-		if (type_ == 0 && gen_ != nullptr) {
+	// Explode
+	void onDeath() {
+		if (type_ == 0) {
 			gen_->setActive(true);
 			auto model = clone();
 			model->type_++;
-			model->setInitPos(getPos());
 			gen_->changeModelPart(model);
 			delete model;
 		}
 	}
 
+
 	inline Firework* clone() {
-		return new Firework(phys_.acc, type_, maxLifetime_, gen_);
+		auto fw = new Firework(phys_.acc, type_, maxLifetime_, gen_);
+		fw->phys_.pos = tr_->p;
+		return fw;
 	}
 
-	// The firework generates more fireworks when exploding --> they should be gathered by the System
-	/*std::list<Particle*> explode();
-	void addGenerator(ParticleGenerator* p);*/
 };

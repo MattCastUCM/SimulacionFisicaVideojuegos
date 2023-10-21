@@ -15,6 +15,7 @@ protected:
 	std::mt19937 mt_;
 	double time_, generationTime_;			// Tiempo que ha pasado desde la última generación, tiempo que tarda en generar nuevas partículas
 	bool changeX_, changeY_, changeZ_;		// Si el generador cambia la velocidad x, y o z de la partícula al generar partículas nuevas
+	bool active_;
 
 public:
 	ParticleGenerator(/*const std::string& name,*/ double genTime, bool changeX = true, bool changeY = false, bool changeZ = true);
@@ -43,7 +44,7 @@ public:
 	inline Vector3 getVel() const { return vel_; }
 	inline void changeGenerateN(int n) { generateN_ = n; }
 	inline void changeLifetime(double t) { modelPart_->changeLifetime(t); }
-	
+	inline void setActive(bool a) { active_ = a; }
 	
 	
 	
