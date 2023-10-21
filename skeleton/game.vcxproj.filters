@@ -10,12 +10,21 @@
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="callbacks.cpp" />
-    <ClCompile Include="P1\SceneP1.cpp">
-      <Filter>P1</Filter>
+    <ClCompile Include="Practicas\Particle.cpp">
+      <Filter>Practicas</Filter>
     </ClCompile>
-    <ClCompile Include="P2\ParticleSystem.cpp" />
-    <ClCompile Include="P1\Particle.cpp" />
-    <ClCompile Include="P2\SceneP2.cpp" />
+    <ClCompile Include="Practicas\ParticleGenerator.cpp">
+      <Filter>Practicas</Filter>
+    </ClCompile>
+    <ClCompile Include="Practicas\ParticleSystem.cpp">
+      <Filter>Practicas</Filter>
+    </ClCompile>
+    <ClCompile Include="Practicas\Scenes\SceneP1.cpp">
+      <Filter>Practicas\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Practicas\Scenes\SceneP2.cpp">
+      <Filter>Practicas\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -27,36 +36,61 @@
     </ClInclude>
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="callbacks.hpp" />
-    <ClInclude Include="P1\Particle.h">
-      <Filter>P1</Filter>
+    <ClInclude Include="Practicas\ParticleSystem.h">
+      <Filter>Practicas</Filter>
     </ClInclude>
-    <ClInclude Include="P1\SceneP1.h">
-      <Filter>P1</Filter>
+    <ClInclude Include="Practicas\Particle.h">
+      <Filter>Practicas</Filter>
     </ClInclude>
-    <ClInclude Include="P2\ParticleGenerator.h">
-      <Filter>P2</Filter>
+    <ClInclude Include="Practicas\ParticleGenerator.h">
+      <Filter>Practicas</Filter>
     </ClInclude>
-    <ClInclude Include="P2\ParticleSystem.h">
-      <Filter>P2</Filter>
+    <ClInclude Include="Practicas\Generators\UniformParticleGenerator.h">
+      <Filter>Practicas\Generators</Filter>
     </ClInclude>
-    <ClInclude Include="P2\SceneP2.h" />
-    <ClInclude Include="P2\UniformParticleGenerator.h" />
-    <ClInclude Include="P2\GaussianParticleGenerator.h" />
-    <ClInclude Include="P2\Water.h" />
-    <ClInclude Include="P2\Firework.h" />
-    <ClInclude Include="P2\CircleGenerator.h" />
-    <ClInclude Include="P2\WaterSystem.h" />
-    <ClInclude Include="P2\Systems\FireworksSystem.h" />
+    <ClInclude Include="Practicas\Generators\CircleGenerator.h">
+      <Filter>Practicas\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="Practicas\Generators\GaussianParticleGenerator.h">
+      <Filter>Practicas\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="Practicas\Particles\Firework.h">
+      <Filter>Practicas\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Practicas\Particles\Water.h">
+      <Filter>Practicas\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Practicas\Scenes\SceneP2.h">
+      <Filter>Practicas\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Practicas\Scenes\SceneP1.h">
+      <Filter>Practicas\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Practicas\Systems\FireworksSystem.h">
+      <Filter>Practicas\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Practicas\Systems\WaterSystem.h">
+      <Filter>Practicas\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
       <UniqueIdentifier>{d04b4f9f-5a69-465e-8070-25c6d0bcd3c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="P1">
-      <UniqueIdentifier>{74e5a9a3-afd2-43e7-ab03-0623a4e5370c}</UniqueIdentifier>
+    <Filter Include="Practicas">
+      <UniqueIdentifier>{46ed9275-aa0d-4484-9b1a-8908650ab871}</UniqueIdentifier>
     </Filter>
-    <Filter Include="P2">
-      <UniqueIdentifier>{b958eb94-ddda-4104-a2d3-7e29ff670af3}</UniqueIdentifier>
+    <Filter Include="Practicas\Generators">
+      <UniqueIdentifier>{18ffbd97-30d1-4636-9613-0679653f9805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Practicas\Particles">
+      <UniqueIdentifier>{cef2f818-306b-49b5-804f-e098fa554e8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Practicas\Scenes">
+      <UniqueIdentifier>{dfdf577d-11d1-4941-9b93-e08d634d80bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Practicas\Systems">
+      <UniqueIdentifier>{165c4f0b-579e-499a-8fef-8e3c72ac70e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

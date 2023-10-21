@@ -32,8 +32,8 @@ ContactReportCallback gContactReportCallback;
 
 
 
-#include "P1/SceneP1.h"
-#include "P2/SceneP2.h"
+#include "Practicas/Scenes/SceneP1.h"
+#include "Practicas/Scenes/SceneP2.h"
 
 //SceneP1* scMngr = nullptr;
 SceneP2* scMngr = nullptr;
