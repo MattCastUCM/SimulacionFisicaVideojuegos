@@ -1,18 +1,23 @@
 #pragma once
 
-#include "GaussianParticleGenerator.h"
+#include "../ParticleGenerator.h"
 
-class CircleGenerator : public GaussianParticleGenerator {
+class CircleGenerator : public ParticleGenerator {
+private:
+	float rads(float a) { return 0.017453292 * a; }
+	double rads(double a) { return 0.017453292 * a; }
+
+
 public:
 	// Media y desviación estándar
-	CircleGenerator(double genTime, double mean, double dev) : GaussianParticleGenerator(genTime, mean, dev) { };
+	CircleGenerator(double genTime, double mean, double dev) : ParticleGenerator(genTime) { };
 
 	inline std::list<Particle*> generateParticles() override {
 		std::list<Particle*> generated;
 		Particle* p;
 		for (int i = 0; i < generateN_; i++) {
 			p = modelPart_->clone();
-			setVelocities(p);
+			setVelocities(p, i);
 
 			generated.push_back(p);
 		}
@@ -21,15 +26,20 @@ public:
 	};
 
 
-	inline void setVelocities(Particle* p) {
+	inline void setVelocities(Particle* p, int i) {
 		p->setInitPos(origin_);
 		p->setPos(origin_);
 
 		auto velMagn = p->getInitVel().magnitude();
 		float velX = p->getInitVel().x,
 			 velZ = p->getInitVel().z;
-		if (changeX_) velX = normDistr_(mt_) * velMagn;
-		if (changeZ_) velZ = normDistr_(mt_) * velMagn;
+		
+		float a = 360 / generateN_;
+		velX = physx::PxCos(rads(a * i)) * velMagn;
+		velZ = physx::PxSin(rads(a * i)) * velMagn;
 		p->setVel({ velX, 0.0f, velZ });
 	}
+
+
+
 };

@@ -17,6 +17,6 @@ SceneP2::~SceneP2() {
 }
 
 void SceneP2::update(double t) {
-	waterSystem_->update(t);
+	//waterSystem_->update(t);
 	fireworksSystem_->update(t);
 }
