@@ -9,8 +9,8 @@ protected:
 
 
 public:
-	UniformParticleGenerator(double genTime, double min, double max, bool changeX = true, bool changeY = false, bool changeZ = true) 
-		: ParticleGenerator(genTime, changeX, changeY, changeZ) 
+	UniformParticleGenerator(double genTime, double min, double max, bool autoInactive = false, bool changeX = true, bool changeY = false, bool changeZ = true)
+		: ParticleGenerator(genTime, autoInactive, changeX, changeY, changeZ) 
 	{
 		unifDistr_.param(std::uniform_real_distribution<double>::param_type(min, max));
 	};
@@ -30,6 +30,10 @@ public:
 
 	inline void setVelocities(Particle* p) {
 		auto pos = origin_;
+
+		p->setInitPos(origin_);
+		p->setPos(origin_);
+
 		if (changeX_) pos.x += unifDistr_(mt_);
 		if (changeY_) pos.y += unifDistr_(mt_);
 		if (changeZ_) pos.z += unifDistr_(mt_);

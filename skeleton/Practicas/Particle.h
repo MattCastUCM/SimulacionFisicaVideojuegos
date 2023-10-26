@@ -71,6 +71,11 @@ public:
 	}
 	inline Vector3 getVel() { return vel; }
 
+	inline void setSimSpd(float s) {
+		phys_.simSpd = s;
+		simulatePhys();
+	}
+	inline float getSimSpd() { return phys_.simSpd; }
 
 	// Obtener o cambiar velocidad (inicial o actual/simulada)
 	void setInitAcc(Vector3 a) { phys_.acc = a; }

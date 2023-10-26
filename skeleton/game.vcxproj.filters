@@ -72,6 +72,7 @@
     <ClInclude Include="Practicas\Systems\WaterSystem.h">
       <Filter>Practicas\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Practicas\Generators\HeartGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

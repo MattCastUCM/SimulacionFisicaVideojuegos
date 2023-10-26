@@ -10,8 +10,9 @@ protected:
 
 public:
 	// Media y desviación estándar
-	GaussianParticleGenerator(double genTime, double mean, double dev, bool changeX = true, bool changeY = false, bool changeZ = true) 
-		: ParticleGenerator(genTime, changeX, changeY, changeZ) {
+	GaussianParticleGenerator(double genTime, double mean, double dev, bool autoInactive = false, bool changeX = true, bool changeY = false, bool changeZ = true)
+		: ParticleGenerator(genTime, autoInactive, changeX, changeY, changeZ) 
+	{
 		normDistr_.param(std::normal_distribution<float>::param_type(mean, dev));
 	};
 
@@ -31,6 +32,9 @@ public:
 
 	virtual inline void setVelocities(Particle* p) {
 		auto pos = origin_;
+		p->setInitPos(origin_);
+		p->setPos(origin_);
+
 		if (changeX_) pos.x += normDistr_(mt_);
 		if (changeY_) pos.y += normDistr_(mt_);
 		if (changeZ_) pos.z += normDistr_(mt_);

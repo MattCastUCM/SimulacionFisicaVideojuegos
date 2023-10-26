@@ -269,6 +269,7 @@
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Practicas\Generators\CircleGenerator.h" />
     <ClInclude Include="Practicas\Generators\GaussianParticleGenerator.h" />
+    <ClInclude Include="Practicas\Generators\HeartGenerator.h" />
     <ClInclude Include="Practicas\Generators\UniformParticleGenerator.h" />
     <ClInclude Include="Practicas\Particle.h" />
     <ClInclude Include="Practicas\ParticleGenerator.h" />

@@ -15,10 +15,12 @@ protected:
 	std::mt19937 mt_;
 	double time_, generationTime_;			// Tiempo que ha pasado desde la última generación, tiempo que tarda en generar nuevas partículas
 	bool changeX_, changeY_, changeZ_;		// Si el generador cambia la velocidad x, y o z de la partícula al generar partículas nuevas
-	bool active_;
+	bool active_, autoInactive_;
+	std::string name_;
+
 
 public:
-	ParticleGenerator(/*const std::string& name,*/ double genTime, bool changeX = true, bool changeY = false, bool changeZ = true);
+	ParticleGenerator(double genTime, bool autoInactive = false, bool changeX = true, bool changeY = false, bool changeZ = true);
 
 
 	virtual std::list<Particle*> generateParticles();
@@ -46,6 +48,14 @@ public:
 	inline void changeLifetime(double t) { modelPart_->changeLifetime(t); }
 	inline void setActive(bool a) { active_ = a; }
 	
-	
-	
+	inline int getN() { return generateN_; }
+	inline bool isActive() { return active_; }
+
+	inline void setName(std::string n) { name_ = n; }
+	inline std::string getName() { return name_; }
+
+
+protected:
+	inline float rads(float deg) { return 0.017453292 * deg; }
+	inline double rads(double deg) { return 0.017453292 * deg; }
 };

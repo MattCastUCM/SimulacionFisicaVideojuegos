@@ -13,7 +13,7 @@ public:
 
 		Particle::physics p;
 		p.damp = 0.998f;
-		p.pos = { 0.0f, -20.0f, -100.0f };
+		p.pos = { 0.0f, 0.0f, 0.0f };
 		p.vel = { 1.0f, 1.0f, 1.0f };
 		p.vel *= 75;
 		p.acc = g;

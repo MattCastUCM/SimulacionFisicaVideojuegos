@@ -13,6 +13,8 @@ public:
 		fountain->changeGenerateN(5);
 		generators_.insert({ "fountain", fountain });
 
+		fountain->setOrigin({ 0.0f, -40.0f, -100.0f });
+
 		delete w;
 	}
 };
