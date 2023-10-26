@@ -270,6 +270,7 @@
     <ClInclude Include="Practicas\Generators\CircleGenerator.h" />
     <ClInclude Include="Practicas\Generators\GaussianParticleGenerator.h" />
     <ClInclude Include="Practicas\Generators\HeartGenerator.h" />
+    <ClInclude Include="Practicas\Generators\MistGenerator.h" />
     <ClInclude Include="Practicas\Generators\UniformParticleGenerator.h" />
     <ClInclude Include="Practicas\Particle.h" />
     <ClInclude Include="Practicas\ParticleGenerator.h" />
@@ -279,6 +280,7 @@
     <ClInclude Include="Practicas\Scenes\SceneP1.h" />
     <ClInclude Include="Practicas\Scenes\SceneP2.h" />
     <ClInclude Include="Practicas\Systems\FireworksSystem.h" />
+    <ClInclude Include="Practicas\Systems\MistSystem.h" />
     <ClInclude Include="Practicas\Systems\WaterSystem.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />

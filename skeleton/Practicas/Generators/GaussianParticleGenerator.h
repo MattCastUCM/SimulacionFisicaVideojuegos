@@ -35,17 +35,18 @@ public:
 		p->setInitPos(origin_);
 		p->setPos(origin_);
 
-		if (changeX_) pos.x += normDistr_(mt_);
-		if (changeY_) pos.y += normDistr_(mt_);
-		if (changeZ_) pos.z += normDistr_(mt_);
+		if (changeX_) pos.x += normDistr_(mt_) * pos.x;
+		if (changeY_) pos.y += normDistr_(mt_) * pos.y;
+		if (changeZ_) pos.z += normDistr_(mt_) * pos.z;
 		p->setInitPos(pos);
-
+		p->setPos(pos);
 
 		auto velMagn = vel_.magnitude();
 		auto vel = vel_;
 		if (changeX_) vel.x = normDistr_(mt_) * velMagn;
 		if (changeY_) vel.y = normDistr_(mt_) * velMagn;
 		if (changeZ_) vel.z = normDistr_(mt_) * velMagn;
+		p->setInitVel(vel);
 		p->setVel(vel);
 	}
 };

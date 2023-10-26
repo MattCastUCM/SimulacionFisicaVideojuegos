@@ -73,6 +73,8 @@
       <Filter>Practicas\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Practicas\Generators\HeartGenerator.h" />
+    <ClInclude Include="Practicas\Systems\MistSystem.h" />
+    <ClInclude Include="Practicas\Generators\MistGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

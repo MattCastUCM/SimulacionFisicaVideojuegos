@@ -8,8 +8,10 @@ private:
 	const physx::PxTransform* FLOOR_TR_ = new physx::PxTransform(0, -10, 0);
 	RenderItem* floor_;
 
-	ParticleSystem* waterSystem_;
-	ParticleSystem* fireworksSystem_;
+	ParticleSystem* water_;
+	ParticleSystem* fireworks_;
+	ParticleSystem* mist_;
+
 
 public:
 	SceneP2();

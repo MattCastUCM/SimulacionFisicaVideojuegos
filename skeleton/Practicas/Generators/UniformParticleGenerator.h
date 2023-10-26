@@ -38,13 +38,14 @@ public:
 		if (changeY_) pos.y += unifDistr_(mt_);
 		if (changeZ_) pos.z += unifDistr_(mt_);
 		p->setInitPos(pos);
-
+		p->setPos(pos);
 
 		auto velMagn = vel_.magnitude();
 		auto vel = vel_;
 		if (changeX_) vel.x = unifDistr_(mt_) * velMagn;
 		if (changeY_) vel.y = unifDistr_(mt_) * velMagn;
 		if (changeZ_) vel.z = unifDistr_(mt_) * velMagn;
+		p->setInitVel(vel);
 		p->setVel(vel);
 	}
 };
