@@ -8,18 +8,18 @@ SceneP2::SceneP2() {
 	//floor_ = new RenderItem(CreateShape(physx::PxBoxGeometry(400, 1, 400)), FLOOR_TR_, FLOOR_COLOR_);
 	water_ = new WaterSystem();
 	fireworks_ = new FireworksSystem();
-	mist_ = new MistSystem();
+	//mist_ = new MistSystem();
 }
 
 SceneP2::~SceneP2() {
 	//DeregisterRenderItem(floor_);
 	delete water_;
 	delete fireworks_;
-	delete mist_;
+	//delete mist_;
 }
 
 void SceneP2::update(double t) {
-	/*water_->update(t);
-	fireworks_->update(t);*/
-	mist_->update(t);
+	//water_->update(t);
+	fireworks_->update(t);
+	//mist_->update(t);
 }

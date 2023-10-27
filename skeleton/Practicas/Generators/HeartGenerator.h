@@ -1,19 +1,18 @@
 #pragma once
 
-#include "../Generators/GaussianParticleGenerator.h"
+#include "../ParticleGenerator.h"
 
-class HeartGenerator : public GaussianParticleGenerator {
+class HeartGenerator : public ParticleGenerator {
 public:
 	// Media y desviación estándar
-	HeartGenerator(double genTime, double mean, double dev, bool autoInactive) : GaussianParticleGenerator(genTime, mean, dev, autoInactive) { };
+	HeartGenerator(double genTime, double mean, double dev, bool autoInactive) : ParticleGenerator(genTime, autoInactive) { };
 
 	inline std::list<Particle*> generateParticles() override {
 		std::list<Particle*> generated;
 		Particle* p;
-		float rnd = normDistr_(mt_);
 		for (int i = 0; i < generateN_; i++) {
 			p = modelPart_->clone();
-			setVelocities(p, i, rnd);
+			setVelocities(p, i);
 
 			generated.push_back(p);
 		}
@@ -21,7 +20,7 @@ public:
 	};
 
 
-	inline void setVelocities(Particle* p, int i, float rnd) {
+	inline void setVelocities(Particle* p, int i) {
 		p->setInitPos(origin_);
 		p->setPos(origin_);
 
@@ -32,7 +31,7 @@ public:
 		
 		float a = 2 * physx::PxPi * i / generateN_;
 		float sin = physx::PxSin(a);
-		velX = 16 *  sin * sin * sin; /** velMagn + velMagn * rnd*/;
+		velX = 16 *  sin * sin * sin;;
 		velY = 13 * physx::PxCos(a)
 				- 5 * physx::PxCos(2 * a)
 				- 2 * physx::PxCos(3 * a)

@@ -18,7 +18,6 @@ public:
 		p.vel *= 75;
 		p.acc = g;
 		p.mass = 5.4f;
-		p.simSpd = 70.0f;
 
 		init(v, p, lifetime);
 	}

@@ -1,5 +1,5 @@
 #include "SceneP1.h"
-
+#include "../Particles/Projectile.h"
 
 SceneP1::SceneP1() {
 	cam = GetCamera();
@@ -66,14 +66,14 @@ void SceneP1::addParticle(unsigned char key) {
 	p.pos = cam->getEye();*/
 	p.pos = { -50,0,-100 };
 	p.vel = { 1, 0, 0 };
-
+	float simSpd;
 
 	// Bola de cañón
 	if (key == tolower('q')) {
 		p.vel *= 350.0f;
 		p.acc = { 0.0f, -0.5f, 0.0f };
 		p.mass = 5.4f;
-		p.simSpd = 50.0f;
+		simSpd = 50.0f;
 		v.color = { 1.0f, 0.0f, 0.0f, 1.0f };
 	}
 	// Misil de un tanque
@@ -81,7 +81,7 @@ void SceneP1::addParticle(unsigned char key) {
 		p.vel *= 1800.0f;
 		p.acc = { 0.0f, -0.01f, 0.0f };
 		p.mass = 15.0f;
-		p.simSpd = 70.0f;
+		simSpd = 70.0f;
 		v.color = { 0.0f, 1.0f, 0.0f, 1.0f };
 	}
 	// Bala de pistola
@@ -89,11 +89,11 @@ void SceneP1::addParticle(unsigned char key) {
 		p.vel *= 330.0f;
 		p.acc = { 0.0f, -0.098f, 0.0f };
 		p.mass = 0.055f;
-		p.simSpd = 100.0f;
+		simSpd = 100.0f;
 		v.color = { 0.0f, 0.0f, 1.0f, 1.0f };
 	}
 
 
-	Particle* part = new Particle(v, p);
+	Projectile* part = new Projectile(v, p, simSpd);
 	particles_.push_back(part);
 }

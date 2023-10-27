@@ -19,8 +19,7 @@ public:
 			vel,		// Dirección/velocidad (vector)
 			acc;		// Aceleración (vector) en m/s^2
 		float damp,		// Rozamiento (magnitud)
-			mass,		// Masa (magnitud) en kg
-			simSpd;
+			  mass;		// Masa (magnitud) en kg
 	};
 
 
@@ -32,9 +31,9 @@ protected:
 	physics phys_;
 
 	// Físicas que se actualizan luego (porque se simulan o integran)
-	Vector3 vel, acc;					
-	float mass;
-
+	Vector3 vel_, acc_;					
+	float mass_;
+	Vector3 accumForce_;
 
 	float maxLifetime_;
 	float lifetime_;
@@ -42,8 +41,7 @@ protected:
 
 
 	void init(visual vis, physics phys, float maxLifetime = 1.0f);
-	void simulatePhys();
-
+	
 public:
 	Particle() { };
 	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
@@ -51,6 +49,11 @@ public:
 	virtual void onDeath() { };
 
 	void update(double t);
+
+	void clearForce();
+	void addForce(const Vector3& f);
+
+
 
 
 	// Obtener o cambiar posición (inicial o actual)
@@ -65,29 +68,16 @@ public:
 	inline void setInitVel(Vector3 v) { phys_.vel = v; }
 	inline Vector3 getInitVel() { return phys_.vel; }
 
-	inline void setVel(Vector3 v) {
-		vel = v; 
-		simulatePhys();
-	}
-	inline Vector3 getVel() { return vel; }
+	inline void setVel(Vector3 v) { vel_ = v; }
+	inline Vector3 getVel() { return vel_; }
 
-	inline void setSimSpd(float s) {
-		phys_.simSpd = s;
-		simulatePhys();
-	}
-	inline float getSimSpd() { return phys_.simSpd; }
 
 	// Obtener o cambiar velocidad (inicial o actual/simulada)
 	void setInitAcc(Vector3 a) { phys_.acc = a; }
 	inline Vector3 getInitAcc() { return phys_.acc; }
 	
-	void setAcc(Vector3 a) { 
-		acc = a; 
-		simulatePhys();
-	}
-	inline Vector3 getAcc() { return acc; }
-
-
+	void setAcc(Vector3 a) { acc_ = a; }
+	inline Vector3 getAcc() { return acc_; }
 
 	inline bool isAlive() { return alive_; }
 	inline void changeLifetime(float t) { maxLifetime_ = t; }

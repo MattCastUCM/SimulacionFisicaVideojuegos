@@ -5,7 +5,8 @@
 class CircleGenerator : public GaussianParticleGenerator {
 public:
 	// Media y desviación estándar
-	CircleGenerator(double genTime, double mean, double dev, bool autoInactive) : GaussianParticleGenerator(genTime, mean, dev, autoInactive) { };
+	CircleGenerator(double genTime, double mean, double dev, int offset, bool autoInactive) 
+		: GaussianParticleGenerator(genTime, mean, dev, offset, autoInactive) { };
 
 	inline std::list<Particle*> generateParticles() override {
 		std::list<Particle*> generated;

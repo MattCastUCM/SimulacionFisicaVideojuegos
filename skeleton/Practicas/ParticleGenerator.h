@@ -19,19 +19,51 @@ protected:
 	std::string name_;
 
 
+	// Convertir a radianes
+	inline float rads(float deg) { return 0.017453292 * deg; }
+	inline double rads(double deg) { return 0.017453292 * deg; }
+
+
+
 public:
-	ParticleGenerator(double genTime, bool autoInactive = false, bool changeX = true, bool changeY = false, bool changeZ = true);
+	ParticleGenerator(double genTime, bool autoInactive = false, bool changeX = true, bool changeY = false, bool changeZ = true) 
+		: generateN_(3), genProb_(1.0), modelPart_(nullptr), time_(0), generationTime_(genTime), 
+		  changeX_(changeX), changeY_(changeY), changeZ_(changeZ), autoInactive_(autoInactive), active_(true), name_("") { };
 
+	inline virtual std::list<Particle*> generateParticles() {
+		std::list<Particle*> generated;
+		Particle* p;
+		for (int i = 0; i < generateN_; i++) {
+			p = modelPart_->clone();
+			generated.push_back(p);
+		}
 
-	virtual std::list<Particle*> generateParticles();
-
+		return generated;
+	};
 	virtual void setVelocities(Particle* p) { }
-	
-	std::list<Particle*> update(double t);
 
-	void changeModelPart(Particle* p, bool modifyPosVel = true);
-	inline Particle* getModelPart() { return modelPart_; };
+	inline std::list<Particle*> update(double t) {
+		time_ += t;
+		if (time_ >= generationTime_ && active_) {
+			std::list<Particle*> generated = generateParticles();
+			time_ = 0;
+			if (autoInactive_) active_ = false;
+			return generated;
+		}
+		else return { };
+	};
 
+	inline void changeModelPart(Particle* p, bool modifyPosVel = true) {
+		delete modelPart_;
+		modelPart_ = p->clone();
+		if (modifyPosVel) {
+			origin_ = p->getInitPos();
+			vel_ = p->getInitVel();
+		}
+		modelPart_->setPos({ -1000.0f, -1000.0f, -1000.0f });
+	};
+
+	// Getters y setters
 	inline void setOrigin(const Vector3& p) {
 		modelPart_->setInitPos(p);
 		origin_ = p;
@@ -55,7 +87,5 @@ public:
 	inline std::string getName() { return name_; }
 
 
-protected:
-	inline float rads(float deg) { return 0.017453292 * deg; }
-	inline double rads(double deg) { return 0.017453292 * deg; }
+
 };

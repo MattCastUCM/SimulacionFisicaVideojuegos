@@ -6,12 +6,12 @@ class MistGenerator : public GaussianParticleGenerator {
 protected:
 	//Vector3 velWidth_, posWidth_;
 	std::normal_distribution<float> normDistr_{ 0, 1 };
-	int offset_;
+	
 
 public:
 	// Media y desviación estándar
 	MistGenerator(double genTime, double mean, double dev, int offset, bool autoInactive = false, bool changeX = true, bool changeY = false, bool changeZ = true)
-		: GaussianParticleGenerator(genTime, mean, dev, autoInactive, changeX, changeY, changeZ), offset_(offset)
+		: GaussianParticleGenerator(genTime, mean, dev, offset, autoInactive, changeX, changeY, changeZ)
 	{
 		normDistr_.param(std::normal_distribution<float>::param_type(mean, dev));
 	};

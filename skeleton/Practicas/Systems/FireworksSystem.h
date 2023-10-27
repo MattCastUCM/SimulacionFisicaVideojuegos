@@ -16,13 +16,13 @@ public:
 		Firework* shotF = new Firework(g, 0, 3.0);
 
 		
-		GaussianParticleGenerator* sphereGen = new GaussianParticleGenerator(0, 0, 0.1, true, true, true, true);
-		sphereGen->changeGenerateN(20);
+		GaussianParticleGenerator* sphereGen = new GaussianParticleGenerator(0, 0, 0.1, 0, true, true, true, true);
+		sphereGen->changeGenerateN(50);
 		sphereGen->setName("sphereGen");
 		generators_.insert({ "sphereGen", sphereGen });
 		shotF->addGenerator(sphereGen);
 
-		CircleGenerator* circleGen = new CircleGenerator(0, 0, 0.05, true);
+		CircleGenerator* circleGen = new CircleGenerator(0, 0, 0.05, 0, true);
 		circleGen->changeGenerateN(10);
 		circleGen->setName("circleGen");
 		generators_.insert({ "circleGen", circleGen });
@@ -43,7 +43,6 @@ public:
 		fireworkShooter->setOrigin({ 0.0f, -60.0f, -200.0f });
 
 
-		shotF->setPos({ -1000, -1000, -1000 });
 		delete shotF;
 	}
 

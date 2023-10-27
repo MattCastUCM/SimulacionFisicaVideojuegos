@@ -34,7 +34,6 @@ public:
 		p.vel *= 75;
 		p.acc = g;
 		p.mass = 5.4f;
-		p.simSpd = 95.0f;
 
 		init(v, p, lifetime);
 	}
@@ -50,14 +49,10 @@ public:
 			if (generators_[safeIndex]->getName() == "circleGen") {
 				phys_.vel = { 1.0f, 1.0f, 1.0f };
 				phys_.vel *= 200.0f;
-				phys_.simSpd = 30.0f;
-				simulatePhys();
 			}
 			else if (generators_[safeIndex]->getName() == "sphereGen") {
 				phys_.vel = { 1.0f, 1.0f, 1.0f };
 				phys_.vel *= 75;
-				phys_.simSpd = 100.0f;
-				simulatePhys();
 			}
 
 
@@ -82,7 +77,6 @@ public:
 		// Hay que cambiar manualmente la posición y velocidad
 		// porque la constructora de Firework no los recoge
 		fw->phys_.pos = tr_->p;
-		fw->setSimSpd(phys_.simSpd);
 		fw->addGenerators(generators_);
 
 		return fw;
