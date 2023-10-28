@@ -13,12 +13,6 @@
     <ClCompile Include="Practicas\Particle.cpp">
       <Filter>Practicas</Filter>
     </ClCompile>
-    <ClCompile Include="Practicas\ParticleGenerator.cpp">
-      <Filter>Practicas</Filter>
-    </ClCompile>
-    <ClCompile Include="Practicas\ParticleSystem.cpp">
-      <Filter>Practicas</Filter>
-    </ClCompile>
     <ClCompile Include="Practicas\Scenes\SceneP1.cpp">
       <Filter>Practicas\Scenes</Filter>
     </ClCompile>
@@ -75,6 +69,10 @@
     <ClInclude Include="Practicas\Generators\HeartGenerator.h" />
     <ClInclude Include="Practicas\Systems\MistSystem.h" />
     <ClInclude Include="Practicas\Generators\MistGenerator.h" />
+    <ClInclude Include="Practicas\ForceGenerator.h" />
+    <ClInclude Include="Practicas\ParticleForceRegistry.h" />
+    <ClInclude Include="Practicas\Particles\Projectile.h" />
+    <ClInclude Include="Practicas\Particles\Mist.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

@@ -13,7 +13,7 @@ public:
 	FireworksSystem (const Vector3& g = { 0.0f, -10.0f, 0.0f }) : ParticleSystem(g) {
 		srand(time(NULL));
 		
-		Firework* shotF = new Firework(g, 0, 3.0);
+		Firework* shotF = new Firework(g, 0, 0, 3.0);
 
 		
 		GaussianParticleGenerator* sphereGen = new GaussianParticleGenerator(0, 0, 0.1, 0, true, true, true, true);
@@ -36,11 +36,11 @@ public:
 
 
 
-		GaussianParticleGenerator* fireworkShooter = new GaussianParticleGenerator(2.0, 0, 0.1);
+		GaussianParticleGenerator* fireworkShooter = new GaussianParticleGenerator(5.0, 0, 0.1);
 		fireworkShooter->changeModelPart(shotF);
 		fireworkShooter->changeGenerateN(1);
 		generators_.insert({ "fireworkShooter", fireworkShooter });
-		fireworkShooter->setOrigin({ 0.0f, -60.0f, -200.0f });
+		fireworkShooter->setOrigin({ 0.0f, -60.0f, -150.0f });
 
 
 		delete shotF;
@@ -48,4 +48,3 @@ public:
 
 
 };
-

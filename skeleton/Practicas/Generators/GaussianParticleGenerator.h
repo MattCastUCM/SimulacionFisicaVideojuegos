@@ -47,7 +47,6 @@ public:
 		if (changeX_) vel.x = normDistr_(mt_) * velMagn;
 		if (changeY_) vel.y = normDistr_(mt_) * velMagn;
 		if (changeZ_) vel.z = normDistr_(mt_) * velMagn;
-		//p->setInitVel(vel);
 		p->setVel(vel);
 	}
 };

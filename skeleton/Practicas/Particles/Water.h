@@ -14,10 +14,10 @@ public:
 		Particle::physics p;
 		p.damp = 0.998f;
 		p.pos = { 0.0f, 0.0f, 0.0f };
-		p.vel = { 1.0f, 1.0f, 1.0f };
-		p.vel *= 75;
+		p.vel = { 0.7f, 1.0f, 0.7f };
+		p.vel *= 20;
 		p.acc = g;
-		p.mass = 5.4f;
+		p.mass = 1.0f / 1000;
 
 		init(v, p, lifetime);
 	}

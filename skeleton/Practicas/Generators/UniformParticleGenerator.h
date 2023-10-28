@@ -45,7 +45,6 @@ public:
 		if (changeX_) vel.x = unifDistr_(mt_) * velMagn;
 		if (changeY_) vel.y = unifDistr_(mt_) * velMagn;
 		if (changeZ_) vel.z = unifDistr_(mt_) * velMagn;
-		//p->setInitVel(vel);
 		p->setVel(vel);
 	}
 };

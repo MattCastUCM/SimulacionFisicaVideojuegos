@@ -276,6 +276,7 @@
     <ClInclude Include="Practicas\ParticleGenerator.h" />
     <ClInclude Include="Practicas\ParticleSystem.h" />
     <ClInclude Include="Practicas\Particles\Firework.h" />
+    <ClInclude Include="Practicas\Particles\Mist.h" />
     <ClInclude Include="Practicas\Particles\Projectile.h" />
     <ClInclude Include="Practicas\Particles\Water.h" />
     <ClInclude Include="Practicas\Scenes\SceneP1.h" />

@@ -24,20 +24,19 @@ public:
 		p->setInitPos(origin_);
 		p->setPos(origin_);
 
-		auto velMagn = p->getInitVel().magnitude();
-		float velX = p->getInitVel().x,
-			  velY = p->getInitVel().y,
-			  velZ = p->getInitVel().z;
+		auto velMagn = vel_.magnitude();
+		auto vel = vel_;
 		
 		float a = 2 * physx::PxPi * i / generateN_;
 		float sin = physx::PxSin(a);
-		velX = 16 *  sin * sin * sin;;
-		velY = 13 * physx::PxCos(a)
+		vel.x = 16 *  sin * sin * sin;;
+		vel.y = 13 * physx::PxCos(a)
 				- 5 * physx::PxCos(2 * a)
 				- 2 * physx::PxCos(3 * a)
 				- physx::PxCos(4 * a);
+		vel.z = 0.0f;
 
-		p->setVel({ velX, velY, 0.0f });
+		p->setVel(vel);
 	}
 
 

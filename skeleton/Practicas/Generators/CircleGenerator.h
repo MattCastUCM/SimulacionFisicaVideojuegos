@@ -26,17 +26,14 @@ public:
 		p->setInitPos(origin_);
 		p->setPos(origin_);
 
-		auto velMagn = p->getInitVel().magnitude();
-		float velX = p->getInitVel().x,
-			  velY = p->getInitVel().y,
-			  velZ = p->getInitVel().z;
+		auto velMagn = vel_.magnitude();
 		
+		auto vel = vel_;
 		float a = (360 / generateN_) * i;
-		velX = physx::PxCos(rads(a)) * velMagn + velMagn * rnd;
-		velZ = physx::PxSin(rads(a)) * velMagn + velMagn * rnd;
-		velY = 2 * velMagn + velMagn * rnd;
-
-		p->setVel({ velX, velY, velZ });
+		vel.x = physx::PxCos(rads(a)) * velMagn + velMagn * rnd;
+		vel.y *= velMagn * abs(rnd) * 5;
+		vel.z = physx::PxSin(rads(a)) * velMagn + velMagn * rnd;
+		p->setVel(vel);
 	}
 
 
