@@ -2,7 +2,7 @@
 
 #include "../ParticleSystem.h"
 #include "../Particles/Water.h"
-#include "../Generators/GaussianParticleGenerator.h"
+#include "../ParticleGenerators/GaussianParticleGenerator.h"
 
 class WaterSystem : public ParticleSystem {
 public:

@@ -2,7 +2,7 @@
 
 #include "../ParticleSystem.h"
 #include "../Particles/Mist.h"
-#include "../Generators/MistGenerator.h"
+#include "../ParticleGenerators/MistGenerator.h"
 
 class MistSystem : public ParticleSystem {
 public:

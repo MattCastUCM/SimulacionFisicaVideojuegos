@@ -19,6 +19,7 @@
     <ClCompile Include="Practicas\Scenes\SceneP2.cpp">
       <Filter>Practicas\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Practicas\Scenes\SceneP3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -73,6 +74,10 @@
     <ClInclude Include="Practicas\ParticleForceRegistry.h" />
     <ClInclude Include="Practicas\Particles\Projectile.h" />
     <ClInclude Include="Practicas\Particles\Mist.h" />
+    <ClInclude Include="Practicas\Scenes\SceneP3.h" />
+    <ClInclude Include="Practicas\ForceGenerators\GravityForceGenerator.h" />
+    <ClInclude Include="Practicas\Systems\GravitySystem.h" />
+    <ClInclude Include="Practicas\ForceSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

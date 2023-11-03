@@ -11,6 +11,7 @@ protected:
 
 
 public:
+	ForceGenerator() { } 
 	virtual ~ForceGenerator() { }
 	
 	inline bool updateTime(double t) {

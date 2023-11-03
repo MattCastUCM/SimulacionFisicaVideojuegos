@@ -14,17 +14,16 @@ protected:
 
 	inline void refresh() {
 		for (auto p : particles_) {
-			if (!p->isAlive()) p->onDeath();
-
 			particles_.erase(
 				remove_if(particles_.begin(), particles_.end(), [](Particle* p) {
 					if (p->isAlive() /* || p->outOfBounds */) return false;
 					else {
+						p->onDeath();
 						delete p;
 						return true;
 					}
-					}), particles_.end()
-						);
+				}), particles_.end()
+			);
 		}
 	}
 
@@ -38,8 +37,8 @@ public:
 	
 	inline virtual void update(double t) {
 		// Recorre la lista de partículas para llamar a su update. 
-	// El update de cada partícula actualiza el tiempo que 
-	// sigue viva y actualiza si ha muerto o no
+		// El update de cada partícula actualiza el tiempo que 
+		// sigue viva y actualiza si ha muerto o no
 		for (auto p : particles_) {
 			p->update(t);
 		}

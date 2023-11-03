@@ -258,6 +258,7 @@
     <ClCompile Include="Practicas\Particle.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP1.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP2.cpp" />
+    <ClCompile Include="Practicas\Scenes\SceneP3.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
@@ -266,6 +267,8 @@
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Practicas\ForceGenerator.h" />
+    <ClInclude Include="Practicas\ForceGenerators\GravityForceGenerator.h" />
+    <ClInclude Include="Practicas\ForceSystem.h" />
     <ClInclude Include="Practicas\Generators\CircleGenerator.h" />
     <ClInclude Include="Practicas\Generators\GaussianParticleGenerator.h" />
     <ClInclude Include="Practicas\Generators\HeartGenerator.h" />
@@ -281,7 +284,9 @@
     <ClInclude Include="Practicas\Particles\Water.h" />
     <ClInclude Include="Practicas\Scenes\SceneP1.h" />
     <ClInclude Include="Practicas\Scenes\SceneP2.h" />
+    <ClInclude Include="Practicas\Scenes\SceneP3.h" />
     <ClInclude Include="Practicas\Systems\FireworksSystem.h" />
+    <ClInclude Include="Practicas\Systems\GravitySystem.h" />
     <ClInclude Include="Practicas\Systems\MistSystem.h" />
     <ClInclude Include="Practicas\Systems\WaterSystem.h" />
     <ClInclude Include="RenderUtils.hpp" />

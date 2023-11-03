@@ -1,6 +1,25 @@
 #include "Particle.h"
 
 #include<iostream>
+Particle::Particle(bool default) {
+	if (default) {
+		Particle::visual v;
+		v.size = 1.0f;
+		v.geometry = &physx::PxSphereGeometry(v.size);
+		v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		
+
+		Particle::physics p;
+		p.damp = 0.998f;
+		p.pos = { 0, 50, -100 };
+		p.vel = { 0, 0, 0 };
+		p.acc = { 0, 0, 0 };
+		p.mass = 1 / 5.4f;
+
+		init(v, p, 10);
+	}
+}
+
 Particle::Particle(visual vis, physics phys, float maxLifetime) {
 	init(vis, phys, maxLifetime);
 	
@@ -25,6 +44,8 @@ void Particle::init(visual vis, physics phys, float maxLifetime) {
 	vel_ = phys_.vel;
 	acc_ = phys_.acc;
 	mass_ = phys_.mass;
+
+	accumForce_ = { 0, 0, 0 };
 }
 
 
@@ -32,15 +53,15 @@ void Particle::update(double t) {
 	// Si está viva, se actualiza
 	if (alive_) {
 		// Si se ha pasado su tiempo de vida, se pone alive a false
-		if (lifetime_ > maxLifetime_) alive_ = false;
+		if (lifetime_ > maxLifetime_ && maxLifetime_ > 0) alive_ = false;
 
 		// Si no, se actualiza su tiempo de vida y su pos, vel y acc
 		else {
 			lifetime_ += t;
 
-			// Fuerzas (acc = F / m)
-			/*Vector3 resultaccel = accumForce_ * (1 / mass_);
-			vel_ += resultaccel * t;*/
+			// Fuerzas (acc = F / m), mass_ guarda la masa inversa
+			Vector3 resultaccel = accumForce_ * mass_;
+			vel_ += resultaccel * t;
 
 			// MRU	(no haría falta normalizar la velocidad)
 			//tr_->p += SPD_ * vel_/*.getNormalized()*/ * t;
@@ -51,7 +72,7 @@ void Particle::update(double t) {
 			vel_ *= pow(phys_.damp, t);		// Actualizar vel según damp
 			tr_->p += vel_ * t;				// Actualizar pos
 
-
+			
 			// Quita la fuerza acumulada
 			clearForce();
 		}

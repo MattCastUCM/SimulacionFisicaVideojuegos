@@ -19,7 +19,7 @@ public:
 			vel,		// Dirección/velocidad (vector)
 			acc;		// Aceleración (vector) en m/s^2
 		float damp,		// Rozamiento (magnitud)
-			  mass;		// Masa (magnitud) en kg
+			  mass;		// Masa (magnitud) en kg. Se utiliza para guardar el inverso de la masa al aplicar fuerzas
 	};
 
 
@@ -43,7 +43,7 @@ protected:
 	void init(visual vis, physics phys, float maxLifetime = 1.0f);
 	
 public:
-	Particle() { };
+	Particle(bool default = false);
 	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
 	virtual ~Particle();
 	virtual void onDeath() { };
@@ -53,7 +53,7 @@ public:
 	void clearForce();
 	void addForce(const Vector3& f);
 
-
+	virtual Particle* clone();
 
 
 	// Obtener o cambiar posición (inicial o actual)
@@ -81,7 +81,10 @@ public:
 
 	inline bool isAlive() { return alive_; }
 	inline void changeLifetime(float t) { maxLifetime_ = t; }
-	
-	virtual Particle* clone();
+
+
+	// ASUMIENDO QUE LO QUE SE GUARDA COMO MASA ES SU INVERSO
+	inline float getMass() { return 1 /phys_.mass; }
+	inline float getInvMass() { return phys_.mass; }
 };
 
