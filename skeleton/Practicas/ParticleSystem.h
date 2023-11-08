@@ -2,6 +2,7 @@
 
 #include "Particle.h"
 #include "ParticleGenerator.h"
+#include "ParticleForceRegistry.h"
 
 #include <unordered_map>
 
@@ -9,33 +10,49 @@ class ParticleSystem {
 protected:
 	Vector3 gravity_;
 
-	std::vector<Particle*> particles_;
+	std::list<Particle*> particles_;
 	std::unordered_map<std::string, ParticleGenerator*> generators_;
 
-	inline void refresh() {
-		for (auto p : particles_) {
-			particles_.erase(
-				remove_if(particles_.begin(), particles_.end(), [](Particle* p) {
-					if (p->isAlive() /* || p->outOfBounds */) return false;
-					else {
-						p->onDeath();
-						delete p;
-						return true;
-					}
-				}), particles_.end()
-			);
+	ParticleForceRegistry* partForceReg_;
+
+
+	virtual inline void refresh() {
+		for (auto it = particles_.begin(); it != particles_.end(); ) {
+			if (!(*it)->isAlive()) {
+				(*it)->onDeath();
+				partForceReg_->deleteParticleRegistry(*it);
+				delete* it;
+				it = particles_.erase(it);
+			}
+			else ++it;
 		}
 	}
 
+	virtual inline void generateParticles() {
+		// Recorrer generadores (generar partículas nuevas y añadirlas a la lista)
+		for (auto pg : generators_) {
+			// El update se encarga de generar las partículas
+			// según el tiempo de generación de cada generador
+			auto parts = pg.second->update(t);
+			for (auto p : parts)
+				particles_.push_back(p);
+		}
+	}
+
+
 public:
 	// Se usa -10.0f como gravedad por defecto
-	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g) { };
+	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g), partForceReg_(nullptr) { };
+	
 	virtual ~ParticleSystem() {
 		for (auto p : particles_) delete p;
 		for (auto g : generators_) delete g.second;
+		if(partForceReg_ != nullptr) delete partForceReg_;
 	};
 	
 	inline virtual void update(double t) {
+		if(partForceReg_ != nullptr) partForceReg_->updateForces(t);
+		
 		// Recorre la lista de partículas para llamar a su update. 
 		// El update de cada partícula actualiza el tiempo que 
 		// sigue viva y actualiza si ha muerto o no
@@ -45,14 +62,7 @@ public:
 		// Elimina las partículas muertas
 		refresh();
 
-		// Recorrer generadores (generar partículas nuevas y añadirlas a la lista)
-		for (auto pg : generators_) {
-			// El update se encarga de generar las partículas
-			// según el tiempo de generación de cada generador
-			auto parts = pg.second->update(t);
-			for (auto p : parts)
-				particles_.push_back(p);
-		}
+		generateParticles();
 	}
 
 

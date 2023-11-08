@@ -18,17 +18,12 @@ void SceneP1::update(double t) {
 		p->update(t);
 
 	// Refresh de las partículas
-	for (auto p : particles_) {
-		particles_.erase(
-			remove_if(particles_.begin(), particles_.end(), [](Particle* p) {
-				if (p->isAlive()) return false;
-				else {
-
-					delete p;
-					return true;
-				}
-			}), particles_.end()
-		);
+	for (auto it = particles_.begin(); it != particles_.end(); ) {
+		if (!(*it)->isAlive()) {
+			delete* it;
+			it = particles_.erase(it);
+		}
+		else ++it;
 	}
 }
 

@@ -77,7 +77,7 @@
     <ClInclude Include="Practicas\Scenes\SceneP3.h" />
     <ClInclude Include="Practicas\ForceGenerators\GravityForceGenerator.h" />
     <ClInclude Include="Practicas\Systems\GravitySystem.h" />
-    <ClInclude Include="Practicas\ForceSystem.h" />
+    <ClInclude Include="Practicas\ForceGenerators\WindForceGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Particle.h"
+#include <list>
 
 class SceneP1 {
 private:
@@ -8,7 +9,7 @@ private:
 	const physx::PxTransform* FLOOR_TR_ = new physx::PxTransform(0, -10, 0);
 	RenderItem* floor_;
 
-	std::vector<Particle*> particles_;
+	std::list<Particle*> particles_;
 	Camera* cam;
 
 public:

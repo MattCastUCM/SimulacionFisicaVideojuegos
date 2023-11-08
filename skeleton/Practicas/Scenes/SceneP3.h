@@ -1,14 +1,14 @@
 #pragma once
 
 
-class ForceSystem;
+class ParticleSystem;
 
 #include "../ForceGenerator.h"
 
 class SceneP3 {
 private:
 	RenderItem* floor_;
-	ForceSystem* gravity_;
+	ParticleSystem* gravity_;
 
 public:
 	SceneP3();
