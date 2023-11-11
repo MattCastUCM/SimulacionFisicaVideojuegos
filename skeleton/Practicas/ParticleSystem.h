@@ -2,7 +2,6 @@
 
 #include "Particle.h"
 #include "ParticleGenerator.h"
-#include "ParticleForceRegistry.h"
 
 #include <unordered_map>
 class ParticleSystem {
@@ -12,14 +11,10 @@ protected:
 	std::list<Particle*> particles_;
 	std::unordered_map<std::string, ParticleGenerator*> generators_;
 
-	ParticleForceRegistry* partForceReg_;
-
-
 	virtual inline void refresh() {
 		for (auto it = particles_.begin(); it != particles_.end(); ) {
 			if (!(*it)->isAlive()) {
 				(*it)->onDeath();
-				partForceReg_->deleteParticleRegistry(*it);
 
 				delete* it;
 				it = particles_.erase(it);
@@ -42,19 +37,14 @@ protected:
 
 public:
 	// Se usa -10.0f como gravedad por defecto
-	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g), partForceReg_(nullptr) { 
-		int a = 0;
-	};
+	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g) { };
 	
 	virtual ~ParticleSystem() {
 		for (auto p : particles_) delete p;
 		for (auto g : generators_) delete g.second;
-		if(partForceReg_ != nullptr) delete partForceReg_;
 	};
 	
 	inline virtual void update(double t) {
-		if(partForceReg_ != nullptr) partForceReg_->updateForces(t);
-		
 		// Recorre la lista de partículas para llamar a su update. 
 		// El update de cada partícula actualiza el tiempo que 
 		// sigue viva y actualiza si ha muerto o no

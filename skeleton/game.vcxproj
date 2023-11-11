@@ -267,7 +267,9 @@
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Practicas\ForceGenerator.h" />
+    <ClInclude Include="Practicas\ForceGenerators\ExplosionForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\GravityForceGenerator.h" />
+    <ClInclude Include="Practicas\ForceGenerators\TornadoForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\WindForceGenerator.h" />
     <ClInclude Include="Practicas\Generators\CircleGenerator.h" />
     <ClInclude Include="Practicas\Generators\GaussianParticleGenerator.h" />
@@ -276,6 +278,7 @@
     <ClInclude Include="Practicas\Generators\UniformParticleGenerator.h" />
     <ClInclude Include="Practicas\Particle.h" />
     <ClInclude Include="Practicas\ParticleForceRegistry.h" />
+    <ClInclude Include="Practicas\ParticleForceSystem.h" />
     <ClInclude Include="Practicas\ParticleGenerator.h" />
     <ClInclude Include="Practicas\ParticleSystem.h" />
     <ClInclude Include="Practicas\Particles\Firework.h" />
@@ -285,6 +288,7 @@
     <ClInclude Include="Practicas\Scenes\SceneP1.h" />
     <ClInclude Include="Practicas\Scenes\SceneP2.h" />
     <ClInclude Include="Practicas\Scenes\SceneP3.h" />
+    <ClInclude Include="Practicas\Systems\ExplosionSystem.h" />
     <ClInclude Include="Practicas\Systems\FireworksSystem.h" />
     <ClInclude Include="Practicas\Systems\GravitySystem.h" />
     <ClInclude Include="Practicas\Systems\MistSystem.h" />

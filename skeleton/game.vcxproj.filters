@@ -79,6 +79,10 @@
     <ClInclude Include="Practicas\Systems\GravitySystem.h" />
     <ClInclude Include="Practicas\ForceGenerators\WindForceGenerator.h" />
     <ClInclude Include="Practicas\Systems\WindSystem.h" />
+    <ClInclude Include="Practicas\ForceGenerators\TornadoForceGenerator.h" />
+    <ClInclude Include="Practicas\Systems\ExplosionSystem.h" />
+    <ClInclude Include="Practicas\ParticleForceSystem.h" />
+    <ClInclude Include="Practicas\ForceGenerators\ExplosionForceGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

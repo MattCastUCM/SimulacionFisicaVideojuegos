@@ -84,6 +84,7 @@ public:
 
 
 	// ASUMIENDO QUE LO QUE SE GUARDA COMO MASA ES SU INVERSO
+	inline void setInvMass(float m) { phys_.mass = m; }
 	inline float getMass() { return 1 /phys_.mass; }
 	inline float getInvMass() { return phys_.mass; }
 };

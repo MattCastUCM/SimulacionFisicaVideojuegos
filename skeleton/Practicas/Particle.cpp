@@ -10,7 +10,7 @@ Particle::Particle(bool default, float maxLifetime) {
 
 		Particle::physics p;
 		p.damp = 0.998f;
-		p.pos = { 0, 50, -100 };
+		p.pos = { 0, 0, 0 };
 		p.vel = { 0, 0, 0 };
 		p.acc = { 0, 0, 0 };
 		p.mass = 1 / 5.4f;
