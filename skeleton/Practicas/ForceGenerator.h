@@ -11,7 +11,7 @@ protected:
 
 
 public:
-	ForceGenerator() { } 
+	ForceGenerator(std::string name = "") : name_(name) { }
 	virtual ~ForceGenerator() { }
 	
 	inline bool updateTime(double t) {
@@ -19,4 +19,7 @@ public:
 		return t_ < duration_ || duration_ < 0.0; // Devuelve true si ya era cero o si es positivo
 	}
 	virtual void update(Particle* p, double t) { };
+
+	inline void setName(std::string name) { name_ = name; }
+	inline std::string getTame() { return name_; }
 };

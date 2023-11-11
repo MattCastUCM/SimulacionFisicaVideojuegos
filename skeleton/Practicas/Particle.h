@@ -43,7 +43,7 @@ protected:
 	void init(visual vis, physics phys, float maxLifetime = 1.0f);
 	
 public:
-	Particle(bool default = false);
+	Particle(bool default = false, float maxLifetime = 1.0f);
 	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
 	virtual ~Particle();
 	virtual void onDeath() { };

@@ -5,7 +5,6 @@
 #include "ParticleForceRegistry.h"
 
 #include <unordered_map>
-
 class ParticleSystem {
 protected:
 	Vector3 gravity_;
@@ -21,6 +20,7 @@ protected:
 			if (!(*it)->isAlive()) {
 				(*it)->onDeath();
 				partForceReg_->deleteParticleRegistry(*it);
+
 				delete* it;
 				it = particles_.erase(it);
 			}
@@ -28,7 +28,7 @@ protected:
 		}
 	}
 
-	virtual inline void generateParticles() {
+	virtual inline void generateParticles(double t) {
 		// Recorrer generadores (generar partículas nuevas y añadirlas a la lista)
 		for (auto pg : generators_) {
 			// El update se encarga de generar las partículas
@@ -42,7 +42,9 @@ protected:
 
 public:
 	// Se usa -10.0f como gravedad por defecto
-	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g), partForceReg_(nullptr) { };
+	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g), partForceReg_(nullptr) { 
+		int a = 0;
+	};
 	
 	virtual ~ParticleSystem() {
 		for (auto p : particles_) delete p;
@@ -62,7 +64,7 @@ public:
 		// Elimina las partículas muertas
 		refresh();
 
-		generateParticles();
+		generateParticles(t);
 	}
 
 

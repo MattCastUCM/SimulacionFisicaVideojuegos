@@ -289,6 +289,7 @@
     <ClInclude Include="Practicas\Systems\GravitySystem.h" />
     <ClInclude Include="Practicas\Systems\MistSystem.h" />
     <ClInclude Include="Practicas\Systems\WaterSystem.h" />
+    <ClInclude Include="Practicas\Systems\WindSystem.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />

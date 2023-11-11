@@ -9,6 +9,7 @@ class SceneP3 {
 private:
 	RenderItem* floor_;
 	ParticleSystem* gravity_;
+	ParticleSystem* wind_;
 
 public:
 	SceneP3();

@@ -14,9 +14,7 @@ public:
 		p->setPos(p->getPos() + Vector3(10, 0, 0));
 		
 		GravityForceGenerator* gr = new GravityForceGenerator({ 0,-9.8f, 0 });
-		partForceReg_->addRegistry(gr, p);
-		partForceReg_->addParticle(gr, p);
-
+		partForceReg_->addForce(gr, p);
 		
 		p = new Particle(true);
 		particles_.push_back(p);
@@ -24,11 +22,8 @@ public:
 		p->setPos(p->getPos() + Vector3(-10, 0, 0));
 
 		gr = new GravityForceGenerator({ 0, -20.0f, 0 });
-		partForceReg_->addRegistry(gr, p);
-		partForceReg_->addParticle(gr, p);
+		partForceReg_->addForce(gr, p);
 	}
-
-	~GravitySystem() { }
 
 };
 

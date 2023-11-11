@@ -1,11 +1,10 @@
 #include "Particle.h"
 
-#include<iostream>
-Particle::Particle(bool default) {
+Particle::Particle(bool default, float maxLifetime) {
 	if (default) {
 		Particle::visual v;
 		v.size = 1.0f;
-		v.geometry = &physx::PxSphereGeometry(v.size);
+		v.geometry = new physx::PxSphereGeometry(v.size);
 		v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		
 
@@ -16,7 +15,7 @@ Particle::Particle(bool default) {
 		p.acc = { 0, 0, 0 };
 		p.mass = 1 / 5.4f;
 
-		init(v, p, 10);
+		init(v, p, maxLifetime);
 	}
 }
 
@@ -47,7 +46,6 @@ void Particle::init(visual vis, physics phys, float maxLifetime) {
 
 	accumForce_ = { 0, 0, 0 };
 }
-
 
 void Particle::update(double t) {
 	// Si está viva, se actualiza
