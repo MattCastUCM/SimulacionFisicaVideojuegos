@@ -74,5 +74,6 @@ public:
 		active_ = active;
 	}
 
+	virtual inline void keyPress(unsigned char key) { };
 };
 

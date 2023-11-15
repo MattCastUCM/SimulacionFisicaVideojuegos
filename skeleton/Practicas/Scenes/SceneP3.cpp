@@ -35,6 +35,7 @@ void SceneP3::keyPress(unsigned char key) {
 			gravity_->setActive(grActive_);
 			break;
 		case 'v': 
+			wind_->keyPress(key); 
 			wndActive_ = !wndActive_; 
 			wind_->setActive(wndActive_);
 			break;
@@ -43,6 +44,12 @@ void SceneP3::keyPress(unsigned char key) {
 			expl_->setActive(explActive_);
 			break;
 
+		case 'o':
+		case 'p':
+		case 'k':
+		case 'l':
+			wind_->keyPress(key);
+			break;
 		default: break;
 	}
 }

@@ -15,6 +15,9 @@ public:
 	inline void setK2(const float& k) { k2_ = k; }
 	inline float getK2() const { return k2_; }
 
+	inline void setVel(const Vector3& vel) { windVel_ = vel; }
+	inline Vector3 getVel() { return windVel_; }
+
 	inline virtual void update(Particle* p, double t) { 
 		if (fabs(p->getInvMass()) < 1e-10) return;
 		else {
