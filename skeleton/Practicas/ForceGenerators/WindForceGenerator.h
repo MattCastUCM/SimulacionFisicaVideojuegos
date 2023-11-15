@@ -15,7 +15,7 @@ public:
 	inline void setK2(const float& k) { k2_ = k; }
 	inline float getK2() const { return k2_; }
 
-	virtual void update(Particle* p, double t) { 
+	inline virtual void update(Particle* p, double t) { 
 		if (fabs(p->getInvMass()) < 1e-10) return;
 		else {
 			auto pos = p->getPos();
@@ -23,13 +23,15 @@ public:
 				&& pos.y >= minPos_.y && pos.y <= maxPos_.y
 				&& pos.z >= minPos_.z && pos.z <= maxPos_.z)
 			{
-				Vector3 f;
 				auto partVel = p->getVel();
 				auto windPartDiff = windVel_ - partVel;
-				f = k1_ * windPartDiff + k2_ * windPartDiff.magnitude() * windPartDiff;
+				Vector3 f = k1_ * windPartDiff + k2_ * windPartDiff.magnitude() * windPartDiff;
 
 				p->addForce(f);
 			}
 		}
 	};
+
+
+
 };

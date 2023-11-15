@@ -7,9 +7,12 @@
 class ParticleSystem {
 protected:
 	Vector3 gravity_;
+	bool active_;
 
 	std::list<Particle*> particles_;
 	std::unordered_map<std::string, ParticleGenerator*> generators_;
+
+
 
 	virtual inline void refresh() {
 		for (auto it = particles_.begin(); it != particles_.end(); ) {
@@ -37,7 +40,7 @@ protected:
 
 public:
 	// Se usa -10.0f como gravedad por defecto
-	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g) { };
+	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g), active_(true) { };
 	
 	virtual ~ParticleSystem() {
 		for (auto p : particles_) delete p;
@@ -45,16 +48,19 @@ public:
 	};
 	
 	inline virtual void update(double t) {
-		// Recorre la lista de partículas para llamar a su update. 
-		// El update de cada partícula actualiza el tiempo que 
-		// sigue viva y actualiza si ha muerto o no
-		for (auto p : particles_) {
-			p->update(t);
-		}
-		// Elimina las partículas muertas
-		refresh();
+		if (active_) {
+			// Recorre la lista de partículas para llamar a su update. 
+			// El update de cada partícula actualiza el tiempo que 
+			// sigue viva y actualiza si ha muerto o no
+			for (auto p : particles_) {
+				p->update(t);
+			}
+			// Elimina las partículas muertas
+			refresh();
 
-		generateParticles(t);
+			generateParticles(t);
+		}
+		
 	}
 
 
@@ -63,6 +69,10 @@ public:
 		else return nullptr;
 	}
 
+
+	virtual inline void setActive(bool active) {
+		active_ = active;
+	}
 
 };
 

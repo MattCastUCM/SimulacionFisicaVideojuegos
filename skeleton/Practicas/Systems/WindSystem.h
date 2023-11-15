@@ -16,7 +16,7 @@ public:
 
 		/* Viento
 		Particle* p = new Particle(true, 4);
-		wind_ = new WindForceGenerator({ 100,0,0 }, 1.0f, 0.0); //{ -100, 0, -200 }, { -20, 50, 100 }
+		wind_ = new WindForceGenerator({ 100,0,0 }, 0.5f, 0.0); //{ -100, 0, -200 }, { -20, 50, 100 }
 
 		GaussianParticleGenerator* pg = new GaussianParticleGenerator(0.1, 0, 0.4, 10, false, true, true, true);
 		pg->changeModelPart(p);
@@ -25,9 +25,9 @@ public:
 
 		//* Tornado
 		Particle* p = new Particle(true, 10);
-		wind_ = new TornadoForceGenerator({ 0, 0, -100 }, { 0.1, 0, 0 }, 1.0f, 0.0f);
+		wind_ = new TornadoForceGenerator({ 0, 0, -100 }, { 0.1, 0, 0 }, 10, 0.5f);
 
-		GaussianParticleGenerator* pg = new GaussianParticleGenerator(0.1, 0, 1, 10, false, true, true, true);
+		GaussianParticleGenerator* pg = new GaussianParticleGenerator(0.1, 0, 0.8, 5, false, true, true, true);
 		pg->changeModelPart(p);
 		pg->changeGenerateN(10);
 		// */
@@ -50,6 +50,5 @@ public:
 			}
 		}
 	}
-
 };
 

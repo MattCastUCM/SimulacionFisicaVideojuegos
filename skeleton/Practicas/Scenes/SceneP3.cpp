@@ -9,6 +9,10 @@ SceneP3::SceneP3() : gravity_(nullptr), wind_(nullptr), expl_(nullptr), grActive
 	gravity_ = new GravitySystem();
 	wind_ = new WindSystem();
 	expl_ = new ExplosionSystem();
+
+	gravity_->setActive(false);
+	wind_->setActive(false);
+	expl_->setActive(false);
 }
 
 SceneP3::~SceneP3() {
@@ -19,16 +23,25 @@ SceneP3::~SceneP3() {
 }
 
 void SceneP3::update(double t) {
-	if (grActive_) gravity_->update(t);
-	if (wndActive_) wind_->update(t);
-	if (explActive_) expl_->update(t);
+	gravity_->update(t);
+	wind_->update(t);
+	expl_->update(t);
 }
 
 void SceneP3::keyPress(unsigned char key) {
 	switch (tolower(key)) {
-		case 'g': grActive_ = !grActive_; break;
-		case 'v': wndActive_ = !wndActive_; break;
-		case 'e': explActive_ = !explActive_; break;
+		case 'g': 
+			grActive_ = !grActive_; 
+			gravity_->setActive(grActive_);
+			break;
+		case 'v': 
+			wndActive_ = !wndActive_; 
+			wind_->setActive(wndActive_);
+			break;
+		case 'e': 
+			explActive_ = !explActive_; 
+			expl_->setActive(explActive_);
+			break;
 
 		default: break;
 	}

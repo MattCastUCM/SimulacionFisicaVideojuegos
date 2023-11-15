@@ -35,6 +35,16 @@ public:
 		ParticleSystem::update(t);
 	}
 
+	virtual inline void setActive(bool active) {
+		ParticleSystem::setActive(active);
 
+		if (!active_) {
+			for (auto p : particles_) {
+				partForceReg_->deleteParticleRegistry(p);
+				delete p;
+			}
+			particles_.clear();
+		}
+	}
 };
 
