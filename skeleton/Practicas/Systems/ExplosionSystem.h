@@ -20,6 +20,7 @@ public:
 		p->setVel({ 1,1,1 });
 		p->setInitVel({ 1,1,1 });
 		expl_ = new ExplosionForceGenerator(10000, 1, 0.1, { 0, 0, -100 });
+		forces_.push_back(expl_);
 
 		gen_ = new GaussianParticleGenerator(0.1, 0, 1, 1, false, true, true, true);
 		gen_->changeModelPart(p);
@@ -43,6 +44,7 @@ public:
 		ParticleForceSystem::setActive(active);
 
 		if (active) {
+			expl_->resetTime();
 			// Genera las N partículas solo al activar el generador, no hace 
 			// falta ir generando más conforme vaya pasando el tiempo.
 			// Luego las añade a la lista de partículas y al registro

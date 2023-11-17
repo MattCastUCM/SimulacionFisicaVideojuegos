@@ -20,6 +20,7 @@
       <Filter>Practicas\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Practicas\Scenes\SceneP3.cpp" />
+    <ClCompile Include="Practicas\Scenes\SceneP4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -83,6 +84,9 @@
     <ClInclude Include="Practicas\Systems\ExplosionSystem.h" />
     <ClInclude Include="Practicas\ParticleForceSystem.h" />
     <ClInclude Include="Practicas\ForceGenerators\ExplosionForceGenerator.h" />
+    <ClInclude Include="Practicas\Scenes\SceneP4.h" />
+    <ClInclude Include="Practicas\ForceGenerators\SpringForceGenerator.h" />
+    <ClInclude Include="Practicas\Systems\SpringSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

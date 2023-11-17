@@ -1,11 +1,11 @@
 #include "SceneP2.h"
 
+#include "../ParticleSystem.h"
 #include "../Systems/WaterSystem.h"
 #include "../Systems/FireworksSystem.h"
 #include "../Systems/MistSystem.h"
 
 SceneP2::SceneP2() {
-	//floor_ = new RenderItem(CreateShape(physx::PxBoxGeometry(400, 1, 400)), FLOOR_TR_, FLOOR_COLOR_);
 	water_ = new WaterSystem();
 	
 	fireworks_ = new FireworksSystem();
@@ -16,7 +16,6 @@ SceneP2::SceneP2() {
 }
 
 SceneP2::~SceneP2() {
-	//DeregisterRenderItem(floor_);
 	delete water_;
 	delete fireworks_;
 	delete mist_;

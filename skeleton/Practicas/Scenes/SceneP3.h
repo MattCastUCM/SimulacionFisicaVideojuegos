@@ -1,13 +1,10 @@
 #pragma once
 
-
-class ParticleSystem;
-
 #include "../ForceGenerator.h"
+class ParticleSystem;
 
 class SceneP3 {
 private:
-	RenderItem* floor_;
 	ParticleSystem* gravity_, * wind_, *expl_;
 	bool grActive_, wndActive_, explActive_;
 

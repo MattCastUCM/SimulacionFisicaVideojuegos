@@ -10,11 +10,8 @@ private:
 	std::unordered_map<Particle*, std::unordered_set<ForceGenerator*>> particles_;		// Cada partícula guarza las fuerzas que la afectan
 
 public:
-	// Se borran solo las fuerzas, ya que el sistema de 
-	// partículas se encarga de borrar las partículas
-	~ParticleForceRegistry() {
-		for (auto f : forces_) delete f.first;
-	}
+	// El sistema de partículas se encarga de borrar las partículas y las fuerzas
+	virtual ~ParticleForceRegistry() { }
 
 	inline void updateForces(double t) {
 		// Para cada fuerza, recorre cada partícula a la que afecta para actualizarla

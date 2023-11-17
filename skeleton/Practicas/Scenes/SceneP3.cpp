@@ -5,7 +5,6 @@
 #include "../Systems/ExplosionSystem.h"
 
 SceneP3::SceneP3() : gravity_(nullptr), wind_(nullptr), expl_(nullptr), grActive_(false), wndActive_(false), explActive_(false) {
-	//floor_ = new RenderItem(CreateShape(physx::PxBoxGeometry(400, 1, 400)), FLOOR_TR_, FLOOR_COLOR_);
 	gravity_ = new GravitySystem();
 	wind_ = new WindSystem();
 	expl_ = new ExplosionSystem();
@@ -16,7 +15,6 @@ SceneP3::SceneP3() : gravity_(nullptr), wind_(nullptr), expl_(nullptr), grActive
 }
 
 SceneP3::~SceneP3() {
-	//DeregisterRenderItem(floor_);
 	delete gravity_;
 	delete wind_;
 	delete expl_;

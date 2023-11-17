@@ -259,6 +259,7 @@
     <ClCompile Include="Practicas\Scenes\SceneP1.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP2.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP3.cpp" />
+    <ClCompile Include="Practicas\Scenes\SceneP4.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
@@ -269,6 +270,7 @@
     <ClInclude Include="Practicas\ForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\ExplosionForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\GravityForceGenerator.h" />
+    <ClInclude Include="Practicas\ForceGenerators\SpringForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\TornadoForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\WindForceGenerator.h" />
     <ClInclude Include="Practicas\Generators\CircleGenerator.h" />
@@ -288,10 +290,12 @@
     <ClInclude Include="Practicas\Scenes\SceneP1.h" />
     <ClInclude Include="Practicas\Scenes\SceneP2.h" />
     <ClInclude Include="Practicas\Scenes\SceneP3.h" />
+    <ClInclude Include="Practicas\Scenes\SceneP4.h" />
     <ClInclude Include="Practicas\Systems\ExplosionSystem.h" />
     <ClInclude Include="Practicas\Systems\FireworksSystem.h" />
     <ClInclude Include="Practicas\Systems\GravitySystem.h" />
     <ClInclude Include="Practicas\Systems\MistSystem.h" />
+    <ClInclude Include="Practicas\Systems\SpringSystem.h" />
     <ClInclude Include="Practicas\Systems\WaterSystem.h" />
     <ClInclude Include="Practicas\Systems\WindSystem.h" />
     <ClInclude Include="RenderUtils.hpp" />

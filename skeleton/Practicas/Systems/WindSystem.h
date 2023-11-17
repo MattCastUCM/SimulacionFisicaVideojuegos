@@ -7,12 +7,18 @@
 
 class WindSystem : public ParticleForceSystem {
 protected:
-	WindForceGenerator* wind_;
-
+	WindForceGenerator* wind_, *tornado_;
+	bool windActive_;
 
 public:
-	WindSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : ParticleForceSystem(g) {
+	WindSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : ParticleForceSystem(g), windActive_(false) {
 		partForceReg_ = new ParticleForceRegistry();
+
+		wind_ = new WindForceGenerator({ 100, 0, 0 }, 0.5f, 0.0, { -100, 0, -200 }, { -20, 50, 100 }); //{ -100, 0, -200 }, { -20, 50, 100 }
+		tornado_ = new TornadoForceGenerator({ 0, 0, -100 }, { 0.1, 0, 0 }, 10, 0.5f);
+		
+		forces_.push_back(wind_);
+		forces_.push_back(tornado_);
 
 		activateWind();
 	}
@@ -44,17 +50,19 @@ public:
 			// según el tiempo de generación de cada generador
 			auto parts = pg.second->update(t);
 			for (auto p : parts) {
+				//p->setInvMass(1/ 5.0f)
 				particles_.push_back(p);
-				partForceReg_->addForce(wind_, p);
+				if(windActive_) partForceReg_->addForce(wind_, p);
+				else partForceReg_->addForce(tornado_, p);
 			}
 		}
 	}
 
 	inline void activateWind() {
+		windActive_ = true;
 		generators_.erase("gen");
 
 		Particle* p = new Particle(true, 4);
-		wind_ = new WindForceGenerator({ 100, 0, 0 }, 0.5f, 0.0); //{ -100, 0, -200 }, { -20, 50, 100 }
 		p->setInitVel({ 5, 10, 0 });
 
 		GaussianParticleGenerator* pg = new GaussianParticleGenerator(0.1, 0, 0.4, 10, false, true, true, true);
@@ -69,14 +77,14 @@ public:
 
 
 	inline void activateTornado() {
+		windActive_ = false;
 		generators_.erase("gen");
 
 		Particle* p = new Particle(true, 10);
-		wind_ = new TornadoForceGenerator({ 0, 0, -100 }, { 0.1, 0, 0 }, 10, 0.5f);
 
 		GaussianParticleGenerator* pg = new GaussianParticleGenerator(0.1, 0, 0.8, 5, false, true, true, true);
 		pg->changeModelPart(p);
-		pg->changeGenerateN(10);
+		pg->changeGenerateN(1);
 		pg->setOrigin({ 0, 0, -100 });
 
 		generators_.insert({ "gen", pg });

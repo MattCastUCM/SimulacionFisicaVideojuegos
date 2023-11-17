@@ -11,7 +11,7 @@ protected:
 
 	std::list<Particle*> particles_;
 	std::unordered_map<std::string, ParticleGenerator*> generators_;
-
+	
 
 
 	virtual inline void refresh() {

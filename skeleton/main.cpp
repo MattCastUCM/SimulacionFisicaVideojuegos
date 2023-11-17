@@ -35,10 +35,12 @@ ContactReportCallback gContactReportCallback;
 #include "Practicas/Scenes/SceneP1.h"
 #include "Practicas/Scenes/SceneP2.h"
 #include "Practicas/Scenes/SceneP3.h"
+#include "Practicas/Scenes/SceneP4.h"
 
 //SceneP1* scMngr = nullptr;
 //SceneP2* scMngr = nullptr;
 SceneP3* scMngr = nullptr;
+//SceneP4* scMngr = nullptr;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -68,6 +70,7 @@ void initPhysics(bool interactive)
 	//scMngr = new SceneP1();
 	//scMngr = new SceneP2();
 	scMngr = new SceneP3();
+	//scMngr = new SceneP4();
 }
 
 
