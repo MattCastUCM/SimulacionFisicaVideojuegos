@@ -18,23 +18,25 @@ public:
 		ParticleForceSystem::setActive(active);
 
 		if(active) {
+			float k = 10, restingLength = 10;
+
 			Particle* p1 = new Particle(true);
 			particles_.push_back(p1);
 			p1->changeLifetime(-1);
-			p1->setPos({ -10, 0, -10 });
+			p1->setPos({ -10, 0, -50 });
 			p1->setInvMass(1 / 200.0f);
 
 			Particle* p2 = new Particle(true);
 			particles_.push_back(p2);
 			p2->changeLifetime(-1);
-			p2->setPos({ 10, 0, -10 });
-			p2->setInvMass(1 / 60.0f);
+			p2->setPos({ 10, 0, -50 });
+			p2->setInvMass(1 / 10.0f);
 
 
-			spr1_ = new SpringForceGenerator(1, 10, p2);
+			spr1_ = new SpringForceGenerator(k, restingLength, p2);
 			forces_.push_back(spr1_);
 			
-			spr2_ = new SpringForceGenerator(1, 10, p1);
+			spr2_ = new SpringForceGenerator(k, restingLength, p1);
 			forces_.push_back(spr2_);
 			
 			partForceReg_->addForce(spr1_, p1);

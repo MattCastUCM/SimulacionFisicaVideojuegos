@@ -16,6 +16,7 @@ public:
 	virtual void update(Particle* p, double t) { 
 		Vector3 posDif = other_->getPos() - p->getPos();
 		float delta = posDif.normalize() - restingLength_;
+		delta -= p->getSize() / 2;		//para que no se pare justo cuando están en la misma posición
 		Vector3 f = posDif * delta * k_;
 
 		p->addForce(f);

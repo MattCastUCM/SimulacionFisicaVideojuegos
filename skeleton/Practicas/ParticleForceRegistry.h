@@ -15,9 +15,10 @@ public:
 
 	inline void updateForces(double t) {
 		// Para cada fuerza, recorre cada partícula a la que afecta para actualizarla
-		for (auto f : forces_)
+		for (auto f : forces_) {
 			for(auto p : f.second)
 				f.first->update(p, t);
+		}
 	}
 
 	// Añade una fuerza sin partículas asignadas

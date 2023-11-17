@@ -14,7 +14,7 @@ public:
 	WindSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : ParticleForceSystem(g), windActive_(false) {
 		partForceReg_ = new ParticleForceRegistry();
 
-		wind_ = new WindForceGenerator({ 100, 0, 0 }, 0.5f, 0.0, { -100, 0, -200 }, { -20, 50, 100 }); //{ -100, 0, -200 }, { -20, 50, 100 }
+		wind_ = new WindForceGenerator({ 100, 0, 0 }, 0.5f, 0.0/*, { -100, 0, -200 }, { -20, 50, 100 }*/);
 		tornado_ = new TornadoForceGenerator({ 0, 0, -100 }, { 0.1, 0, 0 }, 10, 0.5f);
 		
 		forces_.push_back(wind_);
@@ -50,7 +50,7 @@ public:
 			// según el tiempo de generación de cada generador
 			auto parts = pg.second->update(t);
 			for (auto p : parts) {
-				//p->setInvMass(1/ 5.0f)
+				p->setInvMass(1 / 5.0f);
 				particles_.push_back(p);
 				if(windActive_) partForceReg_->addForce(wind_, p);
 				else partForceReg_->addForce(tornado_, p);

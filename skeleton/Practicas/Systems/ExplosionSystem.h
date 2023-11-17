@@ -17,26 +17,14 @@ public:
 		partForceReg_ = new ParticleForceRegistry();
 
 		Particle* p = new Particle(true, 5);
-		p->setVel({ 1,1,1 });
-		p->setInitVel({ 1,1,1 });
-		expl_ = new ExplosionForceGenerator(10000, 1, 0.1, { 0, 0, -100 });
+		expl_ = new ExplosionForceGenerator(10000, 50, 1000, { 0, 0, -100 });
 		forces_.push_back(expl_);
 
 		gen_ = new GaussianParticleGenerator(0.1, 0, 1, 1, false, true, true, true);
 		gen_->changeModelPart(p);
-		gen_->changeGenerateN(200);
+		gen_->changeGenerateN(100);
 		gen_->setOrigin({ 0, 0, -100 });
 
-
-		auto parts = gen_->generateParticles();
-		for (auto part : parts) {
-			particles_.push_back(part);
-			partForceReg_->addForce(expl_, part);
-
-			int rndMass = rand() % 15 + 1;
-			part->setInvMass(1.0f / rndMass);
-		}
-		for (auto part : particles_) part->setVel({ 0,0,0 });
 		delete p;
 	}
 
@@ -58,7 +46,6 @@ public:
 				int rndMass = rand() % 15 + 1;
 				part->setInvMass(1.0f / rndMass);
 			}
-			for (auto part : particles_) part->setVel({ 0,0,0 });
 			
 		}
 	} 

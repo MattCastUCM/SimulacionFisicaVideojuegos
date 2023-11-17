@@ -6,7 +6,6 @@ Particle::Particle(bool default, float maxLifetime) {
 		v.size = 1.0f;
 		v.geometry = new physx::PxSphereGeometry(v.size);
 		v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		
 
 		Particle::physics p;
 		p.damp = 0.998f;
@@ -19,10 +18,7 @@ Particle::Particle(bool default, float maxLifetime) {
 	}
 }
 
-Particle::Particle(visual vis, physics phys, float maxLifetime) {
-	init(vis, phys, maxLifetime);
-	
-}
+Particle::Particle(visual vis, physics phys, float maxLifetime) { init(vis, phys, maxLifetime); }
 
 Particle::~Particle() {
 	DeregisterRenderItem(renderItem_);
@@ -57,12 +53,12 @@ void Particle::update(double t) {
 		else {
 			lifetime_ += t;
 
+			// MRU	(no haría falta normalizar la velocidad)
+			//tr_->p += SPD_ * vel_/*.getNormalized()*/ * t;
+
 			// Fuerzas (acc = F / m), mass_ guarda la masa inversa
 			Vector3 resultaccel = accumForce_ * mass_;
 			vel_ += resultaccel * t;
-
-			// MRU	(no haría falta normalizar la velocidad)
-			//tr_->p += SPD_ * vel_/*.getNormalized()*/ * t;
 
 			//MRUA	
 			// (v * t + 1/2 acc * t * t) <- NO FUNCIONA porque la velocidad no se actualiza :[
