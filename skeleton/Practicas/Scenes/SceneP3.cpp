@@ -41,13 +41,7 @@ void SceneP3::keyPress(unsigned char key) {
 			explActive_ = !explActive_; 
 			expl_->setActive(explActive_);
 			break;
-
-		case 'o':
-		case 'p':
-		case 'k':
-		case 'l':
-			wind_->keyPress(key);
-			break;
 		default: break;
 	}
+	if(wndActive_) wind_->keyPress(key);
 }

@@ -11,86 +11,14 @@ protected:
 	bool windActive_;
 
 public:
-	WindSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : ParticleForceSystem(g), windActive_(false) {
-		partForceReg_ = new ParticleForceRegistry();
+	WindSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f });
 
-		wind_ = new WindForceGenerator({ 100, 0, 0 }, 0.5f, 0.0/*, { -100, 0, -200 }, { -20, 50, 100 }*/);
-		tornado_ = new TornadoForceGenerator({ 0, 0, -100 }, { 0.1, 0, 0 }, 10, 0.5f);
-		
-		forces_.push_back(wind_);
-		forces_.push_back(tornado_);
+	void keyPress(unsigned char key);
+	void generateParticles(double t) override;
 
-		activateWind();
-	}
-
-	inline void keyPress(unsigned char key) { 
-		switch (tolower(key)) {
-			case 'o':
-				activateTornado();
-				break;
-			case 'p':
-				activateWind();
-				break;
-			case 'k':
-				increaseWindVel({ 0, -10, 0 });
-				break;
-			case 'l':
-				increaseWindVel({ 0, 10, 0 }); 
-				break;
-
-			default: break;
-		}
-	};
-	
-
-	inline void generateParticles(double t) override {
-		// Recorrer generadores (generar partículas nuevas y añadirlas a la lista)
-		for (auto pg : generators_) {
-			// El update se encarga de generar las partículas
-			// según el tiempo de generación de cada generador
-			auto parts = pg.second->update(t);
-			for (auto p : parts) {
-				p->setInvMass(1 / 5.0f);
-				particles_.push_back(p);
-				if(windActive_) partForceReg_->addForce(wind_, p);
-				else partForceReg_->addForce(tornado_, p);
-			}
-		}
-	}
-
-	inline void activateWind() {
-		windActive_ = true;
-		generators_.erase("gen");
-
-		Particle* p = new Particle(true, 4);
-		p->setInitVel({ 5, 10, 0 });
-
-		GaussianParticleGenerator* pg = new GaussianParticleGenerator(0.1, 0, 0.4, 10, false, true, true, true);
-		pg->changeModelPart(p);
-		pg->changeGenerateN(3);
-		pg->setOrigin({ -30, 0, -100 });
-
-		generators_.insert({ "gen", pg });
-
-		delete p;
-	}
-
-
-	inline void activateTornado() {
-		windActive_ = false;
-		generators_.erase("gen");
-
-		Particle* p = new Particle(true, 10);
-
-		GaussianParticleGenerator* pg = new GaussianParticleGenerator(0.1, 0, 0.8, 5, false, true, true, true);
-		pg->changeModelPart(p);
-		pg->changeGenerateN(1);
-		pg->setOrigin({ 0, 0, -100 });
-
-		generators_.insert({ "gen", pg });
-
-		delete p;
-	}
+private:
+	void activateWind();
+	 void activateTornado();
 
 	inline void increaseWindVel(Vector3 vel) {
 		wind_->setVel(wind_->getVel() + vel);

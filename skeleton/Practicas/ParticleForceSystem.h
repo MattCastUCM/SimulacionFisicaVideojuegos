@@ -37,16 +37,36 @@ public:
 		ParticleSystem::update(t);
 	}
 
-	virtual inline void setActive(bool active) {
-		ParticleSystem::setActive(active);
-
-		if (!active_) {
-			for (auto p : particles_) {
-				partForceReg_->deleteParticleRegistry(p);
-				delete p;
-			}
-			particles_.clear();
+	inline void clearParts() {
+		for (auto p : particles_) {
+			partForceReg_->deleteParticleRegistry(p);
+			delete p;
+			p = nullptr;
 		}
+		particles_.clear();
 	}
+	inline void clearForces() {
+		for (auto f : forces_) {
+			partForceReg_->deleteForceRegistry(f);
+			delete f;
+			f = nullptr;
+		}
+		forces_.clear();
+	}
+	inline void clearPartForces() {
+		clearParts();
+		clearForces();
+	}
+
+
+	inline virtual void setActive(bool active) {
+		ParticleSystem::setActive(active);
+		if (!active_) clearParts();
+	}
+
+
+	
+
+
 };
 

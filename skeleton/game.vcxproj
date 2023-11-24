@@ -260,6 +260,8 @@
     <ClCompile Include="Practicas\Scenes\SceneP2.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP3.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP4.cpp" />
+    <ClCompile Include="Practicas\Systems\SpringSystem.cpp" />
+    <ClCompile Include="Practicas\Systems\WindSystem.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />

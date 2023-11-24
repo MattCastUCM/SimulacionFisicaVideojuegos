@@ -62,7 +62,7 @@ void Particle::update(double t) {
 
 			//MRUA	
 			// (v * t + 1/2 acc * t * t) <- NO FUNCIONA porque la velocidad no se actualiza :[
-			vel_ += acc_ * t;					// Actualizar vel según acc
+			//vel_ += acc_ * t;				// Actualizar vel según acc
 			vel_ *= pow(phys_.damp, t);		// Actualizar vel según damp
 			tr_->p += vel_ * t;				// Actualizar pos
 

@@ -64,4 +64,24 @@ public:
 		particles_.erase(p);
 	}
 
+
+	inline void deleteForceRegistry(ForceGenerator* f) {
+		std::vector<Particle*> forceInPart;
+
+		auto force = forces_.find(f);
+		if (force != forces_.end()) {
+			for (auto it = (*force).second.begin(); it != (*force).second.end(); ) {
+				forceInPart.push_back((*it));
+				it = (*force).second.erase(it);
+			}
+		}
+
+		for (auto p : forceInPart) {
+			auto it = particles_.find(p);
+			if (it != particles_.end()) (*it).second.erase(f);
+		}
+
+		forces_.erase(f);
+	}
+
 };

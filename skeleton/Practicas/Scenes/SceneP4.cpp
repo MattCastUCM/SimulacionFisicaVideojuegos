@@ -2,10 +2,8 @@
 
 #include "../Systems/SpringSystem.h"
 
-SceneP4::SceneP4() : springs_(nullptr), sprActive_(false) {
+SceneP4::SceneP4() : springs_(nullptr), sprActive_(true) {
 	springs_ = new SpringSystem();
-	
-	springs_->setActive(false);
 }
 
 SceneP4::~SceneP4() {
@@ -18,10 +16,11 @@ void SceneP4::update(double t) {
 
 void SceneP4::keyPress(unsigned char key) {
 	switch (tolower(key)) {
-		case 'g': 
+		/*case 'g': 
 			sprActive_ = !sprActive_; 
 			springs_->setActive(sprActive_);
-			break;
+			break;*/
 		default: break;
 	}
+	if (sprActive_) springs_->keyPress(key);
 }
