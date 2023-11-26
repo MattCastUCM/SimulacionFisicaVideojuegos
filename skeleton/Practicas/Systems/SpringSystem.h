@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../ParticleForceSystem.h"
-#include "../ForceGenerators/SpringForceGenerator.h"
-#include "../ForceGenerators/GravityForceGenerator.h"
 
 class SpringSystem : public ParticleForceSystem {
 private:
-	ForceGenerator* gr_;
+	ForceGenerator* gr_, *wind_;
+	Particle* staticPart_;
+	bool activatedGr_, activatedWind_;
 
 public:
 	SpringSystem();
@@ -16,8 +16,11 @@ public:
 private:
 	void activatePartToStatic();
 	void activatePartToPart();
+	void activateRubberBand();
 	void activateSlinky();
-	void activateGravity();
-	void activateFlotation();
+	void activateBuoyancy();
+
+	void toggleGravity(bool activate);
+	void toggleWind(bool activate);
 };
 

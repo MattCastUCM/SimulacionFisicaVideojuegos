@@ -22,4 +22,6 @@ public:
 
 	inline void setName(std::string name) { name_ = name; }
 	inline std::string getTame() { return name_; }
+
+	inline virtual void keyPress(unsigned char key) { }
 };

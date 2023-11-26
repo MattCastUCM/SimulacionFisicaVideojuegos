@@ -14,19 +14,19 @@ protected:
 	
 
 
-	virtual inline void refresh() {
+	inline virtual void refresh() {
 		for (auto it = particles_.begin(); it != particles_.end(); ) {
 			if (!(*it)->isAlive()) {
 				(*it)->onDeath();
 
-				delete* it;
+				delete *it;
 				it = particles_.erase(it);
 			}
 			else ++it;
 		}
 	}
 
-	virtual inline void generateParticles(double t) {
+	inline virtual void generateParticles(double t) {
 		// Recorrer generadores (generar partículas nuevas y añadirlas a la lista)
 		for (auto pg : generators_) {
 			// El update se encarga de generar las partículas
@@ -70,10 +70,12 @@ public:
 	}
 
 
-	virtual inline void setActive(bool active) {
+	inline virtual void setActive(bool active) {
 		active_ = active;
 	}
 
-	virtual inline void keyPress(unsigned char key) { };
+	inline virtual void keyPress(unsigned char key) {
+		for (auto pg : generators_) pg.second->keyPress(key);
+	};
 };
 

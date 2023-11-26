@@ -10,15 +10,8 @@ public:
 	WindForceGenerator(Vector3 windVel, const float& k1, const float& k2 = 0, Vector3 minPos = { -1000, -1000, -1000 }, Vector3 maxPos = { 1000, 1000, 1000 })
 		: ForceGenerator(), windVel_(windVel), k1_(k1), k2_(k2), minPos_(minPos), maxPos_(maxPos) { };
 	
-	inline void setK1(const float& k) { k1_ = k; }
-	inline float getK1() const { return k1_; }
-	inline void setK2(const float& k) { k2_ = k; }
-	inline float getK2() const { return k2_; }
 
-	inline void setVel(const Vector3& vel) { windVel_ = vel; }
-	inline Vector3 getVel() { return windVel_; }
-
-	inline virtual void update(Particle* p, double t) { 
+	inline virtual void update(Particle* p, double t) {
 		if (fabs(p->getInvMass()) < 1e-10) return;
 		else {
 			auto pos = p->getPos();
@@ -36,5 +29,17 @@ public:
 	};
 
 
+	inline virtual void keyPress(unsigned char key) {
+		switch (tolower(key)) {
+		case 'k':
+			windVel_ += {0, -5, 0};
+			break;
+		case 'l':
+			windVel_ += {0, 5, 0};
+			break;
+
+		default: break;
+		}
+	}
 
 };

@@ -86,6 +86,5 @@ public:
 	inline void setName(std::string n) { name_ = n; }
 	inline std::string getName() { return name_; }
 
-
-
+	inline virtual void keyPress(unsigned char key) { }
 };

@@ -18,7 +18,7 @@ public:
 
 		Particle* p = new Particle(true, 5);
 		expl_ = new ExplosionForceGenerator(10000, 50, 1000, { 0, 0, -100 });
-		forces_.push_back(expl_);
+		forces_.insert(expl_);
 
 		gen_ = new GaussianParticleGenerator(0.1, 0, 1, 1, false, true, true, true);
 		gen_->changeModelPart(p);

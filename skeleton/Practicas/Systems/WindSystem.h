@@ -19,10 +19,5 @@ public:
 private:
 	void activateWind();
 	 void activateTornado();
-
-	inline void increaseWindVel(Vector3 vel) {
-		wind_->setVel(wind_->getVel() + vel);
-	}
-
 };
 

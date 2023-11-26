@@ -89,6 +89,8 @@
     <ClInclude Include="Practicas\Scenes\SceneP4.h" />
     <ClInclude Include="Practicas\ForceGenerators\SpringForceGenerator.h" />
     <ClInclude Include="Practicas\Systems\SpringSystem.h" />
+    <ClInclude Include="Practicas\ForceGenerators\BuoyancyForceGenerator.h" />
+    <ClInclude Include="Practicas\ForceGenerators\ElasticRubberForceGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

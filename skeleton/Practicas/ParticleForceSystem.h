@@ -6,15 +6,15 @@
 class ParticleForceSystem : public ParticleSystem {
 protected:
 	ParticleForceRegistry* partForceReg_;
-	std::list<ForceGenerator*> forces_;
+	std::unordered_set<ForceGenerator*> forces_;
 
-	virtual inline void refresh() {
+	inline virtual void refresh() {
 		for (auto it = particles_.begin(); it != particles_.end(); ) {
 			if (!(*it)->isAlive()) {
 				(*it)->onDeath();
 				partForceReg_->deleteParticleRegistry(*it);
 
-				delete* it;
+				delete *it;
 				it = particles_.erase(it);
 			}
 			else ++it;
@@ -37,11 +37,11 @@ public:
 		ParticleSystem::update(t);
 	}
 
+
 	inline void clearParts() {
 		for (auto p : particles_) {
 			partForceReg_->deleteParticleRegistry(p);
 			delete p;
-			p = nullptr;
 		}
 		particles_.clear();
 	}
@@ -49,7 +49,6 @@ public:
 		for (auto f : forces_) {
 			partForceReg_->deleteForceRegistry(f);
 			delete f;
-			f = nullptr;
 		}
 		forces_.clear();
 	}
@@ -65,7 +64,10 @@ public:
 	}
 
 
-	
+	inline virtual void keyPress(unsigned char key) {
+		for (auto pg : generators_) pg.second->keyPress(key);
+		for (auto fg : forces_) fg->keyPress(key);
+	};
 
 
 };

@@ -13,8 +13,8 @@ public:
 		gr1_ = new GravityForceGenerator({ 0,-9.8f, 0 });
 		gr2_ = new GravityForceGenerator({ 0, -20.0f, 0 });
 		
-		forces_.push_back(gr1_);
-		forces_.push_back(gr2_);
+		forces_.insert(gr1_);
+		forces_.insert(gr2_);
 	}
 
 

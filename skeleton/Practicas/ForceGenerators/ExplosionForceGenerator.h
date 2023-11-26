@@ -6,14 +6,14 @@
 class ExplosionForceGenerator : public ForceGenerator {
 protected:
 	const float SOUNDVEL_ = 342.2f;
-	float k_, explR_, timeConstant_, elapsedTime_;
+	float k_, explR_, elapsedTime_;
 	Vector3 origin_;
 
 public:
-	ExplosionForceGenerator(float k, float r, float t, Vector3 origin) : ForceGenerator(), k_(k), explR_(r), timeConstant_(t), origin_(origin), elapsedTime_(0) { };
+	ExplosionForceGenerator(float k, float r, double t, Vector3 origin) : ForceGenerator(), k_(k), explR_(r), origin_(origin), elapsedTime_(0) {
+		timeConstant_ = t;
+	};
 	
-	inline void setK(const float& k) { k_ = k; }
-	inline float getK() const { return k_; }
 	inline void resetTime() { elapsedTime_ = 0; }
 
 	virtual void update(Particle* p, double t) { 

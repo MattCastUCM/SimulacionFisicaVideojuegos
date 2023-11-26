@@ -30,7 +30,7 @@ public:
 	};
 
 
-	virtual inline void setVelocities(Particle* p) {
+	inline virtual void setVelocities(Particle* p) {
 		auto pos = origin_;
 		p->setInitPos(origin_);
 		p->setPos(origin_);

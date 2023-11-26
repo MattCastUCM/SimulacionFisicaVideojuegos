@@ -6,8 +6,8 @@ WindSystem::WindSystem(const Vector3& g) : ParticleForceSystem(g), windActive_(f
 	wind_ = new WindForceGenerator({ 100, 0, 0 }, 0.5f, 0.0/*, { -100, 0, -200 }, { -20, 50, 100 }*/);
 	tornado_ = new TornadoForceGenerator({ 0, 0, -100 }, { 0.1, 0, 0 }, 10, 0.5f);
 
-	forces_.push_back(wind_);
-	forces_.push_back(tornado_);
+	forces_.insert(wind_);
+	forces_.insert(tornado_);
 
 	activateWind();
 }
@@ -21,10 +21,8 @@ void WindSystem::keyPress(unsigned char key) {
 		activateWind();
 		break;
 	case 'k':
-		increaseWindVel({ 0, -10, 0 });
-		break;
 	case 'l':
-		increaseWindVel({ 0, 10, 0 });
+		wind_->keyPress(key);
 		break;
 
 	default: break;
