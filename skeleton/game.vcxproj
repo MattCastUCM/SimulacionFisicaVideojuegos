@@ -271,6 +271,7 @@
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Practicas\ForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\BuoyancyForceGenerator.h" />
+    <ClInclude Include="Practicas\ForceGenerators\DragForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\ElasticRubberForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\ExplosionForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\GravityForceGenerator.h" />

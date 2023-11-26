@@ -7,6 +7,7 @@ private:
 	ForceGenerator* gr_, *wind_;
 	Particle* staticPart_;
 	bool activatedGr_, activatedWind_;
+	float g_;
 
 public:
 	SpringSystem();

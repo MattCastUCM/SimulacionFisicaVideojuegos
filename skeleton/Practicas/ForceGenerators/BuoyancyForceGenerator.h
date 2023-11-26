@@ -28,7 +28,7 @@ public:
 			else if (h - h0 < -height_ * 0.5)  immersed = 1.0f;
 			else immersed = (h0 - h) / height_ + 0.5;
 
-			float y = density_ * volume_ * immersed * g_;
+			float y = density_ * volume_ * immersed /** g_*/;	// g ya se aplica desde otro generador
 			Vector3 f = { 0, y, 0 };
 			p->addForce(f);
 		}
@@ -36,13 +36,13 @@ public:
 
 	inline virtual void keyPress(unsigned char key) {
 		switch (tolower(key)) {
-		case 'k':
-			
+		case 'm':
+			volume_++;
 			break;
-		case 'l':
-			
+		case 'n':
+			if(volume_ >= 1) volume_--;
 			break;
-
+		
 		default: break;
 		}
 	}

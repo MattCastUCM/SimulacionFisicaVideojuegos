@@ -52,7 +52,6 @@ void Particle::update(double t) {
 		// Si no, se actualiza su tiempo de vida y su pos, vel y acc
 		else {
 			lifetime_ += t;
-
 			// MRU	(no haría falta normalizar la velocidad)
 			//tr_->p += SPD_ * vel_/*.getNormalized()*/ * t;
 

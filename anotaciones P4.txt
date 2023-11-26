@@ -1,7 +1,0 @@
-- Al aplicar/borrar fuerzas nuevas, los muelles pueden llegar a estirarse más que su punto de ruptura o se comportan de manera extraña (por ejemplo, con la partícula anclada de manera horizontal, al aplicar la gravedad empieza a girar alrededor del ancla) (¿está bien? ¿cómo evitarlo?)
-
-- Al dejar de aplicar fuerzas, las velocidades de las partículas tras haber aplicado las fuerzas se mantienen (por ejemplo, si dejo de aplicar una gravedad, la partícula sigue bajando porque su velocidad ya ha sido modificada por la gravedad. Para las gomas, si la distancia entre partículas no supera la distancia de reposo del muelle, no se aplicará la fuerza, pero las partículas siguen moviéndose hasta que se separan lo suficiente de nuevo y se les aplica de nuevo la fuerza) (¿está bien? ¿forzar la velocidad de las partículas? ¿cambiar el damping?)
-
-- Para la flotación: ¿Hay que tener el generador de gravedad funcionando a la vez, o no hace falta? (ya que la fuerza de flotación usa el valor de la gravedad). ¿Cómo hacer que deje de dar saltos?
-
-- No sé qué hacer con el slinky :(((((

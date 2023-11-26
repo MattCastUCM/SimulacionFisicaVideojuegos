@@ -13,11 +13,18 @@ SpringSystem::SpringSystem() : ParticleForceSystem(), staticPart_(nullptr),
 {
 	
 	partForceReg_ = new ParticleForceRegistry();
-	
+	g_ = 9.81f;
 }
 
 void SpringSystem::keyPress(unsigned char key) {
 	switch (tolower(key)) {
+	case '0':
+		clearPartForces();
+		gr_ = nullptr;
+		wind_ = nullptr;
+		activatedGr_ = false;
+		activatedWind_ = false;
+		break;
 	case '1':
 		activatePartToStatic();
 		break;
@@ -41,6 +48,18 @@ void SpringSystem::keyPress(unsigned char key) {
 		activatedWind_ = !activatedWind_;
 		toggleWind(activatedWind_);
 		break;
+
+	// Aumentar / disminuir la masa
+	case ',':
+		for (auto p : particles_) {
+			if(p->getMass() > 100)
+				p->setInvMass(1 / (p->getMass() - 100));
+		}
+		break;
+	case '.':
+		for (auto p : particles_) p->setInvMass(1 / (p->getMass() + 100));
+		break;
+
 	default: break;
 	}
 
@@ -49,11 +68,11 @@ void SpringSystem::keyPress(unsigned char key) {
 
 void SpringSystem::activatePartToStatic() {
 	clearPartForces();
+	toggleGravity(false);
 
 	Particle::visual v;
 	v.size = 1.0f;
-	//v.geometry = new physx::PxBoxGeometry(v.size / 2, v.size * 2, v.size * 2);
-	v.geometry = new physx::PxBoxGeometry(v.size * 2, v.size / 2, v.size * 2);
+	v.geometry = new physx::PxBoxGeometry(v.size, v.size, v.size);
 	v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	Particle::physics p;
@@ -72,7 +91,7 @@ void SpringSystem::activatePartToStatic() {
 	//part->setPos({ 10, 0, -50 });
 	part->setPos({ 0, 10, -50 });
 	part->setInvMass(1 / 10.0f);
-
+	
 
 	// No deberían tener un restingLength muy inferior a la distancia con la que aparecen inicialmente
 	//float k = 500, restingLength = 10;
@@ -155,7 +174,7 @@ void SpringSystem::activateSlinky() {
 	staticPart_->setInvMass(1 / 10.0f);
 
 	std::vector<Particle*> parts;
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 2; i++) {
 		Particle* p = new Particle(true);
 		p->changeLifetime(-1);
 		p->setPos({ 0.0f, 20.0f - (i + 1) * 5, -50 });
@@ -165,7 +184,7 @@ void SpringSystem::activateSlinky() {
 		parts.push_back(p);
 	}
 
-	float k = 100, restingLength = 1;
+	float k = 100, restingLength = 5;
 	Particle* prevPart = staticPart_;
 	std::vector<SpringForceGenerator*> springs;
 	for (int i = 0; i < parts.size(); i++) {
@@ -203,22 +222,23 @@ void SpringSystem::activateBuoyancy() {
 	v.geometry = new physx::PxBoxGeometry(v.size, v.size, v.size);
 	v.color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	p.damp = 0.998f;
+	// Damping bajo para evitar que de saltos
+	p.damp = 0.01f;
 	p.pos = { 0, 0, -50 };
 	p.vel = { 0, 0, 0 };
 	p.acc = { 0, 0, 0 };
-	p.mass = 1 / 1.0f;
+	p.mass = 1 / 1000.0f;
 	Particle* part = new Particle(v, p, -1);
 	particles_.push_back(part);
 
 
 	float V = v.size * v.size * v.size;
 	float waterD = 1000.0f;
-	BuoyancyForceGenerator* b = new BuoyancyForceGenerator(v.size, V, waterD, staticPart_);
+	BuoyancyForceGenerator* b = new BuoyancyForceGenerator(v.size, V, waterD, staticPart_, g_);
 	forces_.insert(b);
 	partForceReg_->addForce(b, part);
 
-	gr_ = new GravityForceGenerator({ 0, -9.81f, 0 });
+	gr_ = new GravityForceGenerator({ 0, -g_, 0 });
 	forces_.insert(gr_);
 	partForceReg_->addForce(gr_, part);
 }
@@ -232,7 +252,7 @@ void SpringSystem::toggleGravity(bool activate) {
 	if (activatedGr_) {
 		std::cout << "Gravity activated\n";
 		if (gr_ == nullptr) {
-			gr_ = new GravityForceGenerator({ 0, -9.81f, 0 });
+			gr_ = new GravityForceGenerator({ 0, -g_, 0 });
 			forces_.insert(gr_);
 		}
 		for (auto p : particles_) {

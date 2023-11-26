@@ -93,5 +93,8 @@ public:
 	inline float getInvMass() { return phys_.mass; }
 
 	inline float getSize() { return vis_.size; }
+
+	inline void setDamp(float d) { phys_.damp = d; }
+	inline float getDamp() { return phys_.damp; }
 };
 

@@ -91,6 +91,7 @@
     <ClInclude Include="Practicas\Systems\SpringSystem.h" />
     <ClInclude Include="Practicas\ForceGenerators\BuoyancyForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\ElasticRubberForceGenerator.h" />
+    <ClInclude Include="Practicas\ForceGenerators\DragForceGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
