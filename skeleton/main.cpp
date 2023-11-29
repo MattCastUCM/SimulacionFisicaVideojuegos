@@ -32,15 +32,59 @@ ContactReportCallback gContactReportCallback;
 
 
 
-#include "Practicas/Scenes/SceneP1.h"
-#include "Practicas/Scenes/SceneP2.h"
-#include "Practicas/Scenes/SceneP3.h"
-#include "Practicas/Scenes/SceneP4.h"
+#define P4
+#ifndef P5
+	#ifdef P1 
+		#include "Practicas/Scenes/SceneP1.h"
+		SceneP1* scMngr = nullptr;
+	#elif defined(P2)
+		#include "Practicas/Scenes/SceneP2.h"
+		SceneP2* scMngr = nullptr;
+	#elif defined(P3)
+		#include "Practicas/Scenes/SceneP3.h"
+		SceneP3* scMngr = nullptr;
+	#elif defined(P4)
+		#include "Practicas/Scenes/SceneP4.h"
+		SceneP4* scMngr = nullptr;
+	#endif
+#else
+	
+#endif
 
-//SceneP1* scMngr = nullptr;
-//SceneP2* scMngr = nullptr;
-//SceneP3* scMngr = nullptr;
-SceneP4* scMngr = nullptr;
+
+void setupPr() {
+#ifdef P1	
+	scMngr = new SceneP1();
+#elif defined(P2)
+		scMngr = new SceneP2();
+#elif defined(P3)
+		scMngr = new SceneP3();
+#elif defined(P4)
+		scMngr = new SceneP4();
+#else
+
+	PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
+	
+	PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
+	suelo->attachShape(*shape);
+	
+	gScene->addActor(*suelo);
+	RenderItem* item = new RenderItem(shape, suelo, {0.8, 0.8, 0.8, 0.1});
+	
+
+	PxRigidDynamic* solid;
+	solid = gPhysics->createRigidDynamic(PxTransform({ -70, 50, 70 }));
+	solid->setLinearVelocity({ 0,5,0 });
+	solid->setAngularVelocity({ 0,0,0 });
+	shape = CreateShape(PxBoxGeometry(5, 5, 5));
+	solid->attachShape(*shape);
+
+	PxRigidBodyExt::updateMassAndInertia(*solid, 0.15);
+	gScene->addActor(*solid);
+	item = new RenderItem(shape, solid, { 1.0, 0.0, 0.0, 1.0 });
+#endif
+}
+
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -67,10 +111,7 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 
-	//scMngr = new SceneP1();
-	//scMngr = new SceneP2();
-	//scMngr = new SceneP3();
-	scMngr = new SceneP4();
+	setupPr();
 }
 
 
@@ -86,8 +127,9 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 
-	
+#ifndef P5
 	scMngr->update(t);
+#endif
 }
 
 // Function to clean data
@@ -109,8 +151,11 @@ void cleanupPhysics(bool interactive)
 
 
 
-
+#ifndef P5
 	delete scMngr;
+#else
+	
+#endif
 }
 
 // Function called when a key is pressed
@@ -130,14 +175,18 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 
-
+#ifndef P5
 	scMngr->keyPress(key);
+#endif
 }
+
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
+
+	//std::cout << "col\n";
 }
 
 
