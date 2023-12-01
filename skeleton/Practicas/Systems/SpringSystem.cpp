@@ -91,7 +91,7 @@ void SpringSystem::activatePartToStatic() {
 	//part->setPos({ 10, 0, -50 });
 	part->setPos({ 0, 10, -50 });
 	part->setInvMass(1 / 10.0f);
-	
+	part->setDamp(0.5);
 
 	// No deberían tener un restingLength muy inferior a la distancia con la que aparecen inicialmente
 	//float k = 500, restingLength = 10;
@@ -141,17 +141,20 @@ void SpringSystem::activateRubberBand() {
 	particles_.push_back(p1);
 	p1->changeLifetime(-1);
 	p1->setPos({ -10, 0, -50 });
-	p1->setInvMass(1 / 10.0f);
+	p1->setInvMass(1 / 1.0f);
 
 	Particle* p2 = new Particle(true);
 	particles_.push_back(p2);
 	p2->changeLifetime(-1);
 	p2->setPos({ 10, 0, -50 });
-	p2->setInvMass(1 / 10.0f);
-
+	p2->setInvMass(1 / 20.0f);
+	
+	
+	p1->setDamp(0.1);
+	p2->setDamp(0.1);
 
 	// No deberían tener un restingLength muy inferior a la distancia con la que aparecen inicialmente
-	float k = 10, restingLength = 10;
+	float k = 15, restingLength = 10;
 
 	ElasticRubberForceGenerator* spr1 = new ElasticRubberForceGenerator(k, restingLength, p2);
 	forces_.insert(spr1);
@@ -174,17 +177,18 @@ void SpringSystem::activateSlinky() {
 	staticPart_->setInvMass(1 / 10.0f);
 
 	std::vector<Particle*> parts;
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 4; i++) {
 		Particle* p = new Particle(true);
 		p->changeLifetime(-1);
-		p->setPos({ 0.0f, 20.0f - (i + 1) * 5, -50 });
+		p->setPos({ 0.0f, 20.0f - (i + 1) * 3, -50 });
 		p->setInvMass(1 / 10.0f);
+		p->setDamp(0.1);
 
 		particles_.push_back(p);
 		parts.push_back(p);
 	}
 
-	float k = 100, restingLength = 5;
+	float k = 20, restingLength = 3;
 	Particle* prevPart = staticPart_;
 	std::vector<SpringForceGenerator*> springs;
 	for (int i = 0; i < parts.size(); i++) {
@@ -202,6 +206,7 @@ void SpringSystem::activateSlinky() {
 
 void SpringSystem::activateBuoyancy() {
 	clearPartForces();
+	toggleGravity(false);
 
 	Particle::visual v;
 	v.size = 30.0f;
@@ -238,9 +243,8 @@ void SpringSystem::activateBuoyancy() {
 	forces_.insert(b);
 	partForceReg_->addForce(b, part);
 
-	gr_ = new GravityForceGenerator({ 0, -g_, 0 });
-	forces_.insert(gr_);
-	partForceReg_->addForce(gr_, part);
+	toggleGravity(true);
+
 }
 
 

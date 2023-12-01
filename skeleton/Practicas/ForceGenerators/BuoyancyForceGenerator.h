@@ -28,7 +28,7 @@ public:
 			else if (h - h0 < -height_ * 0.5)  immersed = 1.0f;
 			else immersed = (h0 - h) / height_ + 0.5;
 
-			float y = density_ * volume_ * immersed /** g_*/;	// g ya se aplica desde otro generador
+			float y = density_ * volume_ * immersed * g_;
 			Vector3 f = { 0, y, 0 };
 			p->addForce(f);
 		}
