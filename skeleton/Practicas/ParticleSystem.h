@@ -6,6 +6,7 @@
 #include <unordered_map>
 class ParticleSystem {
 protected:
+	const int MAXPARTS_ = 100;
 	Vector3 gravity_;
 	bool active_;
 
@@ -58,7 +59,7 @@ public:
 			// Elimina las partículas muertas
 			refresh();
 
-			generateParticles(t);
+			if(particles_.size() < MAXPARTS_) generateParticles(t);
 		}
 		
 	}

@@ -1,6 +1,10 @@
 #include "Particle.h"
 
-Particle::Particle(bool default, float maxLifetime) {
+Particle::Particle(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene, bool dynamic) {
+	if (gPhys != nullptr) {
+		gPhysics_ = gPhys;
+		dynamic_ = dynamic;
+	}
 	if (default) {
 		Particle::visual v;
 		v.size = 1.0f;
@@ -33,14 +37,32 @@ void Particle::init(visual vis, physics phys, float maxLifetime) {
 	lifetime_ = 0;
 	alive_ = true;
 
-	tr_ = new physx::PxTransform(phys_.pos);
-	renderItem_ = new RenderItem(CreateShape(*vis_.geometry), tr_, vis_.color);
-
 	vel_ = phys_.vel;
 	acc_ = phys_.acc;
 	mass_ = phys_.mass;
 
 	accumForce_ = { 0, 0, 0 };
+
+	PxShape* shape = CreateShape(*vis_.geometry);
+	tr_ = new physx::PxTransform(phys_.pos);
+	if (gPhysics_ == nullptr) {
+		renderItem_ = new RenderItem(shape, tr_, vis_.color);
+	}
+	else {
+		if (!dynamic_) {
+			PxRigidStatic* rigid = gPhysics_->createRigidStatic(*tr_);
+			rigid->attachShape(*shape);
+			gScene_->addActor(*rigid);
+			renderItem_ = new RenderItem(shape, rigid, vis_.color);
+		}
+		else {
+			PxRigidDynamic* rigid = gPhysics_->createRigidDynamic(*tr_);
+			rigid->attachShape(*shape);
+			gScene_->addActor(*rigid);
+			renderItem_ = new RenderItem(shape, rigid, vis_.color);
+		}
+		
+	}
 }
 
 void Particle::update(double t) {
@@ -55,19 +77,21 @@ void Particle::update(double t) {
 			// MRU	(no haría falta normalizar la velocidad)
 			//tr_->p += SPD_ * vel_/*.getNormalized()*/ * t;
 
-			// Fuerzas (acc = F / m), mass_ guarda la masa inversa
-			Vector3 resultaccel = accumForce_ * mass_;
-			vel_ += resultaccel * t;
+			if (gPhysics_ == nullptr) {
+				// Fuerzas (acc = F / m), mass_ guarda la masa inversa
+				Vector3 resultaccel = accumForce_ * mass_;
+				vel_ += resultaccel * t;
 
-			//MRUA	
-			// (v * t + 1/2 acc * t * t) <- NO FUNCIONA porque la velocidad no se actualiza :[
-			//vel_ += acc_ * t;				// Actualizar vel según acc
-			vel_ *= pow(phys_.damp, t);		// Actualizar vel según damp
-			tr_->p += vel_ * t;				// Actualizar pos
+				//MRUA	
+				// (v * t + 1/2 acc * t * t) <- NO FUNCIONA porque la velocidad no se actualiza :[
+				//vel_ += acc_ * t;				// Actualizar vel según acc
+				vel_ *= pow(phys_.damp, t);		// Actualizar vel según damp
+				tr_->p += vel_ * t;				// Actualizar pos
 
 			
-			// Quita la fuerza acumulada
-			clearForce();
+				// Quita la fuerza acumulada
+				clearForce();
+			}
 		}
 	}
 }

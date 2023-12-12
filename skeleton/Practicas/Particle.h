@@ -3,6 +3,7 @@
 #include "PxPhysics.h"
 #include "../core.hpp"
 #include "../RenderUtils.hpp"
+using namespace physx;
 
 class Particle {
 public:
@@ -42,8 +43,13 @@ protected:
 
 	void init(visual vis, physics phys, float maxLifetime = 1.0f);
 	
+	PxPhysics* gPhysics_;
+	bool dynamic_;
+	PxScene* gScene_;
+
+
 public:
-	Particle(bool default = false, float maxLifetime = 1.0f);
+	Particle(bool default = false, float maxLifetime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr, bool dynamic = false);
 	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
 	virtual ~Particle();
 	virtual void onDeath() { };
@@ -96,5 +102,9 @@ public:
 
 	inline void setDamp(float d) { phys_.damp = d; }
 	inline float getDamp() { return phys_.damp; }
+
+
+
+
 };
 
