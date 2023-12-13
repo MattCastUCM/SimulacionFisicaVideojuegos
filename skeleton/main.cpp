@@ -48,9 +48,9 @@ ContactReportCallback gContactReportCallback;
 		SceneP4* scMngr = nullptr;
 	#endif
 #else
-	
+	#include "Practicas/Systems/RigidCubesSystem.h"
+	ParticleSystem* sys_;
 #endif
-
 
 void setupPr() {
 #ifdef P1	
@@ -63,25 +63,8 @@ void setupPr() {
 		scMngr = new SceneP4();
 #else
 
-	PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
+	sys_ = new RigidCubesSystem(gPhysics, gScene);
 	
-	PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
-	suelo->attachShape(*shape);
-	
-	gScene->addActor(*suelo);
-	RenderItem* item = new RenderItem(shape, suelo, {0.8, 0.8, 0.8, 0.1});
-	
-
-	PxRigidDynamic* solid;
-	solid = gPhysics->createRigidDynamic(PxTransform({ -70, 50, 70 }));
-	solid->setLinearVelocity({ 0,5,0 });
-	solid->setAngularVelocity({ 0,0,0 });
-	shape = CreateShape(PxBoxGeometry(5, 5, 5));
-	solid->attachShape(*shape);
-
-	PxRigidBodyExt::updateMassAndInertia(*solid, 0.15);
-	gScene->addActor(*solid);
-	item = new RenderItem(shape, solid, { 1.0, 0.0, 0.0, 1.0 });
 #endif
 }
 
@@ -129,6 +112,8 @@ void stepPhysics(bool interactive, double t)
 
 #ifndef P5
 	scMngr->update(t);
+#else
+	sys_->update(t);
 #endif
 }
 
@@ -136,6 +121,15 @@ void stepPhysics(bool interactive, double t)
 // Add custom code to the begining of the function
 void cleanupPhysics(bool interactive)
 {
+	// IMPORTANTE BORRARLO ANTES QUE LA ESCENA Y LAS FÍSICAS
+#ifndef P5
+	delete scMngr;
+#else
+	delete sys_;
+#endif
+
+
+
 	PX_UNUSED(interactive);
 
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
@@ -148,14 +142,6 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 
 	gFoundation->release();
-
-
-
-#ifndef P5
-	delete scMngr;
-#else
-	
-#endif
 }
 
 // Function called when a key is pressed
@@ -177,6 +163,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 #ifndef P5
 	scMngr->keyPress(key);
+#else
+	sys_->keyPress(key);
 #endif
 }
 

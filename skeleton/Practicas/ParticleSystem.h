@@ -6,14 +6,13 @@
 #include <unordered_map>
 class ParticleSystem {
 protected:
-	const int MAXPARTS_ = 100;
 	Vector3 gravity_;
 	bool active_;
 
 	std::list<Particle*> particles_;
 	std::unordered_map<std::string, ParticleGenerator*> generators_;
 	
-
+	int maxParts_;
 
 	inline virtual void refresh() {
 		for (auto it = particles_.begin(); it != particles_.end(); ) {
@@ -41,7 +40,8 @@ protected:
 
 public:
 	// Se usa -10.0f como gravedad por defecto
-	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : particles_(), gravity_(g), active_(true) { };
+	ParticleSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }, int maxParts = 1000) : particles_(), gravity_(g), active_(true), maxParts_(maxParts)
+	{ };
 	
 	virtual ~ParticleSystem() {
 		for (auto p : particles_) delete p;
@@ -59,7 +59,7 @@ public:
 			// Elimina las partículas muertas
 			refresh();
 
-			if(particles_.size() < MAXPARTS_) generateParticles(t);
+			if(particles_.size() < maxParts_) generateParticles(t);
 		}
 		
 	}

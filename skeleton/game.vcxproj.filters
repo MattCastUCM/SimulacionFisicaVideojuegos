@@ -92,6 +92,7 @@
     <ClInclude Include="Practicas\ForceGenerators\BuoyancyForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\ElasticRubberForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\DragForceGenerator.h" />
+    <ClInclude Include="Practicas\Systems\RigidCubesSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

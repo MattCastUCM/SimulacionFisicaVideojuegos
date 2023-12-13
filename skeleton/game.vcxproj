@@ -300,6 +300,7 @@
     <ClInclude Include="Practicas\Systems\FireworksSystem.h" />
     <ClInclude Include="Practicas\Systems\GravitySystem.h" />
     <ClInclude Include="Practicas\Systems\MistSystem.h" />
+    <ClInclude Include="Practicas\Systems\RigidCubesSystem.h" />
     <ClInclude Include="Practicas\Systems\SpringSystem.h" />
     <ClInclude Include="Practicas\Systems\WaterSystem.h" />
     <ClInclude Include="Practicas\Systems\WindSystem.h" />

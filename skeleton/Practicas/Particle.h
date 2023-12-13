@@ -23,7 +23,6 @@ public:
 			  mass;		// Masa (magnitud) en kg. Se utiliza para guardar el inverso de la masa al aplicar fuerzas
 	};
 
-
 protected:
 	physx::PxTransform* tr_;		// Transform de la esfera (Su posición se va actualizando)
 	RenderItem* renderItem_;		// Objeto renderizable
@@ -44,13 +43,13 @@ protected:
 	void init(visual vis, physics phys, float maxLifetime = 1.0f);
 	
 	PxPhysics* gPhysics_;
-	bool dynamic_;
 	PxScene* gScene_;
-
+	bool dynamic_;
+	PxRigidActor* rigid_;
 
 public:
 	Particle(bool default = false, float maxLifetime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr, bool dynamic = false);
-	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
+	Particle(visual vis, physics phys, float maxLifetime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr, bool dynamic = false);
 	virtual ~Particle();
 	virtual void onDeath() { };
 
@@ -104,7 +103,7 @@ public:
 	inline float getDamp() { return phys_.damp; }
 
 
-
+	PxRigidActor* getRigid() { return rigid_; }
 
 };
 

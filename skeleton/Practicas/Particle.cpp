@@ -1,14 +1,17 @@
 #include "Particle.h"
 
 Particle::Particle(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene, bool dynamic) {
+	rigid_ = nullptr;
 	if (gPhys != nullptr) {
 		gPhysics_ = gPhys;
+		gScene_ = gScene;
 		dynamic_ = dynamic;
 	}
 	if (default) {
 		Particle::visual v;
 		v.size = 1.0f;
 		v.geometry = new physx::PxSphereGeometry(v.size);
+		
 		v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		Particle::physics p;
@@ -22,11 +25,24 @@ Particle::Particle(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* g
 	}
 }
 
-Particle::Particle(visual vis, physics phys, float maxLifetime) { init(vis, phys, maxLifetime); }
+Particle::Particle(visual vis, physics phys, float maxLifetime, PxPhysics* gPhys, PxScene* gScene, bool dynamic) {
+	rigid_ = nullptr;
+	if (gPhys != nullptr) {
+		gPhysics_ = gPhys;
+		gScene_ = gScene;
+		dynamic_ = dynamic;
+	}
+	init(vis, phys, maxLifetime); 
+}
 
 Particle::~Particle() {
-	DeregisterRenderItem(renderItem_);
-	if (tr_ != nullptr) delete tr_;
+	if (gPhysics_ != nullptr) {
+		DeregisterRenderItem(renderItem_);
+		if (tr_ != nullptr) delete tr_;
+	}
+	else {
+		gScene_->removeActor(*rigid_);
+	}
 }
 
 
@@ -50,16 +66,16 @@ void Particle::init(visual vis, physics phys, float maxLifetime) {
 	}
 	else {
 		if (!dynamic_) {
-			PxRigidStatic* rigid = gPhysics_->createRigidStatic(*tr_);
-			rigid->attachShape(*shape);
-			gScene_->addActor(*rigid);
-			renderItem_ = new RenderItem(shape, rigid, vis_.color);
+			rigid_ = gPhysics_->createRigidStatic(*tr_);
+			rigid_->attachShape(*shape);
+			gScene_->addActor(*rigid_);
+			renderItem_ = new RenderItem(shape, rigid_, vis_.color);
 		}
 		else {
-			PxRigidDynamic* rigid = gPhysics_->createRigidDynamic(*tr_);
-			rigid->attachShape(*shape);
-			gScene_->addActor(*rigid);
-			renderItem_ = new RenderItem(shape, rigid, vis_.color);
+			rigid_ = gPhysics_->createRigidDynamic(*tr_);
+			rigid_->attachShape(*shape);
+			gScene_->addActor(*rigid_);
+			renderItem_ = new RenderItem(shape, rigid_, vis_.color);
 		}
 		
 	}
@@ -107,5 +123,5 @@ Particle* Particle::clone() {
 	v.geometry = vis_.geometry;
 	v.color = vis_.color;
 
-	return new Particle(v, phys_, maxLifetime_);
+	return new Particle(v, phys_, maxLifetime_, gPhysics_, gScene_, dynamic_);
 }
