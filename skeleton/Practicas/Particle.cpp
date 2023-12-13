@@ -1,7 +1,9 @@
 #include "Particle.h"
 
 Particle::Particle(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene, bool dynamic) {
-	rigid_ = nullptr;
+	rigidActor_ = nullptr;
+	rigidDynamic_ = nullptr;
+	rigidStatic_ = nullptr;
 	if (gPhys != nullptr) {
 		gPhysics_ = gPhys;
 		gScene_ = gScene;
@@ -26,7 +28,9 @@ Particle::Particle(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* g
 }
 
 Particle::Particle(visual vis, physics phys, float maxLifetime, PxPhysics* gPhys, PxScene* gScene, bool dynamic) {
-	rigid_ = nullptr;
+	rigidActor_ = nullptr;
+	rigidDynamic_ = nullptr;
+	rigidStatic_ = nullptr;
 	if (gPhys != nullptr) {
 		gPhysics_ = gPhys;
 		gScene_ = gScene;
@@ -41,7 +45,7 @@ Particle::~Particle() {
 		if (tr_ != nullptr) delete tr_;
 	}
 	else {
-		gScene_->removeActor(*rigid_);
+		gScene_->removeActor(*rigidActor_);
 	}
 }
 
@@ -66,18 +70,29 @@ void Particle::init(visual vis, physics phys, float maxLifetime) {
 	}
 	else {
 		if (!dynamic_) {
-			rigid_ = gPhysics_->createRigidStatic(*tr_);
-			rigid_->attachShape(*shape);
-			gScene_->addActor(*rigid_);
-			renderItem_ = new RenderItem(shape, rigid_, vis_.color);
+			rigidStatic_ = gPhysics_->createRigidStatic(*tr_);
+			rigidActor_ = rigidStatic_;
+			rigidActor_->attachShape(*shape);
+			gScene_->addActor(*rigidActor_);
+			renderItem_ = new RenderItem(shape, rigidActor_, vis_.color);
 		}
 		else {
-			rigid_ = gPhysics_->createRigidDynamic(*tr_);
-			rigid_->attachShape(*shape);
-			gScene_->addActor(*rigid_);
-			renderItem_ = new RenderItem(shape, rigid_, vis_.color);
+			rigidDynamic_ = gPhysics_->createRigidDynamic(*tr_);
+			rigidActor_ = rigidDynamic_;
+			rigidActor_->attachShape(*shape);
+			gScene_->addActor(*rigidActor_);
+			renderItem_ = new RenderItem(shape, rigidActor_, vis_.color);
+			
+			rigidDynamic_->setMass(1 / mass_);
+			rigidDynamic_->setLinearVelocity(vel_);
+			rigidDynamic_->setLinearDamping(phys_.damp);
+			
+			//rigidDynamic_->setAngularVelocity();
+			//rigidDynamic_->setAngularDamping();
+			//rigidDynamic_->setMassSpaceInertiaTensor();
+			
+			//PxRigidBodyExt::updateMassAndInertia(*rigidActor_)
 		}
-		
 	}
 }
 
@@ -108,13 +123,24 @@ void Particle::update(double t) {
 				// Quita la fuerza acumulada
 				clearForce();
 			}
+			else {
+				if (dynamic_) *tr_ = rigidDynamic_->getGlobalPose();
+				else *tr_ = rigidStatic_->getGlobalPose();
+			}
 		}
 	}
 }
 
 void Particle::clearForce() { accumForce_ *= 0; }
 
-void Particle::addForce(const Vector3& f) { accumForce_ += f; }
+void Particle::addForce(const Vector3& f) { 
+	accumForce_ += f; 
+	if (dynamic_) {
+		rigidDynamic_->addForce(f);
+		//rigidDynamic_->addTorque
+
+	}
+}
 
 
 Particle* Particle::clone() {

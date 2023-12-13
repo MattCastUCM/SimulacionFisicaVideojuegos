@@ -45,7 +45,10 @@ protected:
 	PxPhysics* gPhysics_;
 	PxScene* gScene_;
 	bool dynamic_;
-	PxRigidActor* rigid_;
+	PxRigidActor* rigidActor_;
+	PxRigidDynamic* rigidDynamic_;
+	PxRigidStatic* rigidStatic_;
+
 
 public:
 	Particle(bool default = false, float maxLifetime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr, bool dynamic = false);
@@ -65,12 +68,25 @@ public:
 	inline void setInitPos(Vector3 pos) { phys_.pos = pos; }
 	inline Vector3 getInitPos() { return phys_.pos; }
 
-	inline void setPos(Vector3 pos) { tr_->p = pos; }
+	inline void setPos(Vector3 pos) { 
+		tr_->p = pos;
+		if (gPhysics_ != nullptr) {
+			if (dynamic_)
+				rigidDynamic_->setGlobalPose(*tr_);
+			else 
+				rigidStatic_->setGlobalPose(*tr_);
+
+		}
+	}
 	inline Vector3 getPos() { return tr_->p; }
 
 
 	// Obtener o cambiar velociad (inicial o actual/simulada)
-	inline void setInitVel(Vector3 v) { phys_.vel = v; }
+	inline void setInitVel(Vector3 v) { 
+		phys_.vel = v; 
+		if(dynamic_)
+			rigidDynamic_->setLinearVelocity(vel_);
+	}
 	inline Vector3 getInitVel() { return phys_.vel; }
 
 	inline void setVel(Vector3 v) { vel_ = v; }
@@ -92,6 +108,10 @@ public:
 	inline void setInvMass(float m) { 
 		phys_.mass = m; 
 		mass_ = m;
+
+		if(dynamic_)
+			rigidDynamic_->setMass(1 / mass_);
+		
 	}
 
 	inline float getMass() { return 1 /phys_.mass; }
@@ -99,11 +119,16 @@ public:
 
 	inline float getSize() { return vis_.size; }
 
-	inline void setDamp(float d) { phys_.damp = d; }
+	inline void setDamp(float d) { 
+		phys_.damp = d; 
+		
+		if(dynamic_)
+			rigidDynamic_->setLinearDamping(phys_.damp);
+	}
 	inline float getDamp() { return phys_.damp; }
 
 
-	PxRigidActor* getRigid() { return rigid_; }
+	PxRigidActor* getRigidActor() { return rigidActor_; }
 
 };
 

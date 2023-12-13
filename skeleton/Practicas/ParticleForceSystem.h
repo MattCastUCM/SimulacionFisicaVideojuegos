@@ -24,7 +24,7 @@ protected:
 
 public:
 	// Se usa -10.0f como gravedad por defecto
-	ParticleForceSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }) : ParticleSystem(g), partForceReg_(nullptr), forces_() { };
+	ParticleForceSystem(const Vector3& g = { 0.0f, -10.0f, 0.0f }, int maxParts = 1000) : ParticleSystem(g, maxParts), partForceReg_(nullptr), forces_() { };
 	
 	virtual ~ParticleForceSystem() {
 		if(partForceReg_ != nullptr) delete partForceReg_;

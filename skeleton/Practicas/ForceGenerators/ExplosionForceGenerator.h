@@ -24,7 +24,7 @@ public:
 			auto dist = pos - origin_;
 			auto rad = dist.magnitude();
 			explR_ = SOUNDVEL_ * elapsedTime_;
-			if ( rad < explR_) {
+			if ( rad < explR_ && rad != 0) {
 				float intensity = k_ / (rad * rad);
 				float eN = exp(-elapsedTime_ / timeConstant_);	// exp(n) = e^n
 

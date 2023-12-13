@@ -1,11 +1,18 @@
 #pragma once
 
-#include "../ParticleSystem.h"
+#include "../ParticleForceSystem.h"
+#include "../ForceGenerators/ExplosionForceGenerator.h"
 
-class RigidCubesSystem : public ParticleSystem {
+class RigidCubesSystem : public ParticleForceSystem {
+protected:
+	ExplosionForceGenerator* expl_;
+	bool explAct_;
+
 public:
-	RigidCubesSystem(PxPhysics* gPhysics, PxScene* gScene) : ParticleSystem({ 0.0f, -9.8f, 0.0f }, 100) 
+	RigidCubesSystem(PxPhysics* gPhysics, PxScene* gScene) : ParticleForceSystem({ 0.0f, -9.8f, 0.0f }, 100)
 	{
+		explAct_ = false;
+
 		PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0, -20, -100 }));
 
 		PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
@@ -16,7 +23,7 @@ public:
 
 
 		Particle::visual v;
-		v.size = 1.0f;
+		v.size = 0.5f;
 		v.geometry = new physx::PxBoxGeometry(v.size, v.size, v.size);
 		v.color = { 1.0f, 0, 0, 1.0f };
 
@@ -25,18 +32,44 @@ public:
 		p.pos = { 0, 0, 0 };
 		p.vel = { 0, 0, 0 };
 		p.acc = { 0, 0, 0 };
-		p.mass = 1 / 5.4f;
+		p.mass = 1 / 50.0f;
 
-		Particle* part = new Particle(v, p, -1, gPhysics, gScene, true);
-		ParticleGenerator* gen = new ParticleGenerator(1, true);
+		Particle* part = new Particle(v, p, 10, gPhysics, gScene, true);
+		ParticleGenerator* gen = new ParticleGenerator(0.5f);
 		gen->changeModelPart(part);
 		gen->changeGenerateN(1);
 		generators_.insert({ "a", gen });
 
 		gen->setOrigin({ 0.0f, 0.0f, -100.0f });
 
-		gScene->removeActor(*part->getRigid());
+		gScene->removeActor(*part->getRigidActor());
 		delete part;
+
+
+		partForceReg_ = new ParticleForceRegistry();
+		expl_ = new ExplosionForceGenerator(10000, 50, 1000, { 0, -20, -100 });
+		forces_.insert(expl_);
 	}
+
+	inline void keyPress(unsigned char key) {
+		switch (tolower(key)) {
+		case '1':
+			explAct_ = !explAct_;
+			if (explAct_) {
+				for (auto part : particles_) {
+					partForceReg_->addForce(expl_, part);
+				}
+			}
+			else {
+				for (auto part : particles_) {
+					partForceReg_->deleteParticleRegistry(part);
+				}
+			}
+			break;
+		default: break;
+		}
+	}
+
+
 };
 
