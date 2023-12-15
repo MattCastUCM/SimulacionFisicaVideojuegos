@@ -256,6 +256,8 @@
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Practicas\Particle.cpp" />
+    <ClCompile Include="Practicas\Particles\DRigidBody.cpp" />
+    <ClCompile Include="Practicas\Particles\SRigidBody.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP1.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP2.cpp" />
     <ClCompile Include="Practicas\Scenes\SceneP3.cpp" />
@@ -288,9 +290,11 @@
     <ClInclude Include="Practicas\ParticleForceSystem.h" />
     <ClInclude Include="Practicas\ParticleGenerator.h" />
     <ClInclude Include="Practicas\ParticleSystem.h" />
+    <ClInclude Include="Practicas\Particles\DRigidBody.h" />
     <ClInclude Include="Practicas\Particles\Firework.h" />
     <ClInclude Include="Practicas\Particles\Mist.h" />
     <ClInclude Include="Practicas\Particles\Projectile.h" />
+    <ClInclude Include="Practicas\Particles\SRigidBody.h" />
     <ClInclude Include="Practicas\Particles\Water.h" />
     <ClInclude Include="Practicas\Scenes\SceneP1.h" />
     <ClInclude Include="Practicas\Scenes\SceneP2.h" />

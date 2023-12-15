@@ -40,26 +40,19 @@ protected:
 	bool alive_;
 
 
-	void init(visual vis, physics phys, float maxLifetime = 1.0f);
+	virtual void init(visual vis, physics phys, float maxLifetime = 1.0f);
 	
-	PxPhysics* gPhysics_;
-	PxScene* gScene_;
-	bool dynamic_;
-	PxRigidActor* rigidActor_;
-	PxRigidDynamic* rigidDynamic_;
-	PxRigidStatic* rigidStatic_;
-
 
 public:
-	Particle(bool default = false, float maxLifetime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr, bool dynamic = false);
-	Particle(visual vis, physics phys, float maxLifetime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr, bool dynamic = false);
+	Particle(bool default = false, float maxLifetime = 1.0f);
+	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
 	virtual ~Particle();
 	virtual void onDeath() { };
 
-	void update(double t);
+	virtual void update(double t);
 
-	void clearForce();
-	void addForce(const Vector3& f);
+	virtual void clearForce();
+	virtual void addForce(const Vector3& f);
 
 	virtual Particle* clone();
 
@@ -68,28 +61,15 @@ public:
 	inline void setInitPos(Vector3 pos) { phys_.pos = pos; }
 	inline Vector3 getInitPos() { return phys_.pos; }
 
-	inline void setPos(Vector3 pos) { 
-		tr_->p = pos;
-		if (gPhysics_ != nullptr) {
-			if (dynamic_)
-				rigidDynamic_->setGlobalPose(*tr_);
-			else 
-				rigidStatic_->setGlobalPose(*tr_);
-
-		}
-	}
+	inline void setPos(Vector3 pos) { tr_->p = pos; }
 	inline Vector3 getPos() { return tr_->p; }
 
 
 	// Obtener o cambiar velociad (inicial o actual/simulada)
-	inline void setInitVel(Vector3 v) { 
-		phys_.vel = v; 
-		if(dynamic_)
-			rigidDynamic_->setLinearVelocity(vel_);
-	}
+	inline void setInitVel(Vector3 v) { phys_.vel = v; }
 	inline Vector3 getInitVel() { return phys_.vel; }
 
-	inline void setVel(Vector3 v) { vel_ = v; }
+	inline virtual void setVel(Vector3 v) { vel_ = v; }
 	inline Vector3 getVel() { return vel_; }
 
 
@@ -105,13 +85,9 @@ public:
 
 
 	// ASUMIENDO QUE LO QUE SE GUARDA COMO MASA ES SU INVERSO
-	inline void setInvMass(float m) { 
+	inline virtual void setInvMass(float m) {
 		phys_.mass = m; 
 		mass_ = m;
-
-		if(dynamic_)
-			rigidDynamic_->setMass(1 / mass_);
-		
 	}
 
 	inline float getMass() { return 1 /phys_.mass; }
@@ -119,16 +95,9 @@ public:
 
 	inline float getSize() { return vis_.size; }
 
-	inline void setDamp(float d) { 
-		phys_.damp = d; 
-		
-		if(dynamic_)
-			rigidDynamic_->setLinearDamping(phys_.damp);
-	}
+	inline virtual void setDamp(float d) { phys_.damp = d; }
 	inline float getDamp() { return phys_.damp; }
 
-
-	PxRigidActor* getRigidActor() { return rigidActor_; }
 
 };
 

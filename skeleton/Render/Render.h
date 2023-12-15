@@ -47,7 +47,9 @@
 #endif
 #include <string>
 
-extern std::string display_text;
+// PRACTICAS
+#include <vector>
+extern std::vector<std::string> display_text;
 
 namespace Snippets
 {

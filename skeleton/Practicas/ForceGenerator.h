@@ -6,22 +6,26 @@
 class ForceGenerator {
 protected:
 	std::string name_;
-	double timeConstant_ = 0.0; // If starting negative --> eternal
-	double duration_ = -1e10;
+	double lifeTime_ = 0.0; // If starting negative --> eternal
+	double maxLifeTime_ = -1e10;
 
 
 public:
-	ForceGenerator(std::string name = "") : name_(name) { }
+	ForceGenerator(std::string name = "", double maxLifeTime = -1) : name_(name), lifeTime_(0.0), maxLifeTime_(maxLifeTime) { }
+
 	virtual ~ForceGenerator() { }
 	
-	inline bool updateTime(double t) {
-		timeConstant_ += t;
-		return timeConstant_ < duration_ || duration_ < 0.0; // Devuelve true si ya era cero o si es positivo
-	}
+	inline void updateTime(double t) { lifeTime_ += t; }
+	inline double getLifeTime() { return lifeTime_; }
+	inline bool isActive() { 
+		return lifeTime_ < maxLifeTime_ || maxLifeTime_ < 0; }
+	inline void resetTime() { lifeTime_ = 0; }
+
+
 	virtual void update(Particle* p, double t) { };
 
 	inline void setName(std::string name) { name_ = name; }
-	inline std::string getTame() { return name_; }
+	inline std::string getName() { return name_; }
 
 	inline virtual void keyPress(unsigned char key) { }
 };

@@ -139,7 +139,7 @@ void renderLoop()
 	StartCounter();
 
 
-	// PRÁCTICAS: Cámara puesta mirando hacia -z
+	// PRACTICAS: Cámara puesta mirando hacia -z
 	sCamera = new Camera(PxVec3(0.0f, 0.0f, 0.0f), PxVec3(0.0f, 0.0f, -1.0f));
 		//new Camera(PxVec3(50.0f, 50.0f, 50.0f), PxVec3(-0.6f,-0.2f,-0.7f));
 

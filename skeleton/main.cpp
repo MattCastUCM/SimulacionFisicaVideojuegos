@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-std::string display_text = "This is a test";
+//std::string display_text = "This is a test";
 
 
 using namespace physx;
@@ -31,9 +31,11 @@ PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
 
 
+// Buscar modificaciones de la plantilla (camara y texto de ejemplo) buscando "PRACTICAS"
+#define PracticasRigidos
+#ifndef PracticasRigidos
+	#define P4
 
-#define P5
-#ifndef P5
 	#ifdef P1 
 		#include "Practicas/Scenes/SceneP1.h"
 		SceneP1* scMngr = nullptr;
@@ -48,8 +50,17 @@ ContactReportCallback gContactReportCallback;
 		SceneP4* scMngr = nullptr;
 	#endif
 #else
-	#include "Practicas/Systems/RigidCubesSystem.h"
-	ParticleSystem* sys_;
+	#define P5
+	
+	#ifdef P5
+		std::vector<std::string> display_text = {
+			"Pulsar boton 1 para activar y desactivar la explosion",
+			"(hay que desactivarla primero",
+			"para volver a activarla despues)"
+		};
+		#include "Practicas/Systems/RigidCubesSystem.h"
+		ParticleSystem* sys_;
+	#endif
 #endif
 
 void setupPr() {
@@ -110,7 +121,7 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 
-#ifndef P5
+#ifndef PracticasRigidos
 	scMngr->update(t);
 #else
 	sys_->update(t);
@@ -122,7 +133,7 @@ void stepPhysics(bool interactive, double t)
 void cleanupPhysics(bool interactive)
 {
 	// IMPORTANTE BORRARLO ANTES QUE LA ESCENA Y LAS FÍSICAS
-#ifndef P5
+#ifndef PracticasRigidos
 	delete scMngr;
 #else
 	delete sys_;
@@ -161,7 +172,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 
-#ifndef P5
+#ifndef PracticasRigidos
 	scMngr->keyPress(key);
 #else
 	sys_->keyPress(key);

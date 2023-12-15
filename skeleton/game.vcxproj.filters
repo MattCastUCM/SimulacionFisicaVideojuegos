@@ -23,6 +23,8 @@
     <ClCompile Include="Practicas\Scenes\SceneP4.cpp" />
     <ClCompile Include="Practicas\Systems\SpringSystem.cpp" />
     <ClCompile Include="Practicas\Systems\WindSystem.cpp" />
+    <ClCompile Include="Practicas\Particles\SRigidBody.cpp" />
+    <ClCompile Include="Practicas\Particles\DRigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -93,6 +95,8 @@
     <ClInclude Include="Practicas\ForceGenerators\ElasticRubberForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\DragForceGenerator.h" />
     <ClInclude Include="Practicas\Systems\RigidCubesSystem.h" />
+    <ClInclude Include="Practicas\Particles\SRigidBody.h" />
+    <ClInclude Include="Practicas\Particles\DRigidBody.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
