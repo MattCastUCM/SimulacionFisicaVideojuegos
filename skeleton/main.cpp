@@ -10,8 +10,20 @@
 
 #include <iostream>
 
-//std::string display_text = "This is a test";
+#include "Definitions.h"
 
+#ifndef Explicaciones
+std::string display_text = "This is a test";
+#else
+	#ifdef P5
+		std::vector<std::string> display_text = {
+			"Pulsar boton 1 para activar y desactivar la explosion",
+			"(hay que desactivarla primero para volver a activarla)"
+		};
+	#elif defined(Proyecto)
+		std::vector<std::string> display_text = { };
+	#endif
+#endif
 
 using namespace physx;
 
@@ -32,7 +44,6 @@ ContactReportCallback gContactReportCallback;
 
 
 // Buscar modificaciones de la plantilla (camara y texto de ejemplo) buscando "PRACTICAS"
-#define PracticasRigidos
 #ifndef PracticasRigidos
 	#define P4
 
@@ -50,17 +61,12 @@ ContactReportCallback gContactReportCallback;
 		SceneP4* scMngr = nullptr;
 	#endif
 #else
-	#define P5
-	
 	#ifdef P5
-		std::vector<std::string> display_text = {
-			"Pulsar boton 1 para activar y desactivar la explosion",
-			"(hay que desactivarla primero",
-			"para volver a activarla despues)"
-		};
 		#include "Practicas/Systems/RigidCubesSystem.h"
-		ParticleSystem* sys_;
-	#endif
+	#else
+		#include "Proyecto/ProySystem.h"
+#endif
+	ParticleSystem* sys_;
 #endif
 
 void setupPr() {
@@ -73,9 +79,11 @@ void setupPr() {
 #elif defined(P4)
 		scMngr = new SceneP4();
 #else
-
-	sys_ = new RigidCubesSystem(gPhysics, gScene);
-	
+	#ifdef P5
+		sys_ = new RigidCubesSystem(gPhysics, gScene);
+	#elif defined(Proyecto)
+		sys_ = new ProySys(gPhysics, gScene);
+	#endif	
 #endif
 }
 
@@ -164,13 +172,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		//case 'B': break;
 		//case ' ':	break;
-	case ' ':
-	{
-		break;
-	}
 	default:
 		break;
 	}
+
 
 #ifndef PracticasRigidos
 	scMngr->keyPress(key);
@@ -185,7 +190,9 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
 
-	//std::cout << "col\n";
+#ifdef Proyecto
+	((ProySys*)sys_)->onCollision(actor1, actor2);
+#endif
 }
 
 

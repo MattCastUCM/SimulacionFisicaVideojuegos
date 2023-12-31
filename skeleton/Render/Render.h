@@ -47,9 +47,17 @@
 #endif
 #include <string>
 
+
 // PRACTICAS
-#include <vector>
-extern std::vector<std::string> display_text;
+#include "../Definitions.h"
+
+#ifdef Explicaciones
+	#include <vector>
+	extern std::vector<std::string> display_text;
+#else
+	extern std::string display_text;
+#endif // Explicaciones
+
 
 namespace Snippets
 {

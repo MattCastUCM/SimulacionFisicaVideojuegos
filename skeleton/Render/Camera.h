@@ -48,6 +48,15 @@ public:
 	physx::PxVec3		getEye()	const;
 	physx::PxVec3		getDir()	const;
 	physx::PxTransform	getTransform() const;
+
+	// PRACTICAS
+	void setPos(physx::PxVec3 pos);
+	void rotate(unsigned char key);
+	void resetRot();
+private:
+	physx::PxVec3	initDir;
+
+
 private:
 	physx::PxVec3	mEye;
 	physx::PxVec3	mDir;

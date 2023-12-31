@@ -3,29 +3,19 @@
 DRigidBody::DRigidBody(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) {
 	rigidActor_ = nullptr;
 	rigid_ = nullptr;
+	shape_ = nullptr;
 	gPhysics_ = gPhys;
 	gScene_ = gScene;
 	if (default) {
-		DRigidBody::visual v;
-		v.size = 1.0f;
-		v.geometry = new physx::PxSphereGeometry(v.size);
-
-		v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-		DRigidBody::physics p;
-		p.damp = 0.998f;
-		p.pos = { 0, 0, 0 };
-		p.vel = { 0, 0, 0 };
-		p.acc = { 0, 0, 0 };
-		p.mass = 1 / 5.4f;
-
-		init(v, p, maxLifetime);
+		vis_.geometry = new physx::PxSphereGeometry(vis_.size);
+		init(vis_, phys_, maxLifetime);
 	}
 }
 
 DRigidBody::DRigidBody(visual vis, physics phys, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) {
 	rigidActor_ = nullptr;
 	rigid_ = nullptr;
+	shape_ = nullptr;
 	gPhysics_ = gPhys;
 	gScene_ = gScene;
 
@@ -50,13 +40,13 @@ void DRigidBody::init(visual vis, physics phys, float maxLifetime) {
 
 	accumForce_ = { 0, 0, 0 };
 
-	PxShape* shape = CreateShape(*vis_.geometry);
+	shape_ = CreateShape(*vis_.geometry, vis_.material);
 	tr_ = new physx::PxTransform(phys_.pos);
 	rigid_ = gPhysics_->createRigidDynamic(*tr_);
 	rigidActor_ = rigid_;
-	rigidActor_->attachShape(*shape);
+	rigidActor_->attachShape(*shape_);
 	gScene_->addActor(*rigidActor_);
-	renderItem_ = new RenderItem(shape, rigidActor_, vis_.color);
+	renderItem_ = new RenderItem(shape_, rigidActor_, vis_.color);
 
 	// ASUMIENDO QUE EN mass_ SE GUARDA la densidad
 	PxRigidBodyExt::updateMassAndInertia(*rigid_, mass_);		// NO USAR rigid_->setMass(1 / mass_);
@@ -81,13 +71,16 @@ void DRigidBody::update(double t) {
 		else {
 			lifetime_ += t;
 			*tr_ = rigid_->getGlobalPose();
+			vel_ = rigid_->getLinearVelocity();
 		}
 	}
 }
-void DRigidBody::addForce(const Vector3& f) {
-	rigid_->addForce(f);
-	//rigid_->addTorque
+void DRigidBody::addForce(const Vector3& f, PxForceMode::Enum mode, bool autoawake) {
+	rigid_->addForce(f, mode, autoawake);
 }
+//void DRigidBody::addTorque(const Vector3& t, PxForceMode::Enum mode, bool autoawake) {
+//	rigid_->addTorque(t, mode, autoawake);
+//}
 
 
 Particle* DRigidBody::clone() {

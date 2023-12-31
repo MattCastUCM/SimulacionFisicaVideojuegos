@@ -2,20 +2,8 @@
 
 Particle::Particle(bool default, float maxLifetime) {
 	if (default) {
-		Particle::visual v;
-		v.size = 1.0f;
-		v.geometry = new physx::PxSphereGeometry(v.size);
-		
-		v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-		Particle::physics p;
-		p.damp = 0.998f;
-		p.pos = { 0, 0, 0 };
-		p.vel = { 0, 0, 0 };
-		p.acc = { 0, 0, 0 };
-		p.mass = 1 / 5.4f;
-
-		init(v, p, maxLifetime);
+		vis_.geometry = new physx::PxSphereGeometry(vis_.size);
+		init(vis_, phys_, maxLifetime);
 	}
 }
 
@@ -42,7 +30,7 @@ void Particle::init(visual vis, physics phys, float maxLifetime) {
 
 	accumForce_ = { 0, 0, 0 };
 
-	PxShape* shape = CreateShape(*vis_.geometry);
+	PxShape* shape = CreateShape(*vis_.geometry, vis_.material);
 	tr_ = new physx::PxTransform(phys_.pos);
 	renderItem_ = new RenderItem(shape, tr_, vis_.color);
 

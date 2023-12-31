@@ -8,6 +8,7 @@ protected:
 	PxScene* gScene_;
 	PxRigidActor* rigidActor_;
 	PxRigidStatic* rigid_;
+	PxShape* shape_;
 
 	virtual void init(visual vis, physics phys, float maxLifetime = 1.0f);
 
@@ -26,9 +27,11 @@ public:
 		tr_->p = pos;
 		rigid_->setGlobalPose(*tr_);
 	}
+	inline Vector3 getPos() { return rigid_->getGlobalPose().p; }
 
 
-	PxRigidActor* getRigidActor() { return rigidActor_; }
+	inline PxRigidActor* getRigidActor() { return rigidActor_; }
+	inline PxShape* getShape() { return shape_; }
 
 };
 

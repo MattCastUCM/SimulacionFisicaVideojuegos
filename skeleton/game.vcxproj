@@ -264,6 +264,7 @@
     <ClCompile Include="Practicas\Scenes\SceneP4.cpp" />
     <ClCompile Include="Practicas\Systems\SpringSystem.cpp" />
     <ClCompile Include="Practicas\Systems\WindSystem.cpp" />
+    <ClCompile Include="Proyecto\ProySystem.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
@@ -271,6 +272,7 @@
   <ItemGroup>
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="Definitions.h" />
     <ClInclude Include="Practicas\ForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\BuoyancyForceGenerator.h" />
     <ClInclude Include="Practicas\ForceGenerators\DragForceGenerator.h" />
@@ -308,6 +310,10 @@
     <ClInclude Include="Practicas\Systems\SpringSystem.h" />
     <ClInclude Include="Practicas\Systems\WaterSystem.h" />
     <ClInclude Include="Practicas\Systems\WindSystem.h" />
+    <ClInclude Include="Proyecto\HolePushForceGenerator.h" />
+    <ClInclude Include="Proyecto\Pin.h" />
+    <ClInclude Include="Proyecto\ProySystem.h" />
+    <ClInclude Include="Proyecto\ThrowForceGenerator.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />

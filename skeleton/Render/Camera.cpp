@@ -44,6 +44,9 @@ Camera::Camera(const PxVec3& eye, const PxVec3& dir)
 	mDir = dir.getNormalized();
 	mMouseX = 0;
 	mMouseY = 0;
+
+	// PRACTICAS
+	initDir = mDir;
 }
 
 void Camera::handleMouse(int button, int state, int x, int y)
@@ -54,12 +57,17 @@ void Camera::handleMouse(int button, int state, int x, int y)
 	mMouseY = y;
 }
 
+// PRACTICAS
+#include "../Definitions.h"
 bool Camera::handleKey(unsigned char key, int x, int y, float speed)
 {
 	PX_UNUSED(x);
 	PX_UNUSED(y);
 
+
 	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
+
+#ifdef Proyecto
 	switch(toupper(key))
 	{
 	case 'W':	mEye += mDir*2.0f*speed;		break;
@@ -68,7 +76,13 @@ bool Camera::handleKey(unsigned char key, int x, int y, float speed)
 	case 'D':	mEye += viewY*2.0f*speed;		break;
 	default:							return false;
 	}
+
 	return true;
+#else
+	return false;
+#endif
+
+	
 }
 
 void Camera::handleAnalogMove(float x, float y)
@@ -80,6 +94,7 @@ void Camera::handleAnalogMove(float x, float y)
 
 void Camera::handleMotion(int x, int y)
 {
+#ifdef Proyecto
 	int dx = mMouseX - x;
 	int dy = mMouseY - y;
 
@@ -91,7 +106,7 @@ void Camera::handleMotion(int x, int y)
 	mDir = qy.rotate(mDir);
 
 	mDir.normalize();
-
+#endif
 	mMouseX = x;
 	mMouseY = y;
 }
@@ -106,6 +121,29 @@ PxTransform Camera::getTransform() const
 	PxMat33 m(mDir.cross(viewY), viewY, -mDir);
 	return PxTransform(mEye, PxQuat(m));
 }
+
+
+void Camera::setPos(physx::PxVec3 pos) {
+	mEye = pos;
+}
+
+void Camera::rotate(unsigned char key) {
+	auto k = tolower(key);
+	if (k == 'a') {
+		PxQuat qx(PxPi / 180.0f, PxVec3(0, 1, 0));
+		mDir = qx.rotate(mDir);
+	}
+	else if (k == 'd') {
+		PxQuat qx(PxPi / 180.0f, PxVec3(0, -1, 0));
+		mDir = qx.rotate(mDir);
+	}
+}
+void Camera::resetRot() {
+	mDir = initDir;
+}
+
+
+
 
 PxVec3 Camera::getEye() const
 { 

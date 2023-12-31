@@ -134,15 +134,20 @@ void exitCallback(void)
 }
 }
 
+
+#include "Definitions.h"
 void renderLoop()
 {
 	StartCounter();
 
 
 	// PRACTICAS: Cámara puesta mirando hacia -z
+#ifndef Proyecto
 	sCamera = new Camera(PxVec3(0.0f, 0.0f, 0.0f), PxVec3(0.0f, 0.0f, -1.0f));
 		//new Camera(PxVec3(50.0f, 50.0f, 50.0f), PxVec3(-0.6f,-0.2f,-0.7f));
-
+#else
+	sCamera = new Camera(PxVec3(0.0f, 10.0f, 0.0f), PxVec3(0.0f, -0.3f, -1.0f));
+#endif
 	setupDefaultWindow("Simulacion Fisica Videojuegos");
 	setupDefaultRenderState();
 

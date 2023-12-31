@@ -88,4 +88,19 @@ public:
 		forces_.erase(f);
 	}
 
+
+	// Elimina una fuerza de una partícula o una partícula de una fuerza 
+	inline void removeForce(ForceGenerator* fg, Particle* p) {
+		auto &f = forces_.find(fg);
+		if (f != forces_.end()) {
+			auto &parts = forces_.at(fg);
+			parts.erase(p);
+		}
+
+		auto &part = particles_.find(p);
+		if (part != particles_.end()) {
+			auto &f = particles_.at(p);
+			f.erase(fg);
+		}
+	}
 };

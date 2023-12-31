@@ -10,17 +10,18 @@ public:
 	// Tamaño, forma y color
 	struct visual {
 		float size = 1.0f;
-		physx::PxGeometry* geometry;
-		Vector4 color = { 1.0f, 0.0f, 0.0f, 1.0f };
+		physx::PxGeometry* geometry = nullptr;
+		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		PxMaterial* material = nullptr;
 	};
 
 	// Físicas iniciales
 	struct physics {
-		Vector3 pos,	// Posición
-			vel,		// Dirección/velocidad (vector)
-			acc;		// Aceleración (vector) en m/s^2
-		float damp,		// Rozamiento (magnitud)
-			  mass;		// Masa (magnitud) en kg. Se utiliza para guardar el inverso de la masa al aplicar fuerzas
+		Vector3 pos = { 0, 0, 0 },	// Posición
+			vel = { 0, 0, 0 },		// Dirección/velocidad (vector)
+			acc = { 0, 0, 0 };		// Aceleración (vector) en m/s^2
+		float damp = 0.998f,		// Rozamiento (magnitud)
+			  mass = 1 / 5.0f;		// Masa (magnitud) en kg. Se utiliza para guardar el inverso de la masa al aplicar fuerzas
 	};
 
 protected:
@@ -62,7 +63,7 @@ public:
 	inline Vector3 getInitPos() { return phys_.pos; }
 
 	inline void setPos(Vector3 pos) { tr_->p = pos; }
-	inline Vector3 getPos() { return tr_->p; }
+	inline virtual Vector3 getPos() { return tr_->p; }
 
 
 	// Obtener o cambiar velociad (inicial o actual/simulada)
@@ -90,14 +91,16 @@ public:
 		mass_ = m;
 	}
 
-	inline float getMass() { return 1 /phys_.mass; }
-	inline float getInvMass() { return phys_.mass; }
+	inline virtual float getMass() { return 1 /phys_.mass; }
+	inline virtual float getInvMass() { return phys_.mass; }
 
 	inline float getSize() { return vis_.size; }
 
 	inline virtual void setDamp(float d) { phys_.damp = d; }
 	inline float getDamp() { return phys_.damp; }
 
-
+	inline physx::PxTransform& getTransform() const {
+		return *tr_;
+	}
 };
 

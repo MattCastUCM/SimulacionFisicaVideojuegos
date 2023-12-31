@@ -25,6 +25,7 @@
     <ClCompile Include="Practicas\Systems\WindSystem.cpp" />
     <ClCompile Include="Practicas\Particles\SRigidBody.cpp" />
     <ClCompile Include="Practicas\Particles\DRigidBody.cpp" />
+    <ClCompile Include="Proyecto\ProySystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -97,6 +98,11 @@
     <ClInclude Include="Practicas\Systems\RigidCubesSystem.h" />
     <ClInclude Include="Practicas\Particles\SRigidBody.h" />
     <ClInclude Include="Practicas\Particles\DRigidBody.h" />
+    <ClInclude Include="Definitions.h" />
+    <ClInclude Include="Proyecto\ProySystem.h" />
+    <ClInclude Include="Proyecto\ThrowForceGenerator.h" />
+    <ClInclude Include="Proyecto\HolePushForceGenerator.h" />
+    <ClInclude Include="Proyecto\Pin.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

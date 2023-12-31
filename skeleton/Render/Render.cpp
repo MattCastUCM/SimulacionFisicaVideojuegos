@@ -249,7 +249,11 @@ void setupDefaultWindow(const char *name)
 
 	glutInit(&argc, argv);
 	
-	glutInitWindowSize(512, 512);
+	// PRACTICAS
+	//glutInitWindowSize(512, 512);
+	glutInitWindowSize(INIT_WINDOW_W, INIT_WINDOW_H);
+
+
 	glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE|GLUT_DEPTH);
 	int mainHandle = glutCreateWindow(name);
 	glutSetWindow(mainHandle);
@@ -261,7 +265,11 @@ void setupDefaultWindow(const char *name)
 void setupDefaultRenderState()
 {
 	// Setup default render states
-	glClearColor(0.3f, 0.4f, 0.5f, 1.0);
+	// PRACTICAS: COLOR DEL FONDO
+	//glClearColor(0.3f, 0.4f, 0.5f, 1.0);
+	glClearColor(143 / 255.0f, 181 / 255.0f, 242 / 255.0f, 1.0);
+
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_COLOR_MATERIAL);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -282,6 +290,8 @@ void setupDefaultRenderState()
 }
 
 
+
+
 void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNear, PxReal clipFar)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -289,9 +299,14 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 	// PRACTICAS
 	// Display text
 	glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
-	for (int i = 0; i < display_text.size(); i++) {
-		drawText(display_text[i], 0, display_text.size() * 10 - i * 10);
-	}
+	#ifdef Explicaciones
+		for (int i = 0; i < display_text.size(); i++) {
+			drawText(display_text[i], 10, display_text.size() * 10 - i * 15);
+		}
+	#else
+		drawText(display_text, 0, 0);
+	#endif
+	
 
 	// Setup camera
 	glMatrixMode(GL_PROJECTION);
@@ -391,7 +406,12 @@ void drawText(const std::string& text, int x, int y)
 	double* matrix = new double[16];
 	glGetDoublev(GL_PROJECTION_MATRIX, matrix);
 	glLoadIdentity();
-	glOrtho(0, 512, 0, 512, -5, 5);
+
+	// PRACTICAS
+	//glOrtho(0, 512, 0, 512, -5, 5);
+	glOrtho(0, INIT_WINDOW_W, 0, INIT_WINDOW_H, -5, 5);
+
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glPushMatrix();
