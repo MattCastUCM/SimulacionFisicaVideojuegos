@@ -51,7 +51,7 @@ void DRigidBody::init(visual vis, physics phys, float maxLifetime) {
 	// ASUMIENDO QUE EN mass_ SE GUARDA la densidad
 	PxRigidBodyExt::updateMassAndInertia(*rigid_, mass_);		// NO USAR rigid_->setMass(1 / mass_);
 	rigid_->setLinearVelocity(vel_);
-	rigid_->setLinearDamping(phys_.damp);
+	//rigid_->setLinearDamping(phys_.damp);
 
 	// Usar en otros casos?
 	//rigid_->setAngularVelocity();

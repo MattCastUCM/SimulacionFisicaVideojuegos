@@ -127,13 +127,12 @@ void Camera::setPos(physx::PxVec3 pos) {
 	mEye = pos;
 }
 
-void Camera::rotate(unsigned char key) {
-	auto k = tolower(key);
-	if (k == 'a') {
+void Camera::rotate(bool clockwise) {
+	if (clockwise) {
 		PxQuat qx(PxPi / 180.0f, PxVec3(0, 1, 0));
 		mDir = qx.rotate(mDir);
 	}
-	else if (k == 'd') {
+	else {
 		PxQuat qx(PxPi / 180.0f, PxVec3(0, -1, 0));
 		mDir = qx.rotate(mDir);
 	}

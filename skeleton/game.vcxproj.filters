@@ -100,9 +100,9 @@
     <ClInclude Include="Practicas\Particles\DRigidBody.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Proyecto\ProySystem.h" />
-    <ClInclude Include="Proyecto\ThrowForceGenerator.h" />
-    <ClInclude Include="Proyecto\HolePushForceGenerator.h" />
     <ClInclude Include="Proyecto\Pin.h" />
+    <ClInclude Include="Proyecto\ImpulseForceGenerator.h" />
+    <ClInclude Include="Proyecto\RigidSpringForceGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

@@ -2,6 +2,7 @@
 #define PracticasRigidos
 //#define P5
 #define Proyecto
+//#define Explicaciones
 
 
 // Configuración del render y la ventana
@@ -12,5 +13,3 @@
 	#define INIT_WINDOW_W 512
 	#define INIT_WINDOW_H 512
 #endif
-
-#define Explicaciones

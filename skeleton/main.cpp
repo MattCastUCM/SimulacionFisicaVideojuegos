@@ -83,6 +83,7 @@ void setupPr() {
 		sys_ = new RigidCubesSystem(gPhysics, gScene);
 	#elif defined(Proyecto)
 		sys_ = new ProySys(gPhysics, gScene);
+
 	#endif	
 #endif
 }
