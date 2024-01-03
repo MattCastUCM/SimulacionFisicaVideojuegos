@@ -22,6 +22,7 @@ std::string display_text = "This is a test";
 		};
 	#elif defined(Proyecto)
 		std::vector<std::string> display_text = { };
+		std::string score = "score: " + std::to_string(0);
 	#endif
 #endif
 
@@ -79,12 +80,48 @@ void setupPr() {
 #elif defined(P4)
 		scMngr = new SceneP4();
 #else
+	PxU32 gr1 = 1;
+	PxU32 gr2 = 2;
+
+	PxU32 m1 = 0; // Collides with no groups
+	PxU32 m2 = 0; // Collides with no groups
+
+	PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
+	shape->setSimulationFilterData(PxFilterData(gr1, m1, 0, 0));
+
+	PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
+	suelo->attachShape(*shape);
+
+	gScene->addActor(*suelo);
+	RenderItem* item = new RenderItem(shape, suelo, { 0.8, 0.8, 0.8, 0.1 });
+
+	PxRigidDynamic* solid;
+
+	shape = CreateShape(PxBoxGeometry(1, 1, 1));
+	shape->setSimulationFilterData(PxFilterData(gr2, m2, 0, 0));
+
+	solid = gPhysics->createRigidDynamic(PxTransform({ 0, 10, 0 }));
+	solid->setLinearVelocity({ 0,0,0 });
+	solid->setAngularVelocity({ 0,0,0 });
+	solid->attachShape(*shape);
+
+	PxRigidBodyExt::updateMassAndInertia(*solid, 1);
+	gScene->addActor(*solid);
+	item = new RenderItem(shape, solid, { 1.0, 0.0, 0.0, 1.0 });
+
+
+
+
 	#ifdef P5
 		sys_ = new RigidCubesSystem(gPhysics, gScene);
 	#elif defined(Proyecto)
-		sys_ = new ProySys(gPhysics, gScene);
+		sys_ = new ParticleSystem();
 
-	#endif	
+		//sys_ = new ProySys(gPhysics, gScene);
+
+
+		
+	#endif
 #endif
 }
 
@@ -192,7 +229,7 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	PX_UNUSED(actor2);
 
 #ifdef Proyecto
-	((ProySys*)sys_)->onCollision(actor1, actor2);
+	//((ProySys*)sys_)->onCollision(actor1, actor2);
 #endif
 }
 

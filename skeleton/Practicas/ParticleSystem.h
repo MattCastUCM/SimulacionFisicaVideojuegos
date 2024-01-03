@@ -10,20 +10,25 @@ protected:
 	bool active_;
 
 	std::list<Particle*> particles_;
+	std::list<Particle*> remove_;
 	std::unordered_map<std::string, ParticleGenerator*> generators_;
 	
 	int maxParts_;
 
 	inline virtual void refresh() {
-		for (auto it = particles_.begin(); it != particles_.end(); ) {
-			if (!(*it)->isAlive()) {
-				(*it)->onDeath();
-
-				delete *it;
-				it = particles_.erase(it);
+		for (auto p : particles_) {
+			if (!p->isAlive()) {
+				p->onDeath();
+				remove_.push_back(p);
 			}
-			else ++it;
 		}
+
+		for (auto it = remove_.begin(); it != remove_.end(); ) {
+			particles_.remove(*it);
+			delete* it;
+			it = remove_.erase(it);
+		}
+
 	}
 
 	inline virtual void generateParticles(double t) {

@@ -67,7 +67,7 @@ bool Camera::handleKey(unsigned char key, int x, int y, float speed)
 
 	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
 
-#ifdef Proyecto
+#ifdef CamaraTeclas
 	switch(toupper(key))
 	{
 	case 'W':	mEye += mDir*2.0f*speed;		break;

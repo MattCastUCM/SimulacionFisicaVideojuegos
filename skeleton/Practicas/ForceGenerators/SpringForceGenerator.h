@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../ForceGenerator.h"
-#include <iostream>
-using namespace std;
 
 class SpringForceGenerator : public ForceGenerator {
 protected:

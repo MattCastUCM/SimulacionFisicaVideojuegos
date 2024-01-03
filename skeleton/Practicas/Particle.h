@@ -22,6 +22,9 @@ public:
 			acc = { 0, 0, 0 };		// Aceleración (vector) en m/s^2
 		float damp = 0.998f,		// Rozamiento (magnitud)
 			  mass = 1 / 5.0f;		// Masa (magnitud) en kg. Se utiliza para guardar el inverso de la masa al aplicar fuerzas
+
+		// Grupos de colisión (solo para rigidos)
+		PxU32 colGrp = 0, colMask = 0xFFFFFFFF;
 	};
 
 protected:
@@ -102,5 +105,6 @@ public:
 	inline physx::PxTransform& getTransform() const {
 		return *tr_;
 	}
+
 };
 

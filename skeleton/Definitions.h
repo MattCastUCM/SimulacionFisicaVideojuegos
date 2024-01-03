@@ -2,7 +2,8 @@
 #define PracticasRigidos
 //#define P5
 #define Proyecto
-//#define Explicaciones
+//#define CamaraTeclas
+#define Explicaciones
 
 
 // Configuración del render y la ventana

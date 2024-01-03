@@ -42,6 +42,10 @@ void DRigidBody::init(visual vis, physics phys, float maxLifetime) {
 
 	shape_ = CreateShape(*vis_.geometry, vis_.material);
 	tr_ = new physx::PxTransform(phys_.pos);
+
+	// MATRIZ DE COLISION (SE TIENE QUE CREAR ANTES DE CREAR EL RIGIDO)
+	shape_->setSimulationFilterData(PxFilterData(phys_.colGrp, phys_.colMask, 0, 0));
+
 	rigid_ = gPhysics_->createRigidDynamic(*tr_);
 	rigidActor_ = rigid_;
 	rigidActor_->attachShape(*shape_);
@@ -51,14 +55,13 @@ void DRigidBody::init(visual vis, physics phys, float maxLifetime) {
 	// ASUMIENDO QUE EN mass_ SE GUARDA la densidad
 	PxRigidBodyExt::updateMassAndInertia(*rigid_, mass_);		// NO USAR rigid_->setMass(1 / mass_);
 	rigid_->setLinearVelocity(vel_);
-	//rigid_->setLinearDamping(phys_.damp);
+	rigid_->setAngularVelocity(vel_);
+
 
 	// Usar en otros casos?
+	//rigid_->setLinearDamping(phys_.damp);
 	//rigid_->setAngularVelocity();
-	//rigid_->setAngularDamping();
-	//rigid_->setMassSpaceInertiaTensor();
-
-	
+	//rigid_->setAngularDamping();	
 }
 
 void DRigidBody::update(double t) {

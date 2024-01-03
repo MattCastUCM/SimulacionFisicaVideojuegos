@@ -299,6 +299,9 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 	// PRACTICAS
 	// Display text
 	glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
+	#ifdef Proyecto
+		drawText(score, 10, INIT_WINDOW_H - 20);
+	#endif
 	#ifdef Explicaciones
 		for (int i = 0; i < display_text.size(); i++) {
 			drawText(display_text[i], 10, display_text.size() * 10 - i * 15);
@@ -427,6 +430,10 @@ void drawText(const std::string& text, int x, int y)
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixd(matrix);
 	glMatrixMode(GL_MODELVIEW);
+}
+
+void changeScore(int s) {
+	score = "score: " + std::to_string(s);
 }
 
 

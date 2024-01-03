@@ -42,6 +42,10 @@ void SRigidBody::init(visual vis, physics phys, float maxLifetime) {
 
 	shape_ = CreateShape(*vis_.geometry);
 	tr_ = new physx::PxTransform(phys_.pos);
+
+	// MATRIZ DE COLISION (SE TIENE QUE CREAR ANTES DE CREAR EL RIGIDO)
+	shape_->setSimulationFilterData(PxFilterData(phys_.colGrp, phys_.colMask, 0, 0));
+
 	rigid_ = gPhysics_->createRigidStatic(*tr_);
 	rigidActor_ = rigid_;
 	rigidActor_->attachShape(*shape_);

@@ -35,9 +35,9 @@ public:
 	inline void setVel(Vector3 v) { 
 		vel_ = v; 
 		rigid_->setLinearVelocity(vel_);
-		rigid_->setAngularVelocity(vel_);
 	}
-	
+	inline void setAngularVel(Vector3 v) { rigid_->setAngularVelocity(v); }
+
 	// ASUMIENDO QUE LO QUE SE GUARDA COMO MASA ES LA DENSIDAD
 	inline void setInvMass(float m) { 
 		phys_.mass = m; 
