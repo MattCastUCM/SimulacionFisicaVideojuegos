@@ -3,6 +3,7 @@
 #include "../ParticleSystem.h"
 #include "../Particles/Water.h"
 #include "../ParticleGenerators/GaussianParticleGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class WaterSystem : public ParticleSystem {
 public:

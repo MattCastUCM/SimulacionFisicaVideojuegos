@@ -6,6 +6,7 @@ using namespace physx;
 
 #include <iostream>
 using namespace std;
+#include "../checkMemLeaks.h"
 
 class Pin : public DRigidBody {
 private:
@@ -49,13 +50,16 @@ public:
 		DRigidBody::update(t);
 		
 		auto rot = tr_->q;
-		cout << rot.x << ' ' << rot.y << ' ' << rot.z << '\n';
-		if ((rot.x >= 0.5f || rot.x <= -0.5f /*|| rot.z >= 0.9f || rot.z <= -0.9f*/))
-			remove_ = true;
-
-		if(remove_){
+		/*if(!remove_) 
+			cout << rot.x << ' ' << rot.y << ' ' << rot.z << '\n';
+		else */if (remove_) {
 			removeDelay_ += t;
 			if (removeDelay_ >= DELAY_) callback_(this);
 		}
+
+		if ((rot.x >= 0.5f || rot.x <= -0.5f || rot.z >= 0.9f || rot.z <= -0.9f))
+			remove_ = true;
+
+		
 	};
 };

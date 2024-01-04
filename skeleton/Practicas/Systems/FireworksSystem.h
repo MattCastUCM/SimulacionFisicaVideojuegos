@@ -5,6 +5,7 @@
 #include "../ParticleGenerators/GaussianParticleGenerator.h"
 #include "../ParticleGenerators/CircleGenerator.h"
 #include "../ParticleGenerators/HeartGenerator.h"
+#include "../../checkMemLeaks.h"
 
 
 #include <time.h>       /* time */

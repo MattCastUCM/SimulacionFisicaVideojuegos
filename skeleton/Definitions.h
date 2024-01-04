@@ -3,7 +3,7 @@
 //#define P5
 #define Proyecto
 //#define CamaraTeclas
-#define Explicaciones
+//#define Explicaciones
 
 
 // Configuración del render y la ventana

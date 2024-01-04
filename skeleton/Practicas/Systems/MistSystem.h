@@ -3,6 +3,7 @@
 #include "../ParticleSystem.h"
 #include "../Particles/Mist.h"
 #include "../ParticleGenerators/MistGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class MistSystem : public ParticleSystem {
 public:

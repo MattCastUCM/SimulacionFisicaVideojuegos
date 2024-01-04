@@ -1,4 +1,5 @@
 #include "WindSystem.h"
+#include "../../checkMemLeaks.h"
 
 WindSystem::WindSystem(const Vector3& g) : ParticleForceSystem(g), windActive_(false) {
 	partForceReg_ = new ParticleForceRegistry();

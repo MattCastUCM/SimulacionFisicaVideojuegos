@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../ForceGenerator.h"
+#include "../../checkMemLeaks.h"
+
 class WindForceGenerator : public ForceGenerator {
 protected:
 	float k1_, k2_;

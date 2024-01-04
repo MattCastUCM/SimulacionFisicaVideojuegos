@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ParticleGenerators/GaussianParticleGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class CircleGenerator : public GaussianParticleGenerator {
 public:

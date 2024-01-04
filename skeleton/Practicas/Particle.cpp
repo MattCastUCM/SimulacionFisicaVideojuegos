@@ -1,4 +1,5 @@
 #include "Particle.h"
+#include "../checkMemLeaks.h"
 
 Particle::Particle(bool default, float maxLifetime) {
 	if (default) {
@@ -12,8 +13,12 @@ Particle::Particle(visual vis, physics phys, float maxLifetime) {
 }
 
 Particle::~Particle() {
-	if(renderItem_ != nullptr) DeregisterRenderItem(renderItem_);
+	if (renderItem_ != nullptr) { 
+		DeregisterRenderItem(renderItem_); 
+		delete renderItem_;
+	}
 	if (tr_ != nullptr) delete tr_;
+	if (!vis_.clone && vis_.geometry != nullptr) delete vis_.geometry;
 }
 
 
@@ -77,6 +82,7 @@ Particle* Particle::clone() {
 	v.size = vis_.size;
 	v.geometry = vis_.geometry;
 	v.color = vis_.color;
+	v.clone = true;
 
 	return new Particle(v, phys_, maxLifetime_);
 }

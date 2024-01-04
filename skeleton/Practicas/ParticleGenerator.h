@@ -3,6 +3,7 @@
 #include <list>
 #include "Particle.h"
 #include <random>
+#include "../checkMemLeaks.h"
 
 class ParticleGenerator {
 protected:

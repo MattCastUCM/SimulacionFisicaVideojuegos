@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GaussianParticleGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class MistGenerator : public GaussianParticleGenerator {
 protected:

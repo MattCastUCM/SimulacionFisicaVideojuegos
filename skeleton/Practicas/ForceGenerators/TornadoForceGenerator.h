@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WindForceGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class TornadoForceGenerator : public WindForceGenerator {
 protected:

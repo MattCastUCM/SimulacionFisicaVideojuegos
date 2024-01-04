@@ -2,6 +2,7 @@
 
 #include "ParticleSystem.h"
 #include "ParticleForceRegistry.h"
+#include "../checkMemLeaks.h"
 
 class ParticleForceSystem : public ParticleSystem {
 protected:

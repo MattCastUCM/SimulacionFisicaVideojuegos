@@ -2,6 +2,7 @@
 
 #include "Particle.h"
 #include "ParticleGenerator.h"
+#include "../checkMemLeaks.h"
 
 #include <unordered_map>
 class ParticleSystem {

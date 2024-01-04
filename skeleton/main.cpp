@@ -10,21 +10,30 @@
 
 #include <iostream>
 
+#include "checkMemLeaks.h"
 #include "Definitions.h"
 
 #ifndef Explicaciones
-std::string display_text = "This is a test";
-#else
-	#ifdef P5
+	#ifndef Proyecto
+		std::string display_text = "This is a test";
+
+	#else
 		std::vector<std::string> display_text = {
-			"Pulsar boton 1 para activar y desactivar la explosion",
-			"(hay que desactivarla primero para volver a activarla)"
+		"A, D para girar la camara y el disparo",
+		"Mantener pulsado S para cargar el disparo",
+		"Espacio para disparar"
 		};
-	#elif defined(Proyecto)
-		std::vector<std::string> display_text = { };
 		std::string score = "score: " + std::to_string(0);
-	#endif
+	#endif 
+
+#elif defined(P5)
+	std::vector<std::string> display_text = {
+		"Pulsar boton 1 para activar y desactivar la explosion",
+		"(hay que desactivarla primero para volver a activarla)"
+	};
 #endif
+
+
 
 using namespace physx;
 
@@ -80,47 +89,42 @@ void setupPr() {
 #elif defined(P4)
 		scMngr = new SceneP4();
 #else
-	PxU32 gr1 = 1;
-	PxU32 gr2 = 2;
+	//PxU32 gr1 = 1;
+	//PxU32 gr2 = 2;
 
-	PxU32 m1 = 0; // Collides with no groups
-	PxU32 m2 = 0; // Collides with no groups
+	//PxU32 m1 = 0; // Collides with no groups
+	//PxU32 m2 = 0; // Collides with no groups
 
-	PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
-	shape->setSimulationFilterData(PxFilterData(gr1, m1, 0, 0));
+	//gMaterial = gPhysics->createMaterial(0.0f, 0.0f, 0.0f);
+	//PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100), gMaterial);
+	//shape->setSimulationFilterData(PxFilterData(gr1, m1, 0, 0));
 
-	PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
-	suelo->attachShape(*shape);
+	//PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
+	//suelo->attachShape(*shape);
 
-	gScene->addActor(*suelo);
-	RenderItem* item = new RenderItem(shape, suelo, { 0.8, 0.8, 0.8, 0.1 });
+	//gScene->addActor(*suelo);
+	//RenderItem* item = new RenderItem(shape, suelo, { 0.8, 0.8, 0.8, 0.1 });
 
-	PxRigidDynamic* solid;
+	//PxRigidDynamic* solid;
 
-	shape = CreateShape(PxBoxGeometry(1, 1, 1));
-	shape->setSimulationFilterData(PxFilterData(gr2, m2, 0, 0));
+	//shape = CreateShape(PxSphereGeometry(1.0f), gMaterial);
+	//shape->setSimulationFilterData(PxFilterData(gr2, m2, 0, 0));
 
-	solid = gPhysics->createRigidDynamic(PxTransform({ 0, 10, 0 }));
-	solid->setLinearVelocity({ 0,0,0 });
-	solid->setAngularVelocity({ 0,0,0 });
-	solid->attachShape(*shape);
+	//solid = gPhysics->createRigidDynamic(PxTransform({ 0, 10, 0 }));
+	//solid->setLinearVelocity({ 0,0,0 });
+	//solid->setAngularVelocity({ 0,0,0 });
+	//solid->attachShape(*shape);
 
-	PxRigidBodyExt::updateMassAndInertia(*solid, 1);
-	gScene->addActor(*solid);
-	item = new RenderItem(shape, solid, { 1.0, 0.0, 0.0, 1.0 });
-
-
+	//PxRigidBodyExt::updateMassAndInertia(*solid, 1);
+	//gScene->addActor(*solid);
+	//item = new RenderItem(shape, solid, { 1.0, 0.0, 0.0, 1.0 });
 
 
 	#ifdef P5
 		sys_ = new RigidCubesSystem(gPhysics, gScene);
 	#elif defined(Proyecto)
-		sys_ = new ParticleSystem();
+		sys_ = new ProySys(gPhysics, gScene);
 
-		//sys_ = new ProySys(gPhysics, gScene);
-
-
-		
 	#endif
 #endif
 }
@@ -229,13 +233,13 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	PX_UNUSED(actor2);
 
 #ifdef Proyecto
-	//((ProySys*)sys_)->onCollision(actor1, actor2);
+	((ProySys*)sys_)->onCollision(actor1, actor2);
 #endif
 }
 
-
 int main(int, const char* const*)
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #ifndef OFFLINE_EXECUTION 
 	extern void renderLoop();
 	renderLoop();

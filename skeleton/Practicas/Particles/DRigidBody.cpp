@@ -1,4 +1,5 @@
 #include "DRigidBody.h"
+#include "../../checkMemLeaks.h"
 
 DRigidBody::DRigidBody(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) {
 	rigidActor_ = nullptr;

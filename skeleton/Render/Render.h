@@ -51,14 +51,18 @@
 // PRACTICAS
 #include "../Definitions.h"
 
-#ifdef Proyecto
-	extern std::string score;
-#endif 
+
 #ifdef Explicaciones
 	#include <vector>
 	extern std::vector<std::string> display_text;
 #else
+	#ifdef Proyecto
+	#include <vector>
+	extern std::string score;
+	extern std::vector<std::string> display_text;
+	#else
 	extern std::string display_text;
+	#endif 
 #endif // Explicaciones
 
 

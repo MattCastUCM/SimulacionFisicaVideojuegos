@@ -1,21 +1,13 @@
 #include "ProySystem.h"
-
-#include "../Practicas/Particles/SRigidBody.h"
-#include "../Practicas/Particles/DRigidBody.h"
-
-#include "RigidSpringForceGenerator.h"
-#include "ImpulseForceGenerator.h"
-
-
-#include "Pin.h"
-
-
 #include <iostream>
 using namespace std;
+#include "../checkMemLeaks.h"
 
-ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene) 
-	: ParticleForceSystem({ 0.0f, -9.8f, 0.0f }, 100), gPhysics_(gPhysics), gScene_(gScene) 
+ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
+	: ParticleForceSystem({ 0.0f, -9.8f, 0.0f }, 100), gPhysics_(gPhysics), gScene_(gScene), barrels_()
 {
+	finish_ = false;
+
 	// Matrices de colisión
 	colGroups = {
 		colisions::ball,
@@ -38,23 +30,27 @@ ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 	camera_ = GetCamera();
 	camera_->setPos({ 0, 10, 5 });
 
+	createBall();
+
 
 	partForceReg_ = new ParticleForceRegistry();
 
-	impulse_ = new ImpulseForceGenerator({ 0,0,1 }, 20);
+	impulse_ = new ImpulseForceGenerator({ 0,0,1 }, IMPULSEK_);
 	forces_.insert(impulse_);
 	partForceReg_->addForce(impulse_, ball_);
 
 	createSprings();
+	createExpl();
+
 
 	impulse_->setActive(false);
 	throw_->setActive(false);
-
-
-	createBall();
-	resetBall();
+	expl_->setActive(false);
+	explPartGen_->setActive(false);
 	
+	resetBall();
 	createMap();
+	
 }
 	
 
@@ -84,35 +80,26 @@ void ProySys::keyPress(unsigned char key) {
 		}
 		// Lanzar
 		else if (k == ' ') {
-			if(rotating_) lastPos_ = ball_->getPos();
+			if (!shot_) lastPos_ = ball_->getPos();
 			rotating_ = false;
-
+			spring_->setVel({ 0, 0, 0 });
 			throw_->setActive(true);
-
-			/*auto d = camera_->getDir();
-			ball_->addForce(d * 1000);*/
-
-		}
-
-		// Rotar
-		else if (k == 'd') {
-			rot_++;
-			rot_ %= 360;
-			camera_->rotate(false);
-
-			rotating_ = true;
-			throw_->setActive(false);
-		}
-		else if (k == 'a') {
-			rot_--;
-			rot_ %= 360;
-			camera_->rotate(true);
-
-			rotating_ = true;
-			throw_->setActive(false);
 		}
 	}
-
+	
+	// Rotar
+	if (k == 'd') {
+		rot_++;
+		rot_ %= 360;
+		camera_->rotate(false);
+		rotating_ = true;
+	}
+	else if (k == 'a') {
+		rot_--;
+		rot_ %= 360;
+		camera_->rotate(true);
+		rotating_ = true;
+	}
 
 }
 
@@ -120,23 +107,42 @@ void ProySys::update(double t) {
 	auto ballP = ball_->getPos();
 	if (ballP.y < -5) resetBall();
 
+	// La cámara solo sigue a la pelota si está desactivado
+	// el movimiento de la cámara con las teclas
 #ifndef CamaraTeclas
 	followBall(ballP);
-	if (rotating_ && !shot_) rotateSpring(ballP);
 #endif
-	spring_->setAngularVel({ 0, 0, 0 });
+	// Se rota el muelle si no se ha disparado la pelota
+	if (rotating_ && !shot_) rotateSpring(ballP);
 
-	float posDif = (ball_->getPos() - lastPos_).normalize();
-	maxSpd_ = max(maxSpd_, ball_->getVel().normalize());
-	//cout << maxSpd_ << ' ' << ball_->getVel().normalize() << '\n';
-	if (shot_ && ball_->getVel().normalize() < maxSpd_ / 5 && posDif > MINDIST_) {
-		maxSpd_ = 0;
+	// Si el muelle toca la pelota, se le añade la fuerza y se indica que se ha disparado
+	if ((spring_->getPos() - ball_->getPos()).normalize() < BALLSIZE_ + WALLW_ / 2) {
+		ball_->addForce(-throw_->getForce());
+		shot_ = true;
+	}
+
+	// Si la pelota ha sido disparada y la velocidad es inferior
+	// a la mínima, comienza el temporizador para ver si se ha
+	// Frenado completamente o si se ha frenado por una cuesta y 
+	// luego va a seguir moviéndose
+	if (shot_ && ball_->getVel().normalize() < MINVEL_) {
+		stop_ = true;
+		stopTimer_ += t;
+	}
+	else {
+		stopTimer_ = 0;
+		stop_ = false;
+	}
+	// Si se ha frenado completamente, se vuelve
+	// a activar el muelle y el lanzamiento
+	if (stop_ && stopTimer_ >= TIMETOSTOP_) {
 		ball_->setVel({ 0, 0, 0 });
 		ball_->setAngularVel({ 0, 0, 0 });
 
-		shot_ = false;
+		stop_ = shot_ = false;
 		rotating_ = true;
 	}
+
 
 	ParticleForceSystem::update(t);
 }
@@ -144,14 +150,41 @@ void ProySys::update(double t) {
 
 void ProySys::onCollision(physx::PxActor* actor1, physx::PxActor* actor2) {
 	if (actor1 == ball_->getRigidActor() || actor2 == ball_->getRigidActor()) {
+		// Va comprobando por cada barril si ha colisionado con la pelota
+		for (auto b : barrels_) {
+			if (actor1 == b->getRigidActor() || actor2 == b->getRigidActor()) {
+				// Si la pelota ha chocado con el barril y supera la velocidad mínima,
+				// el barril explota, se borra, y disminuye la puntuación en 1
+				if(ball_->getVel().normalize() >= MINEXPLVEL_){
+					ball_->setVel({ 0,0,0 });
 
-		if (!shot_ && (actor1 == spring_->getRigidActor() || actor2 == spring_->getRigidActor())) {
-			shot_ = true;
+					expl_->setOrigin(b->getPos() + explPartGen_->genRandomVec(EXPLRND_));
+					expl_->resetTime();
+					expl_->setActive(true);
+
+					remove_.push_back(b);
+					score_--;
+					changeScore(score_);
+
+					explPartGen_->setOrigin(b->getPos());
+					// Genera las N partículas solo al activar el generador, no hace 
+					// falta ir generando más conforme vaya pasando el tiempo.
+					// Luego las añade a la lista de partículas y al registro
+					// de fuerzas y se les asigna una masa inversa aleatoria
+					// entre 1 y 1/15
+					auto parts = explPartGen_->generateParticles();
+					for (auto part : parts) {
+						particles_.push_back(part);
+						//partForceReg_->addForce(expl_, part);
+
+						int rndMass = rand() % 15 + 1;
+						part->setInvMass(1.0f / rndMass);
+					}
+				}
+			}
 		}
 	}
 }
-
-
 
 
 void ProySys::createBall() {
@@ -167,7 +200,7 @@ void ProySys::createBall() {
 
 	// MASS GUARDA LA DENSIDAD
 	p.mass = BALLMASS_;
-	p.damp = 0;
+	p.damp = 0.998;
 
 	p.colGrp = colGroups[colisions::ball];
 	p.colMask = colMasks[colisions::ball];
@@ -179,20 +212,22 @@ void ProySys::createBall() {
 }
 
 void ProySys::resetBall() {
-	shot_ = false;
+	shot_ = stop_ = false;
 	pushing_ = rotating_ = true;
-	throw_->setActive(false);
 
 	ball_->setPos(lastPos_);
 	ball_->setVel({ 0,0,0 });
 	ball_->setAngularVel({ 0,0,0 });
-	maxSpd_ = 0;
-	timeToStop_ = 0;
 
+	stopTimer_ = 0;
+	
 	rot_ = INITROT_;
 	camera_->resetRot();
 	
 	spring_->setVel({ 0, 0, 0 });
+	impulse_->setActive(false);
+	throw_->setActive(false);
+	expl_->setActive(false);
 
 }
 
@@ -207,27 +242,43 @@ void ProySys::createSprings() {
 	p.pos = INITPOS_ + Vector3(0, 0, ANCHOROFFSET_.z);
 	p.pos.y = FLOORH_ + WALLW_;
 
-	anchor_ = new SRigidBody(v, p, -1, gPhysics_, gScene_);
+	anchor_ = new Particle(v, p, -1);
 	particles_.push_back(anchor_);
 
 
 	v.geometry = new physx::PxBoxGeometry(BALLSIZE_ * 2, WALLW_, WALLW_);
 
-	p.damp = 1;
-	p.mass = 15;
+	p.damp = 0.5f;
+	p.mass = SPRINGMASS_;
 	p.pos += Vector3(0, 0, RESTINGLENGTH_);
 	p.colGrp = colGroups[colisions::spring];
 	p.colMask = colMasks[colisions::spring];
 
-	spring_ = new DRigidBody(v, p, -1, gPhysics_, gScene_);
+	spring_ = new Particle(v, p, -1);
 	particles_.push_back(spring_);
 
 
 	// No hace falta añadir la partícula estática a las fuerzas
-	throw_ = new RigidSpringForceGenerator(K_, RESTINGLENGTH_, anchor_);
+	throw_ = new RotatedSpringForceGenerator(K_, RESTINGLENGTH_, anchor_);
 	forces_.insert(throw_);
 	partForceReg_->addForce(throw_, spring_);
 	throw_->setActive(true);
+
+}
+
+void ProySys::createExpl() {
+	expl_ = new RigidExplosionForceGenerator(EXPLK_, EXPLR_, EXPLT_, { 0, 0, 0 });
+	forces_.insert(expl_);
+	partForceReg_->addForce(expl_, ball_);
+
+	
+	Particle* p = new Smoke();
+	explPartGen_ = new GaussianParticleGenerator(EXPLGENTIME_, EXPLGENMEAN_, EXPLGENDEV_, EXPLGENOFF_, true, true, true, true);
+	explPartGen_->changeModelPart(p);
+	explPartGen_->changeGenerateN(50);
+	explPartGen_->setName("explPartGen");
+	generators_.insert({ "explPartGen", explPartGen_ });
+	delete p;
 
 }
 
@@ -241,10 +292,14 @@ void ProySys::createMap() {
 	createWall({ WALLW_, WALLH_, 50 }, nextPos + Vector3(-FLOORW_, 0, 0));
 	createWall({ WALLW_, WALLH_, 50 }, nextPos + Vector3(FLOORW_, 0, 0));
 
+
 	nextPos.z += -50;
 	createFloor({ FLOORW_, FLOORH_, 20 }, nextPos, PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(-FLOORW_, 0, 0), PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(FLOORW_, 0, 0), PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
+	
+	//createBooster(nextPos + Vector3(0, 5, -7), {0, 0, -1}, PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
+
 
 	nextPos.y += 9.85f;
 	nextPos.z += -36.9f;
@@ -252,13 +307,52 @@ void ProySys::createMap() {
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(-FLOORW_, 0, 0));
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(FLOORW_, 0, 0));
 
+	nextPos.z += -FLOORW_ * 3;
+	createFloor({ FLOORW_, FLOORH_, FLOORW_ }, nextPos);
+	createWall({ WALLW_, WALLH_, FLOORW_ }, nextPos + Vector3(FLOORW_, 0, 0));
+	createWall({ FLOORW_ + WALLW_, WALLH_, WALLW_ }, nextPos + Vector3(0, 0, -FLOORW_));
+
+	nextPos.x += -FLOORW_ * 3;
+	createFloor({ FLOORW_ * 2, FLOORH_, FLOORW_ }, nextPos);
+	createWall({ FLOORW_ * 2 + WALLW_, WALLH_, WALLW_ }, nextPos + Vector3(0, 0, -FLOORW_));
+	createWall({ FLOORW_ * 2 + WALLW_, WALLH_, WALLW_ }, nextPos + Vector3(0, 0, +FLOORW_));
+
+	nextPos.x += -FLOORW_ * 3;
+	createFloor({ FLOORW_, FLOORH_, FLOORW_ }, nextPos);
+	createWall({ FLOORW_ + WALLW_, WALLH_, WALLW_ }, nextPos + Vector3(0, 0, -FLOORW_));
+	createWall({ FLOORW_ + WALLW_, WALLH_, WALLW_ }, nextPos + Vector3(0, 0, +FLOORW_));
+
+	createPin(nextPos);
+	createPin(nextPos + Vector3(-2, 0.01f, 2));
+	createPin(nextPos + Vector3(-2, 0.01f, -2));
+	createPin(nextPos + Vector3(-4, 0.01f, 0));
+	createPin(nextPos + Vector3(-4, 0.01f, 4));
+	createPin(nextPos + Vector3(-4, 0.01f, -4));
+	createPin(nextPos + Vector3(-6, 0.01f, 2));
+	createPin(nextPos + Vector3(-6, 0.01f, -2));
+	createPin(nextPos + Vector3(-6, 0.01f, 6));
+	createPin(nextPos + Vector3(-6, 0.01f, -6));
+
+	nextPos.x += -FLOORW_ * 2;
+	float height = 7;
+	nextPos.y += -height;
+	end_ = createFloor({ FLOORW_, FLOORH_, FLOORW_ }, nextPos);
+	createWall({ FLOORW_ + WALLW_, WALLH_ + height * 1.5f, WALLW_ }, nextPos + Vector3(0, height * 1.5f, -FLOORW_));
+	createWall({ FLOORW_ + WALLW_, WALLH_ + height * 1.5f, WALLW_ }, nextPos + Vector3(0, height * 1.5f, +FLOORW_));
+	createWall({ WALLW_ , WALLH_ + height * 1.5f, FLOORW_ }, nextPos + Vector3(-FLOORW_, height * 1.5f, 0));
+	createWall({ WALLW_ , WALLH_, FLOORW_ }, nextPos + Vector3(FLOORW_, height / 2.0f, 0));
+
+	nextPos.y += height * 3;
+	createFloor({ FLOORW_, FLOORH_, FLOORW_ }, nextPos);
 
 
+	createBarrel({ 0, 3.0f, -20 });
+	//createBarrel({ 0, 3.0f, -50 });
 
-	createPin({ 0, 3.0f, -20 });
 }
 
-void ProySys::createFloor(Vector3 dims, Vector3 pos, PxQuat rot) {
+
+SRigidBody* ProySys::createFloor(Vector3 dims, Vector3 pos, PxQuat rot) {
 	Particle::visual v;
 	v.geometry = new physx::PxBoxGeometry(dims);
 	v.color = FLOORCOLOR_;
@@ -274,6 +368,8 @@ void ProySys::createFloor(Vector3 dims, Vector3 pos, PxQuat rot) {
 
 	PxTransform tr = PxTransform(floor->getRigidActor()->getGlobalPose().p, rot);
 	floor->getRigidActor()->setGlobalPose(tr);
+
+	return floor;
 }
 
 void ProySys::createWall(Vector3 dims, Vector3 pos, PxQuat rot) {
@@ -294,14 +390,11 @@ void ProySys::createWall(Vector3 dims, Vector3 pos, PxQuat rot) {
 	wall->getRigidActor()->setGlobalPose(tr);
 }
 
-
-
-
 void ProySys::createPin(Vector3 pos) {
 	auto pin = new Pin(gPhysics_, gScene_, pos, colGroups[colisions::items], colMasks[colisions::items], [&](Pin* cb) {
 		// Callback: cuando un bolo llama a esta función, se añade a la 
 		// lista de partículas a eliminar y se actualiza la puntuación
-		remove_.push_back((cb));
+		remove_.push_back(cb);
 		score_++;
 		changeScore(score_);
 	});
@@ -309,11 +402,24 @@ void ProySys::createPin(Vector3 pos) {
 	particles_.push_back(pin);
 }
 
+void ProySys::createBarrel(Vector3 pos) {
+	auto barrel = new Barrel(gPhysics_, gScene_, pos);
+	particles_.push_back(barrel);
+	barrels_.push_back(barrel);
+}
 
+void ProySys::createBooster(Vector3 pos, Vector3 dir, PxQuat rot) {
+	Booster* boost = new Booster(gPhysics_, gScene_, pos, [=]() {
+			impulse_->setDir(dir);
+			impulse_->setActive(true);
+			cout << "impulsed\n";
+		}
+	);
+	particles_.push_back(boost);
 
-
-
-
+	PxTransform tr = PxTransform(boost->getRigidActor()->getGlobalPose().p, rot);
+	boost->getRigidActor()->setGlobalPose(tr);
+}
 
 
 
@@ -332,23 +438,23 @@ void ProySys::rotateSpring(Vector3 ballP) {
 	Vector3 anchorPos;
 	
 	float rotation = rot_;
+	auto quat = PxQuat(3 * PxHalfPi + rads(rotation), Vector3(0, -1, 0));
 
 	anchorPos.x = physx::PxCos(rads(rotation)) * ANCHOROFFSET_.x;
 	anchorPos.y = 0;
 	anchorPos.z = physx::PxSin(rads(rotation)) * ANCHOROFFSET_.z;
 	
+	if (rotation == 90) anchorPos.x = 0;
+	
 	anchor_->setPos(ballP + anchorPos);
-
-	PxTransform rotatedAnchor(anchor_->getRigidActor()->getGlobalPose().p, PxQuat(3 * PxHalfPi + rads(rotation), Vector3(0, -1, 0)));
-	anchor_->getRigidActor()->setGlobalPose(rotatedAnchor);
-
+	anchor_->setRot(quat);
 
 	Vector3 springPos;
 	springPos.x = physx::PxCos(rads(rotation));
 	springPos.y = 0;
 	springPos.z = physx::PxSin(rads(rotation));
+	
 	spring_->setPos(anchor_->getPos() + springPos * -RESTINGLENGTH_);
+	spring_->setRot(quat);
 
-	PxTransform rotatedSpring(spring_->getRigidActor()->getGlobalPose().p, PxQuat(3 * PxHalfPi + rads(rotation), Vector3(0, -1, 0)));
-	spring_->getRigidActor()->setGlobalPose(rotatedSpring);
 }

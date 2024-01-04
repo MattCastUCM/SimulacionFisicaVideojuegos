@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ForceGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class BuoyancyForceGenerator : public ForceGenerator {
 protected:

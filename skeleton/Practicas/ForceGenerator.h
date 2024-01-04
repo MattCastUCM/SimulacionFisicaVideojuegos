@@ -2,6 +2,7 @@
 
 #include "Particle.h"
 #include <string>
+#include "../checkMemLeaks.h"
 
 class ForceGenerator {
 protected:

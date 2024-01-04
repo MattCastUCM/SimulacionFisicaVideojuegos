@@ -2,6 +2,7 @@
 
 #include "../ParticleForceSystem.h"
 #include "../ForceGenerators/GravityForceGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class GravitySystem : public ParticleForceSystem {
 private:

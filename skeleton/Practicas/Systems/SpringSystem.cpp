@@ -7,6 +7,7 @@
 #include "../ForceGenerators/GravityForceGenerator.h"
 #include "../ForceGenerators/WindForceGenerator.h"
 
+#include "../../checkMemLeaks.h"
 
 SpringSystem::SpringSystem() : ParticleForceSystem(), staticPart_(nullptr), 
 	gr_(nullptr), activatedGr_(false), wind_(nullptr), activatedWind_(false)

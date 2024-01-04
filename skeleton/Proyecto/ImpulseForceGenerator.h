@@ -2,6 +2,7 @@
 
 #include "../Practicas/ForceGenerator.h"
 #include "../Practicas/Particles/DRigidBody.h"
+#include "../checkMemLeaks.h"
 
 class ImpulseForceGenerator : public ForceGenerator {
 protected:
@@ -14,13 +15,10 @@ public:
 	inline virtual void update(Particle* p, double t) {
 		if (fabs(p->getInvMass()) < 1e-10) return;
 		else {
-			/*auto dir = GetCamera()->getDir();
-			dir.y = 0;
-			auto f = dir * k_;*/
-
 			auto f = dir_ * k_;
 			((DRigidBody*)p)->addForce(f, physx::PxForceMode::eIMPULSE);
 		}
 	};
 
+	inline void setDir(Vector3 d) { dir_ = d; }
 };

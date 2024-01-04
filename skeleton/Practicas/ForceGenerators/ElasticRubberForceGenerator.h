@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SpringForceGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class ElasticRubberForceGenerator : public SpringForceGenerator {
 

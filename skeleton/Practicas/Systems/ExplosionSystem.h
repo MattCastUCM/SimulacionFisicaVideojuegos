@@ -3,6 +3,7 @@
 #include "../ParticleForceSystem.h"
 #include "../ForceGenerators/ExplosionForceGenerator.h"
 #include "../ParticleGenerators/GaussianParticleGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class ExplosionSystem : public ParticleForceSystem {
 protected:

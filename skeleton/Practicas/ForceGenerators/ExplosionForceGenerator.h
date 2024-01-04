@@ -2,6 +2,7 @@
 
 #include "../ForceGenerator.h"
 #include <cmath>
+#include "../../checkMemLeaks.h"
 
 class ExplosionForceGenerator : public ForceGenerator {
 protected:

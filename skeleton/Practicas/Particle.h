@@ -4,6 +4,7 @@
 #include "../core.hpp"
 #include "../RenderUtils.hpp"
 using namespace physx;
+#include "../checkMemLeaks.h"
 
 class Particle {
 public:
@@ -13,6 +14,7 @@ public:
 		physx::PxGeometry* geometry = nullptr;
 		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		PxMaterial* material = nullptr;
+		bool clone = false;
 	};
 
 	// Físicas iniciales
@@ -102,9 +104,7 @@ public:
 	inline virtual void setDamp(float d) { phys_.damp = d; }
 	inline float getDamp() { return phys_.damp; }
 
-	inline physx::PxTransform& getTransform() const {
-		return *tr_;
-	}
-
+	inline physx::PxTransform& getTransform() { return *tr_; }
+	inline void setRot(PxQuat rot) { tr_->q = rot; }
 };
 

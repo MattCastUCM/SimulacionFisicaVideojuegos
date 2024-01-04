@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ParticleGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class UniformParticleGenerator : public ParticleGenerator {
 protected:

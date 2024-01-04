@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ParticleGenerator.h"
+#include "../../checkMemLeaks.h"
 
 class GaussianParticleGenerator : public ParticleGenerator {
 protected:
@@ -48,5 +49,16 @@ public:
 		if (changeY_) vel.y = normDistr_(mt_) * velMagn;
 		if (changeZ_) vel.z = normDistr_(mt_) * velMagn;
 		p->setVel(vel);
+	}
+
+
+	inline Vector3 genRandomVec(Vector3 origin) {
+		Vector3 rnd = origin;
+
+		if (changeX_) rnd.x *= normDistr_(mt_);
+		//if (changeY_) rnd.y *= normDistr_(mt_);
+		if (changeZ_) rnd.z *= normDistr_(mt_);
+
+		return rnd;
 	}
 };
