@@ -12,7 +12,7 @@ class Pin : public DRigidBody {
 private:
 	const float RADIUS_ = 0.75f, 
 				HALFH_ = 3.8f / 2 - RADIUS_, 
-				DENS_ = 0.285f,
+				DENS_ = 1,
 				DELAY_ = 2.0f;
 	const Vector4 COLOR_ = { 242 / 255.0f, 238 / 255.0f, 213 / 255.0f, 1.0f };
 	const Vector3 MAT_ = { 1.0f, 1.0f, 0.0f };
@@ -21,6 +21,7 @@ private:
 	float removeDelay_;
 	std::function<void(Pin* pin)> callback_;
 	std::function<void()> keepCountingCallback_;
+
 public:
 	Pin(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos, std::function<void(Pin* pin)>funct, std::function<void()> keepCountingCallback)
 		: DRigidBody(false, -1, gPhysics, gScene), remove_(false), removeDelay_(0), callback_(funct), keepCountingCallback_(keepCountingCallback)

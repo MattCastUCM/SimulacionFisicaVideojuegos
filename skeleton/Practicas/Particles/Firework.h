@@ -11,9 +11,9 @@ protected:
 
 
 public:
-	Firework(const Vector3& g, unsigned type, int nGens = 0, double lifetime = 1.0f) : Particle(), type_(type), nGens_(nGens) {
+	Firework(const Vector3& g, unsigned type, int nGens = 0, double lifetime = 1.0f, float size = 1.0f) : Particle(), type_(type), nGens_(nGens) {
 		Particle::visual v;
-		v.size = { 1.0f, 1.0f, 1.0f };
+		v.size = { size, size, size};
 		v.type = Particle::geomType::geomSphere;
 			
 
@@ -53,11 +53,11 @@ public:
 			// Si el tipo es igual al número de generadores y hay al menos 1,
 			// ya es del tipo que se genera al morir
 			if (type_ == nGens_ && nGens_ > 0) {
-				if (generators_[safeIndex]->getName() == "circleGen") {
+				auto name = generators_[safeIndex]->getName().substr(0, 9);
+				if (name == "circleGen") {
 					model->phys_.vel = { 1.0f, 0.5f, 1.0f };
 					model->phys_.vel *= 10;
 					model->vel_ = model->phys_.vel;
-
 				}
 			}
 

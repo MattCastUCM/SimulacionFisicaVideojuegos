@@ -61,4 +61,6 @@ public:
 
 		return rnd;
 	}
+
+	inline float getRandomNum() { return normDistr_(mt_); }
 };

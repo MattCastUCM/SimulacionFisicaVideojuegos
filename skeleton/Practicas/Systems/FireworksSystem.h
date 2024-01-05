@@ -5,7 +5,7 @@
 #include "../ParticleGenerators/GaussianParticleGenerator.h"
 #include "../ParticleGenerators/CircleGenerator.h"
 #include "../ParticleGenerators/HeartGenerator.h"
-#include <time.h>
+
 
 #include "../../checkMemLeaks.h"
 
@@ -18,7 +18,6 @@ public:
 		
 		Firework* shotF = new Firework(g, 0, 0, 3.0);
 
-		cout << "spheregen\n";
 		GaussianParticleGenerator* sphereGen = new GaussianParticleGenerator(0, 0, 0.1, 0, true, true, true, true);
 		sphereGen->changeGenerateN(50);
 		sphereGen->setName("sphereGen");

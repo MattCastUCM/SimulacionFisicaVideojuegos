@@ -6,6 +6,8 @@ using namespace std;
 ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 	: ParticleForceSystem({ 0.0f, -9.8f, 0.0f }, 100), gPhysics_(gPhysics), gScene_(gScene), barrels_()
 {
+	srand(time(NULL));
+
 	callback_ = nullptr;
 	genDebris_ = finish_ = pinsFalling_ = false;
 	score_ = finishTimer_ = 0;
@@ -29,11 +31,18 @@ ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 	createSprings();
 	setupExpl();
 
+	for (int i = 0; i < SHOOTERSPOS_.size(); i++) {
+		auto g = setupFireworks(SHOOTERSPOS_[i], i);
+		fireworkShooters_.push_back(g);
+		g->setActive(false);
+	}
+
 	impulse_->setActive(false);
 	throw_->setActive(false);
 	expl_->setActive(false);
 	debrisGen_->setActive(false);
 	smokeGen_->setActive(false);
+
 
 	resetBall();
 	createMap();
@@ -169,11 +178,13 @@ void ProySys::update(double t) {
 		finishTimer_ += t;
 		
 		if (finishTimer_ >= TIMETOSTOP_) {
-			camera_->setPos({ 50, 50, 0 });
+			camera_->setPos(FINALPOS_);
 			camera_->resetRot();
 			camera_->rotate(true, 45);
 
 			setFinish(true);
+			for (auto g : fireworkShooters_) g->setActive(true);
+
 		}
 	}
 	ParticleForceSystem::update(t);
@@ -480,6 +491,50 @@ void ProySys::createBooster(Vector3 pos, Vector3 dir, PxQuat rot) {
 }
 
 
+
+ParticleGenerator* ProySys::setupFireworks(Vector3 pos, int i) {
+	std::random_device rd;
+	std::default_random_engine generator(rd());
+
+	std::uniform_real_distribution<float> distribution1(FIREWORKLIFETIME_ * 0.25, FIREWORKLIFETIME_);
+	float rndLifetime = distribution1(generator);
+
+	Firework* shotF = new Firework(Vector3(0, G_, 0), 0, 0, rndLifetime, FIREWORKSIZE);
+
+	GaussianParticleGenerator* sphereGen = new GaussianParticleGenerator(SPHEREGENTIME_, SPHEREMEAN_, SPHEREDEV_, SPHEREOFF_, true, true, true, true);
+	sphereGen->changeGenerateN(50);
+	sphereGen->setName("sphereGen" + to_string(i));
+
+	generators_.insert({ "sphereGen" + to_string(i), sphereGen });
+	shotF->addGenerator(sphereGen);
+
+
+	CircleGenerator* circleGen = new CircleGenerator(CIRCLEGENTIME_, CIRCLEMEAN_, CIRCLEDEV_, CIRCLEOFF_, true);
+	circleGen->changeGenerateN(10);
+	circleGen->setName("circleGen" + to_string(i));
+	generators_.insert({ "circleGen" + to_string(i), circleGen });
+	shotF->addGenerator(circleGen);
+
+	HeartGenerator* heartGen = new HeartGenerator(HEARTGENTIME_, HEARTMEAN_, HEARTDEV_, true);
+	heartGen->changeGenerateN(50);
+	heartGen->setName("heartGen" + to_string(i));
+	generators_.insert({ "heartGen" + to_string(i), heartGen });
+	shotF->addGenerator(heartGen);
+
+	std::uniform_real_distribution<float> distribution2(SHOOTERGENTIME_, SHOOTERGENTIME_ * 1.5);
+	float rndGentime = distribution2(generator);
+	GaussianParticleGenerator* fireworkShooter = new GaussianParticleGenerator(rndGentime, SHOOTERMEAN_, SHOOTERDEV_, SHOOTEROFF_);
+	fireworkShooter->changeModelPart(shotF);
+	fireworkShooter->changeGenerateN(1);
+	fireworkShooter->setName("fireworkShooter" + to_string(i));
+	generators_.insert({ "fireworkShooter" + to_string(i), fireworkShooter });
+	fireworkShooter->setOrigin(pos);
+
+	delete shotF;
+
+
+	return fireworkShooter;
+}
 
 void ProySys::followBall(Vector3 ballP) {
 	Vector3 rotatedPos;

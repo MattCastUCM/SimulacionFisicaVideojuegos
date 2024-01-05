@@ -2,7 +2,7 @@
 //#define PracticasRigidos
 //#define P4
 #define Proyecto
-//#define CamaraTeclas
+#define CamaraTeclas
 //#define Explicaciones
 
 

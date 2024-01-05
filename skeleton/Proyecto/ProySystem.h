@@ -18,6 +18,11 @@
 #include "Smoke.h"
 
 #include "../Practicas/ParticleGenerators/GaussianParticleGenerator.h"
+#include "../Practicas/Particles/Firework.h"
+#include "../Practicas/ParticleGenerators/GaussianParticleGenerator.h"
+#include "../Practicas/ParticleGenerators/CircleGenerator.h"
+#include "../Practicas/ParticleGenerators/HeartGenerator.h"
+#include <time.h>
 
 class ProySys : public ParticleForceSystem {
 protected:
@@ -33,7 +38,8 @@ protected:
 				BALLRESTIT_ = 0.0f,
 				BALLMASS_ = 1.105f;
 	const Vector4 BALLCOLOR_ = { 46 / 255.0f, 163 / 255.0f, 57 / 255.0f, 1.0f };
-	const Vector3 INITPOS_ = { 0, 0, -5 };
+	const Vector3 INITPOS_ = { 0, 0, -5 }, 
+				  FINALPOS_ = { 50, 50, 0 };
 
 
 	// Suelo y paredes
@@ -74,7 +80,7 @@ protected:
 
 	// Generadores de partículas
 	GaussianParticleGenerator* debrisGen_, *smokeGen_;
-
+	
 	std::vector<Barrel*> barrels_;
 	const float DEBRGENTIME_ = 0.1,
 				DEBRGENMEAN_ = 0,
@@ -91,6 +97,33 @@ protected:
 	const int DEBRGENN_ = 20, SMOKEGENN_ = 1;
 	float smokeTime_;
 	bool genDebris_;
+
+
+	std::vector<ParticleGenerator*> fireworkShooters_;
+	const float FIREWORKSIZE = 0.05f,
+				FIREWORKLIFETIME_ = 3,
+				SPHEREGENTIME_ = 0,
+				SPHEREMEAN_ = 0,
+				SPHEREDEV_ = 0.1f,
+				SPHEREOFF_ = 0,
+
+				CIRCLEGENTIME_ = 0,
+				CIRCLEMEAN_ = 0,
+				CIRCLEDEV_ = 0.05f,
+				CIRCLEOFF_ = 0,
+
+				HEARTGENTIME_ = 0,
+				HEARTMEAN_ = 0,
+				HEARTDEV_ = 0.05f,
+
+				SHOOTERGENTIME_ = 5.0f,
+				SHOOTERMEAN_ = 0,
+				SHOOTERDEV_ = 0.1f,
+				SHOOTEROFF_ = 5;
+	const std::vector<Vector3> SHOOTERSPOS_ = {
+		{ -100, -30, -50}, { -100, 0, -200}, {20, -40, -200}
+	};
+
 
 	// Límites y valores iniciales
 	const float INITROT_ = 90,
@@ -136,6 +169,8 @@ protected:
 	
 	void createSprings();
 	void setupExpl();
+
+	ParticleGenerator* setupFireworks(Vector3 pos, int i);
 
 
 	void createMap();
