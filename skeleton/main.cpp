@@ -33,8 +33,8 @@
 		"Mantener pulsado S para cargar el disparo",
 		"Espacio para disparar"
 	};
-	std::string score = "score: " + std::to_string(0);
-
+	std::string score = "Puntuacion: " + std::to_string(0);
+	bool gameFinished;
 #endif
 
 
@@ -80,7 +80,20 @@ ContactReportCallback gContactReportCallback;
 	#endif
 #else
 	#include "Proyecto/ProySystem.h"
-	ParticleSystem* sys_;
+	ParticleSystem* sys_ = nullptr;
+
+	bool resetGame_ = false;
+	void createPr() {
+		resetGame_ = false;
+		sys_ = new ProySys(gPhysics, gScene);
+		((ProySys*)sys_)->setCallback([&]() {
+				resetGame_ = true;
+				score = "Puntuacion: " + std::to_string(0);
+				changeScore(0);
+				setFinish(false);
+			}
+		);
+	}
 #endif
 
 
@@ -134,7 +147,7 @@ void setupPr() {
 		#endif	
 	#endif
 #else
-	sys_ = new ProySys(gPhysics, gScene);
+	createPr();
 #endif
 
 }
@@ -187,7 +200,17 @@ void stepPhysics(bool interactive, double t)
 		sys_->update(t);
 	#endif
 #else
-	sys_->update(t);
+	
+	if(sys_ != nullptr) sys_->update(t);
+	if (resetGame_) {
+		if (sys_ != nullptr) {
+			delete sys_;
+			sys_ = nullptr;
+		}
+		else createPr();
+	}
+	
+
 #endif
 }
 
@@ -203,7 +226,7 @@ void cleanupPhysics(bool interactive)
 		delete sys_;
 	#endif
 #else
-	delete sys_;
+	if (sys_ != nullptr) delete sys_;
 #endif
 
 
@@ -242,7 +265,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		sys_->keyPress(key);
 	#endif
 #else
-	sys_->keyPress(key);
+	if (sys_ != nullptr) sys_->keyPress(key);
 #endif
 }
 
@@ -253,7 +276,7 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	PX_UNUSED(actor2);
 
 #ifdef Proyecto
-	((ProySys*)sys_)->onCollision(actor1, actor2);
+	if (sys_ != nullptr) ((ProySys*)sys_)->onCollision(actor1, actor2);
 #endif
 }
 

@@ -20,10 +20,10 @@ private:
 	bool remove_;
 	float removeDelay_;
 	std::function<void(Pin* pin)> callback_;
-
+	std::function<void()> keepCountingCallback_;
 public:
-	Pin(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos, std::function<void(Pin* pin)>funct)
-		: DRigidBody(false, -1, gPhysics, gScene), remove_(false), removeDelay_(0), callback_(funct) 
+	Pin(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos, std::function<void(Pin* pin)>funct, std::function<void()> keepCountingCallback)
+		: DRigidBody(false, -1, gPhysics, gScene), remove_(false), removeDelay_(0), callback_(funct), keepCountingCallback_(keepCountingCallback)
 	{
 		Particle::visual v;
 
@@ -34,7 +34,7 @@ public:
 
 		Particle::physics p;
 		p.pos = pos;
-		p.damp = 0;
+		p.damp = 0.5f;
 		// Se guarda la densidad. De media, la masa de un bolo es de 1.66 kg
 		p.mass = DENS_;
 
@@ -51,12 +51,14 @@ public:
 		auto rot = tr_->q;
 		/*if(!remove_) 
 			cout << rot.x << ' ' << rot.y << ' ' << rot.z << '\n';
-		else */if (remove_) {
+		else */
+		if (remove_) {
+			keepCountingCallback_();
 			removeDelay_ += t;
 			if (removeDelay_ >= DELAY_) callback_(this);
 		}
 
-		if ((rot.x >= 0.5f || rot.x <= -0.5f || rot.z >= 0.9f || rot.z <= -0.9f))
+		if ((rot.x >= 0.5f || rot.x <= -0.5f || rot.y >= 0.5f || rot.y <= -0.5f || rot.z >= 0.9f || rot.z <= -0.9f))
 			remove_ = true;
 
 		

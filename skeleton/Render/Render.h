@@ -68,7 +68,7 @@
 	#include <vector>
 	extern std::vector<std::string> display_text;
 	extern std::string score;
-
+	extern bool gameFinished;
 #endif
 
 
@@ -83,9 +83,12 @@ void renderActors(physx::PxRigidActor** actors, const physx::PxU32 numActors, bo
 void finishRender();
 void drawText(const std::string& text, int x, int y);
 
-
+#ifdef Proyecto
 //PRACTICAS: CAMBIAR TEXTO SCORE
 void changeScore(int s);
+void setFinish(bool f);
+
+#endif
 }
 
 #define MAX_NUM_ACTOR_SHAPES 128

@@ -15,6 +15,7 @@ public:
 	inline virtual void update(Particle* p, double t) {
 		if (fabs(p->getInvMass()) < 1e-10) return;
 		else {
+
 			auto f = dir_ * k_;
 			((DRigidBody*)p)->addForce(f, physx::PxForceMode::eIMPULSE);
 		}

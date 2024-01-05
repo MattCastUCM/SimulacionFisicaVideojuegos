@@ -48,12 +48,16 @@ public:
 	virtual void setVelocities(Particle* p) { }
 
 	inline std::list<Particle*> update(double t) {
-		time_ += t;
-		if (time_ >= generationTime_ && active_) {
-			std::list<Particle*> generated = generateParticles();
-			time_ = 0;
-			if (autoInactive_) active_ = false;
-			return generated;
+		if (active_) {
+			time_ += t;
+			if (time_ >= generationTime_) {
+
+				std::list<Particle*> generated = generateParticles();
+				time_ = 0;
+				if (autoInactive_) active_ = false;
+				return generated;
+			}
+			else return { };
 		}
 		else return { };
 	};
@@ -83,7 +87,10 @@ public:
 	inline Vector3 getVel() const { return vel_; }
 	inline void changeGenerateN(int n) { generateN_ = n; }
 	inline void changeLifetime(double t) { modelPart_->changeLifetime(t); }
-	inline void setActive(bool a) { active_ = a; }
+	inline void setActive(bool a) { 
+		active_ = a; 
+		time_ = generationTime_;
+	}
 	
 	inline int getN() { return generateN_; }
 	inline bool isActive() { return active_; }

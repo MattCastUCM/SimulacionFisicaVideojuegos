@@ -17,7 +17,7 @@ private:
 	BoosterCallback* bc_;
 
 public:
-	Booster(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos, std::function<void()>funct) : SRigidBody(false, -1, gPhysics, gScene) {
+	Booster(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos, std::function<void()>funct, physx::PxActor* ballActor) : SRigidBody(false, -1, gPhysics, gScene) {
 		Particle::visual v;
 		v.size = { SIZE_, SIZE_ / 5, SIZE_ };
 		v.type = Particle::geomType::geomBox;
@@ -55,7 +55,7 @@ public:
 		renderItem_ = new RenderItem(shape_, rigidActor_, vis_.color);
 
 
-		bc_ = new BoosterCallback(funct);
+		bc_ = new BoosterCallback(funct, ballActor);
 		gScene->setSimulationEventCallback(bc_);
 	};
 

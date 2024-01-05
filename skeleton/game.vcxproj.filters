@@ -106,6 +106,7 @@
     <ClInclude Include="Proyecto\BoosterCallback.h" />
     <ClInclude Include="checkMemLeaks.h" />
     <ClInclude Include="Proyecto\Barrel.h" />
+    <ClInclude Include="Proyecto\Debris.h" />
     <ClInclude Include="Proyecto\Smoke.h" />
   </ItemGroup>
   <ItemGroup>

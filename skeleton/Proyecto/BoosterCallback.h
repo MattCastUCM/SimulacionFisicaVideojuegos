@@ -10,15 +10,17 @@ extern void onCollision(physx::PxActor* actor1, physx::PxActor* actor2);
 class BoosterCallback : public physx::PxSimulationEventCallback {
 protected:
 	std::function<void()> callback_;
+	physx::PxActor* ballActor_;
 
 public:
-	BoosterCallback(std::function<void()> funct) : PxSimulationEventCallback() {
+	BoosterCallback(std::function<void()> funct, physx::PxActor* ballActor) : PxSimulationEventCallback() {
 		callback_ = funct;
+		ballActor_ = ballActor;
 	};
 
 	void onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count) {
 		PX_UNUSED(pairs); PX_UNUSED(count);
-		callback_();
+		if(pairs->otherActor == ballActor_) callback_();
 	}
 
 	void onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count) { PX_UNUSED(constraints); PX_UNUSED(count); }

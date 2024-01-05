@@ -6,8 +6,11 @@ using namespace std;
 ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 	: ParticleForceSystem({ 0.0f, -9.8f, 0.0f }, 100), gPhysics_(gPhysics), gScene_(gScene), barrels_()
 {
-	finish_ = false;
-	score_ = 0;
+	callback_ = nullptr;
+	genDebris_ = finish_ = pinsFalling_ = false;
+	score_ = finishTimer_ = 0;
+	rot_ = INITROT_;
+
 	camera_ = GetCamera();
 	camera_->setPos({ 0, 10, 5 });
 
@@ -16,19 +19,22 @@ ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 
 	partForceReg_ = new ParticleForceRegistry();
 
-	impulse_ = new ImpulseForceGenerator({ 0,0,1 }, IMPULSEK_);
+	gr_ = new GravityForceGenerator({ 0, G_ , 0 });
+	forces_.insert(gr_);
+
+	impulse_ = new ImpulseForceGenerator({ 0,0,1 }, IMPULSEVEL_);
 	forces_.insert(impulse_);
 	partForceReg_->addForce(impulse_, ball_);
 
 	createSprings();
-	createExpl();
-
+	setupExpl();
 
 	impulse_->setActive(false);
 	throw_->setActive(false);
 	expl_->setActive(false);
-	explPartGen_->setActive(false);
-	
+	debrisGen_->setActive(false);
+	smokeGen_->setActive(false);
+
 	resetBall();
 	createMap();
 	
@@ -38,141 +44,184 @@ ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 
 void ProySys::keyPress(unsigned char key) {
 	auto k = tolower(key);
-	
-	if(k == 'p')
-		createBarrel({ 0, 3.0f, -20 });
+	if (!finish_) {
+		if (!shot_) {
+			// Cargar
+			if (k == 's') {
+				rotating_ = false;
+				throw_->setActive(false);
+				spring_->setVel({ 0, 0, 0 });
 
-	if (!shot_) {
-		// Cargar
-		if (k == 's') {
-			rotating_ = false;
-			throw_->setActive(false);
-			spring_->setVel({ 0, 0, 0 });
-
-			auto posDif = (spring_->getPos() - anchor_->getPos()).normalize();
-			auto dir = camera_->getDir();
-			dir.y = 0;
-			auto movement = 0.1f;
-			if (posDif > 1.5 && pushing_) {
-				spring_->setPos(spring_->getPos() - dir * movement);
-				if (posDif <= 1.6) pushing_ = false;
+				auto posDif = (spring_->getPos() - anchor_->getPos()).normalize();
+				auto dir = camera_->getDir();
+				dir.y = 0;
+				auto movement = 0.1f;
+				if (posDif > 1.5 && pushing_) {
+					spring_->setPos(spring_->getPos() - dir * movement);
+					if (posDif <= 1.6) pushing_ = false;
+				}
+				else if (!pushing_) {
+					spring_->setPos(spring_->getPos() + dir * movement);
+					if (posDif > RESTINGLENGTH_ / 1.3) pushing_ = true;
+				}
 			}
-			else if (!pushing_) {
-				spring_->setPos(spring_->getPos() + dir * movement);
-				if (posDif > RESTINGLENGTH_ / 1.3) pushing_ = true;
+			// Lanzar
+			else if (k == ' ') {
+				if (!shot_) lastPos_ = ball_->getPos();
+				rotating_ = false;
+				spring_->setVel({ 0, 0, 0 });
+				throw_->setActive(true);
 			}
 		}
-		// Lanzar
-		else if (k == ' ') {
-			if (!shot_) lastPos_ = ball_->getPos();
-			rotating_ = false;
-			spring_->setVel({ 0, 0, 0 });
-			throw_->setActive(true);
+
+		// Rotar
+		if (k == 'd') {
+			int newRot = rot_ += CAMROTSPD_;
+			newRot %= 360;
+			rot_ = newRot;
+			camera_->rotate(false, CAMROTSPD_);
+			rotating_ = true;
 		}
+		else if (k == 'a') {
+			int newRot = rot_ -= CAMROTSPD_;
+			newRot %= 360;
+			rot_ = newRot;
+			camera_->rotate(true, CAMROTSPD_);
+			rotating_ = true;
+		}
+
 	}
-	
-	// Rotar
-	if (k == 'd') {
-		int newRot = rot_ += CAMROTSPD_;
-		newRot %= 360;
-		rot_ = newRot;
-		camera_->rotate(false, CAMROTSPD_);
-		rotating_ = true;
-	}
-	else if (k == 'a') {
-		int newRot = rot_ -= CAMROTSPD_;
-		newRot %= 360;
-		rot_ = newRot;
-		camera_->rotate(true, CAMROTSPD_);
-		rotating_ = true;
+	else if (finishTimer_ >= TIMETOSTOP_) {
+		if (k == 'p') {
+			callback_();
+		}
 	}
 
 }
 
 void ProySys::update(double t) {
-	auto ballP = ball_->getPos();
-	if (ballP.y < -5) resetBall();
+	if (!finish_ && finishTimer_ < TIMETOSTOP_) {
+		auto ballP = ball_->getPos();
 
-	// La cámara solo sigue a la pelota si está desactivado
-	// el movimiento de la cámara con las teclas
+		// La cámara solo sigue a la pelota si está desactivado
+		// el movimiento de la cámara con las teclas
 #ifndef CamaraTeclas
-	followBall(ballP);
+		followBall(ballP);
 #endif
-	// Se rota el muelle si no se ha disparado la pelota
-	if (rotating_ && !shot_) rotateSpring(ballP);
 
-	// Si el muelle toca la pelota, se le añade la fuerza y se indica que se ha disparado
-	if ((spring_->getPos() - ball_->getPos()).normalize() < BALLSIZE_ + WALLW_ / 2) {
-		ball_->addForce(-throw_->getForce());
-		shot_ = true;
+		if (ballP.y < -5) resetBall();
+
+		// Se rota el muelle si no se ha disparado la pelota
+		if (rotating_ && !shot_ && !finish_) rotateSpring(ballP);
+
+		// Si el muelle toca la pelota, se le añade la fuerza y se indica que se ha disparado
+		auto posDif = (spring_->getPos() - ball_->getPos()).normalize();
+		if (posDif < BALLSIZE_ + WALLW_ / 2) {
+			ball_->addForce(-throw_->getForce());
+			shot_ = true;
+		}
+		// Si la pelota se ha alejado lo suficiente, se envía
+		// el muelle lejos para que parezca que ha desaparecido
+		if (shot_ && posDif >= MINDIST_) {
+			spring_->setPos({ 1000, 1000, 1000 });
+			anchor_->setPos({ 1000, 1000, 1000 });
+		}
+
+		// Si la pelota ha sido disparada y la velocidad es inferior
+		// a la mínima, comienza el temporizador para ver si se ha
+		// Frenado completamente o si se ha frenado por una cuesta y 
+		// luego va a seguir moviéndose
+		if (shot_ && ball_->getVel().normalize() < MINVEL_) {
+			stop_ = true;
+			stopTimer_ += t;
+		}
+		else {
+			stopTimer_ = 0;
+			stop_ = false;
+		}
+		// Si se ha frenado completamente, se vuelve
+		// a activar el muelle y el lanzamiento
+		if (stop_ && stopTimer_ >= TIMETOSTOP_) {
+			ball_->setVel({ 0, 0, 0 });
+			ball_->setAngularVel({ 0, 0, 0 });
+
+			stop_ = shot_ = false;
+			rotating_ = true;
+		}
+
+
+		if (genDebris_) {
+			genDebris_ = false;
+			createDebris();
+		}
+
+		if (smokeGen_->isActive()) {
+			smokeTime_ += t;
+			if (smokeTime_ >= PARTLIFETIME_ * 2) {
+				smokeGen_->setActive(false);
+			}
+		}
+
 		
-		/*spring_->setPos({ 1000, 1000, 1000 });
-		anchor_->setPos({ 1000, 1000, 1000 });*/
 	}
 
-	// Si la pelota ha sido disparada y la velocidad es inferior
-	// a la mínima, comienza el temporizador para ver si se ha
-	// Frenado completamente o si se ha frenado por una cuesta y 
-	// luego va a seguir moviéndose
-	if (shot_ && ball_->getVel().normalize() < MINVEL_) {
-		stop_ = true;
-		stopTimer_ += t;
-	}
-	else {
-		stopTimer_ = 0;
-		stop_ = false;
-	}
-	// Si se ha frenado completamente, se vuelve
-	// a activar el muelle y el lanzamiento
-	if (stop_ && stopTimer_ >= TIMETOSTOP_) {
-		ball_->setVel({ 0, 0, 0 });
-		ball_->setAngularVel({ 0, 0, 0 });
+	else if (finishTimer_ < TIMETOSTOP_ && !pinsFalling_) {
+		finishTimer_ += t;
+		
+		if (finishTimer_ >= TIMETOSTOP_) {
+			camera_->setPos({ 50, 50, 0 });
+			camera_->resetRot();
+			camera_->rotate(true, 45);
 
-		stop_ = shot_ = false;
-		rotating_ = true;
+			setFinish(true);
+		}
 	}
-
-
 	ParticleForceSystem::update(t);
 }
 
 
 void ProySys::onCollision(physx::PxActor* actor1, physx::PxActor* actor2) {
-	if (actor1 == ball_->getRigidActor() || actor2 == ball_->getRigidActor()) {
-		// Va comprobando por cada barril si ha colisionado con la pelota
+	if (!finish_) {
+		if (actor1 == ball_->getRigidActor() || actor2 == ball_->getRigidActor()) {
+			if (actor1 == end_->getRigidActor() || actor2 == end_->getRigidActor()) {
+				finish_ = true;
+			}
+		}
+		// Va comprobando por cada barril si ha colisionado con algún dynamic rigid body
 		for (auto b : barrels_) {
 			if (actor1 == b->getRigidActor() || actor2 == b->getRigidActor()) {
-				// Si la pelota ha chocado con el barril y supera la velocidad mínima,
-				// el barril explota, se borra, y disminuye la puntuación en 1
-				if(ball_->getVel().normalize() >= MINEXPLVEL_){
-					ball_->setVel({ 0,0,0 });
+				auto other = actor1;
+				if (actor1 == b->getRigidActor()) other = actor2;
 
-					expl_->setOrigin(b->getPos() + explPartGen_->genRandomVec(EXPLRND_));
-					expl_->resetTime();
-					expl_->setActive(true);
+				if (other->is<PxRigidDynamic>()) {
+					// Si supera la velocidad mínima, el barril explota, se borra, y disminuye la puntuación en 1
+					if (((DRigidBody*)other)->getVel().normalize() >= MINEXPLVEL_) {
+						ball_->setVel({ 0,0,0 });
 
-					remove_.push_back(b);
-					score_--;
-					changeScore(score_);
+						expl_->setOrigin(b->getPos() + Vector3(0, -FLOORH_, 0) + debrisGen_->genRandomVec(EXPLRND_));
+						expl_->resetTime();
+						expl_->setActive(true);
+						gr_->setActive(true);
 
-					explPartGen_->setOrigin(b->getPos());
-					// Genera las N partículas solo al activar el generador, no hace 
-					// falta ir generando más conforme vaya pasando el tiempo.
-					// Luego las añade a la lista de partículas y al registro
-					// de fuerzas y se les asigna una masa inversa aleatoria
-					// entre 1 y 1/15
-					auto parts = explPartGen_->generateParticles();
-					for (auto part : parts) {
-						particles_.push_back(part);
-						partForceReg_->addForce(expl_, part);
+						remove_.push_back(b);
+						score_--;
+						changeScore(score_);
 
-						int rndMass = rand() % 15 + 1;
-						part->setInvMass(1.0f / rndMass);
+						debrisGen_->setOrigin(b->getPos() + Vector3(0, FLOORH_, 0));
+						genDebris_ = true;
+
+						smokeTime_ = 0;
+						smokeGen_->setActive(true);
+						smokeGen_->setOrigin(b->getPos() + Vector3(0, FLOORH_ / 2, 0));
+
 					}
 				}
+
+
 			}
 		}
 	}
+	
 }
 
 
@@ -214,7 +263,6 @@ void ProySys::resetBall() {
 	impulse_->setActive(false);
 	throw_->setActive(false);
 	expl_->setActive(false);
-
 }
 
 
@@ -252,20 +300,29 @@ void ProySys::createSprings() {
 
 }
 
-void ProySys::createExpl() {
+void ProySys::setupExpl() {
 	expl_ = new ExplosionForceGenerator(EXPLK_, EXPLR_, EXPLT_, { 0, 0, 0 });
 	forces_.insert(expl_);
 	partForceReg_->addForce(expl_, ball_);
 
 
-	Particle* p = new Smoke();
-	explPartGen_ = new GaussianParticleGenerator(EXPLGENTIME_, EXPLGENMEAN_, EXPLGENDEV_, EXPLGENOFF_, true, true, true, true);
-	explPartGen_->changeModelPart(p);
-	explPartGen_->changeGenerateN(50);
-	explPartGen_->setName("explPartGen");
-	generators_.insert({ "explPartGen", explPartGen_ });
+	Particle* p = new Debris(FLOORCOLOR_, PARTLIFETIME_);
+	debrisGen_ = new GaussianParticleGenerator(DEBRGENTIME_, DEBRGENMEAN_, DEBRGENDEV_, DEBRGENOFF_, true, true, true, true);
+	debrisGen_->changeModelPart(p);
+	debrisGen_->changeGenerateN(DEBRGENN_);
+	debrisGen_->setName("debrisGen_");
+	generators_.insert({ "debrisGen_", debrisGen_ });
+	
 	delete p;
 
+	p = new Smoke(PARTLIFETIME_);
+	smokeGen_ = new GaussianParticleGenerator(SMOKEGENTIME_, SMOKEGENMEAN_, SMOKEGENDEV_, SMOKEGENOFF_);
+	smokeGen_->changeModelPart(p);
+	smokeGen_->changeGenerateN(SMOKEGENN_);
+	smokeGen_->setName("smokeGen_");
+	generators_.insert({ "smokeGen_", smokeGen_ });
+	
+	delete p;
 }
 
 
@@ -278,13 +335,18 @@ void ProySys::createMap() {
 	createWall({ WALLW_, WALLH_, 50 }, nextPos + Vector3(-FLOORW_, 0, 0));
 	createWall({ WALLW_, WALLH_, 50 }, nextPos + Vector3(FLOORW_, 0, 0));
 
+	createPin(nextPos + Vector3(0, 0.01f, 25));
+	createPin(nextPos + Vector3(-2, 0.01f, 10));
+	createBarrel(nextPos + Vector3(0, 0, -5.0f));
+	createPin(nextPos + Vector3(0, 0.01f, -20));
+	createPin(nextPos + Vector3(4, 0.01f, -35));
 
 	nextPos.z += -50;
 	createFloor({ FLOORW_, FLOORH_, 20 }, nextPos, PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(-FLOORW_, 0, 0), PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(FLOORW_, 0, 0), PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 	
-	//createBooster(nextPos + Vector3(0, 5, -7), {0, 0, -1}, PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
+	createBooster(nextPos + Vector3(0, 5, -7), {0, 0, -1}, PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 
 
 	nextPos.y += 9.85f;
@@ -292,6 +354,12 @@ void ProySys::createMap() {
 	createFloor({ FLOORW_, FLOORH_, 20 }, nextPos);
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(-FLOORW_, 0, 0));
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(FLOORW_, 0, 0));
+
+
+	createPin(nextPos + Vector3(-2, 0.01f, 10));
+	createBarrel(nextPos + Vector3(0, 0, -5.0f));
+	createPin(nextPos + Vector3(4, 0.01f, -25));
+
 
 	nextPos.z += -FLOORW_ * 3;
 	createFloor({ FLOORW_, FLOORH_, FLOORW_ }, nextPos);
@@ -302,6 +370,9 @@ void ProySys::createMap() {
 	createFloor({ FLOORW_ * 2, FLOORH_, FLOORW_ }, nextPos);
 	createWall({ FLOORW_ * 2 + WALLW_, WALLH_, WALLW_ }, nextPos + Vector3(0, 0, -FLOORW_));
 	createWall({ FLOORW_ * 2 + WALLW_, WALLH_, WALLW_ }, nextPos + Vector3(0, 0, +FLOORW_));
+
+	createBarrel(nextPos + Vector3(0, 0, 0));
+
 
 	nextPos.x += -FLOORW_ * 3;
 	createFloor({ FLOORW_, FLOORH_, FLOORW_ }, nextPos);
@@ -331,9 +402,6 @@ void ProySys::createMap() {
 	nextPos.y += height * 3;
 	createFloor({ FLOORW_, FLOORH_, FLOORW_ }, nextPos);
 
-
-	createBarrel({ 0, 3.0f, -20 });
-	//createBarrel({ 0, 3.0f, -50 });
 
 }
 
@@ -381,7 +449,12 @@ void ProySys::createPin(Vector3 pos) {
 		remove_.push_back(cb);
 		score_++;
 		changeScore(score_);
-	});
+		pinsFalling_ = false;
+		}, [&]() {
+			pinsFalling_ = true;
+			finishTimer_ = 0;
+		}
+	);
 
 	particles_.push_back(pin);
 }
@@ -394,10 +467,11 @@ void ProySys::createBarrel(Vector3 pos) {
 
 void ProySys::createBooster(Vector3 pos, Vector3 dir, PxQuat rot) {
 	Booster* boost = new Booster(gPhysics_, gScene_, pos, [=]() {
-			impulse_->setDir(dir);
-			impulse_->setActive(true);
-			cout << "impulsed\n";
-		}
+			if (ball_->getVel().normalize() >= MINVEL_) {
+				impulse_->setDir(dir);
+				impulse_->setActive(true);
+			}
+		}, ball_->getRigidActor()
 	);
 	particles_.push_back(boost);
 
@@ -441,4 +515,17 @@ void ProySys::rotateSpring(Vector3 ballP) {
 	spring_->setPos(anchor_->getPos() + springPos * -RESTINGLENGTH_);
 	spring_->setRot(quat);
 
+}
+
+void ProySys::createDebris() {
+	auto parts = debrisGen_->generateParticles();
+	for (auto p : parts) {
+		particles_.push_back(p);
+		partForceReg_->addForce(expl_, p);
+		partForceReg_->addForce(gr_, p);
+
+		// Masa aleatoria entre 1 y 5 veces la masa inicial
+		float rndMass = (rand() % 5 + 1) * p->getMass();
+		p->setInvMass(1.0f / rndMass);
+	}
 }

@@ -262,6 +262,8 @@ void setupDefaultWindow(const char *name)
 	delete[] namestr;
 }
 
+
+
 void setupDefaultRenderState()
 {
 	// Setup default render states
@@ -311,9 +313,22 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 	// Display text
 	glColor4f(0.2f, 0.2f, 0.2f, 1.0f);
 	
-	drawText(score, 10, INIT_WINDOW_H - 20);
-	for (int i = 0; i < display_text.size(); i++) {
-		drawText(display_text[i], 10, INIT_WINDOW_H - 60 - (display_text.size() * 10 - i * 15));
+	if (!gameFinished) {
+		drawText(score, 10, INIT_WINDOW_H - 20);
+		for (int i = 0; i < display_text.size(); i++) {
+			drawText(display_text[i], 10, INIT_WINDOW_H - 60 - (display_text.size() * 10 - i * 15));
+		}
+	}
+	else {
+		std::string text = "Has ganado!";
+		drawText(text, INIT_WINDOW_W / 2 - text.size() / 2 * 10, INIT_WINDOW_H - 30);
+		drawText(score, INIT_WINDOW_W / 2 - score.size() / 2 * 10, INIT_WINDOW_H - 50);
+		
+		text = "Pulsa P para reiniciar";
+		drawText(text, INIT_WINDOW_W / 2 - text.size() / 2 * 10, INIT_WINDOW_H - 70);
+
+		text = "Pulsa ESC para salir";
+		drawText(text, INIT_WINDOW_W / 2 - text.size() / 2 * 10, INIT_WINDOW_H - 90);
 	}
 #endif
 
@@ -438,14 +453,13 @@ void drawText(const std::string& text, int x, int y)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-
-void changeScore(int s) {
 #ifdef Proyecto
-	score = "score: " + std::to_string(s);
-
-#endif
+void changeScore(int s) {
+	score = "Puntuacion: " + std::to_string(s);
 }
 
+void setFinish(bool f) { gameFinished = f; }
+#endif
 
 
 } //namespace Snippets
