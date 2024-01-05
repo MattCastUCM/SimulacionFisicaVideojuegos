@@ -8,13 +8,14 @@ using namespace physx;
 
 class Particle {
 public:
+	enum geomType { geomSphere, geomBox, geomCapsule };
+
 	// Tamaño, forma y color
 	struct visual {
-		float size = 1.0f;
-		physx::PxGeometry* geometry = nullptr;
+		Vector3 size = { 1.0f, 1.0f, 1.0f };
+		geomType type = geomSphere;
 		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		PxMaterial* material = nullptr;
-		bool clone = false;
 	};
 
 	// Físicas iniciales
@@ -24,14 +25,12 @@ public:
 			acc = { 0, 0, 0 };		// Aceleración (vector) en m/s^2
 		float damp = 0.998f,		// Rozamiento (magnitud)
 			  mass = 1 / 5.0f;		// Masa (magnitud) en kg. Se utiliza para guardar el inverso de la masa al aplicar fuerzas
-
-		// Grupos de colisión (solo para rigidos)
-		PxU32 colGrp = 0, colMask = 0xFFFFFFFF;
 	};
 
 protected:
 	physx::PxTransform* tr_;		// Transform de la esfera (Su posición se va actualizando)
 	RenderItem* renderItem_;		// Objeto renderizable
+	PxShape* shape_;
 
 	visual vis_;
 	physics phys_;
@@ -41,13 +40,12 @@ protected:
 	float mass_;
 	Vector3 accumForce_;
 
-	float maxLifetime_;
-	float lifetime_;
-	bool alive_;
+	float maxLifetime_, lifetime_;
+	bool alive_, isRigid_;
 
 
 	virtual void init(visual vis, physics phys, float maxLifetime = 1.0f);
-	
+	PxShape* makeShape();
 
 public:
 	Particle(bool default = false, float maxLifetime = 1.0f);
@@ -87,6 +85,8 @@ public:
 	inline Vector3 getAcc() { return acc_; }
 
 	inline bool isAlive() { return alive_; }
+	inline bool isRigid() { return isRigid_; }
+
 	inline void changeLifetime(float t) { maxLifetime_ = t; }
 
 
@@ -99,12 +99,13 @@ public:
 	inline virtual float getMass() { return 1 /phys_.mass; }
 	inline virtual float getInvMass() { return phys_.mass; }
 
-	inline float getSize() { return vis_.size; }
-
 	inline virtual void setDamp(float d) { phys_.damp = d; }
 	inline float getDamp() { return phys_.damp; }
 
 	inline physx::PxTransform& getTransform() { return *tr_; }
 	inline void setRot(PxQuat rot) { tr_->q = rot; }
+	
+	inline PxShape* getShape() { return shape_; }
+
 };
 

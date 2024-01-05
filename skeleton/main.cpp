@@ -13,26 +13,29 @@
 #include "checkMemLeaks.h"
 #include "Definitions.h"
 
-#ifndef Explicaciones
-	#ifndef Proyecto
-		std::string display_text = "This is a test";
 
+#ifndef Proyecto
+	#ifndef Explicaciones
+		std::string display_text = "This is a test";
+	
 	#else
+		#ifdef P5
 		std::vector<std::string> display_text = {
+			"Pulsar boton 1 para activar y desactivar la explosion",
+			"(hay que desactivarla primero para volver a activarla)"
+		};
+		#endif	
+	#endif
+
+#else
+	std::vector<std::string> display_text = {
 		"A, D para girar la camara y el disparo",
 		"Mantener pulsado S para cargar el disparo",
 		"Espacio para disparar"
-		};
-		std::string score = "score: " + std::to_string(0);
-	#endif 
-
-#elif defined(P5)
-	std::vector<std::string> display_text = {
-		"Pulsar boton 1 para activar y desactivar la explosion",
-		"(hay que desactivarla primero para volver a activarla)"
 	};
-#endif
+	std::string score = "score: " + std::to_string(0);
 
+#endif
 
 
 using namespace physx;
@@ -54,79 +57,86 @@ ContactReportCallback gContactReportCallback;
 
 
 // Buscar modificaciones de la plantilla (camara y texto de ejemplo) buscando "PRACTICAS"
-#ifndef PracticasRigidos
-	#define P4
-
-	#ifdef P1 
-		#include "Practicas/Scenes/SceneP1.h"
-		SceneP1* scMngr = nullptr;
-	#elif defined(P2)
-		#include "Practicas/Scenes/SceneP2.h"
-		SceneP2* scMngr = nullptr;
-	#elif defined(P3)
-		#include "Practicas/Scenes/SceneP3.h"
-		SceneP3* scMngr = nullptr;
-	#elif defined(P4)
-		#include "Practicas/Scenes/SceneP4.h"
-		SceneP4* scMngr = nullptr;
+#ifndef Proyecto
+	#ifndef PracticasRigidos
+		#ifdef P1	
+			#include "Practicas/Scenes/SceneP1.h"
+			SceneP1* scMngr = nullptr;
+		#elif defined(P2)
+			#include "Practicas/Scenes/SceneP2.h"
+			SceneP2* scMngr = nullptr;
+		#elif defined(P3)
+			#include "Practicas/Scenes/SceneP3.h"
+			SceneP3* scMngr = nullptr;
+		#elif defined(P4)
+			#include "Practicas/Scenes/SceneP4.h"
+			SceneP4* scMngr = nullptr;
+		#endif	
+	#else
+		ParticleSystem* sys_;
+		#ifdef P5
+			#include "Practicas/Systems/RigidCubesSystem.h"
+		#endif	
 	#endif
 #else
-	#ifdef P5
-		#include "Practicas/Systems/RigidCubesSystem.h"
-	#else
-		#include "Proyecto/ProySystem.h"
-#endif
+	#include "Proyecto/ProySystem.h"
 	ParticleSystem* sys_;
 #endif
 
+
 void setupPr() {
-#ifdef P1	
-	scMngr = new SceneP1();
-#elif defined(P2)
-		scMngr = new SceneP2();
-#elif defined(P3)
-		scMngr = new SceneP3();
-#elif defined(P4)
-		scMngr = new SceneP4();
-#else
-	//PxU32 gr1 = 1;
-	//PxU32 gr2 = 2;
+#ifdef TestRigidos
+	PxU32 gr1 = 1;
+	PxU32 gr2 = 2;
 
-	//PxU32 m1 = 0; // Collides with no groups
-	//PxU32 m2 = 0; // Collides with no groups
+	PxU32 m1 = 0; // Collides with no groups
+	PxU32 m2 = 0; // Collides with no groups
 
-	//gMaterial = gPhysics->createMaterial(0.0f, 0.0f, 0.0f);
-	//PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100), gMaterial);
-	//shape->setSimulationFilterData(PxFilterData(gr1, m1, 0, 0));
+	gMaterial = gPhysics->createMaterial(0.0f, 0.0f, 0.0f);
+	PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100), gMaterial);
+	shape->setSimulationFilterData(PxFilterData(gr1, m1, 0, 0));
 
-	//PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
-	//suelo->attachShape(*shape);
+	PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
+	suelo->attachShape(*shape);
 
-	//gScene->addActor(*suelo);
-	//RenderItem* item = new RenderItem(shape, suelo, { 0.8, 0.8, 0.8, 0.1 });
+	gScene->addActor(*suelo);
+	RenderItem* item = new RenderItem(shape, suelo, { 0.8, 0.8, 0.8, 0.1 });
 
-	//PxRigidDynamic* solid;
+	PxRigidDynamic* solid;
 
-	//shape = CreateShape(PxSphereGeometry(1.0f), gMaterial);
-	//shape->setSimulationFilterData(PxFilterData(gr2, m2, 0, 0));
+	shape = CreateShape(PxSphereGeometry(1.0f), gMaterial);
+	shape->setSimulationFilterData(PxFilterData(gr2, m2, 0, 0));
 
-	//solid = gPhysics->createRigidDynamic(PxTransform({ 0, 10, 0 }));
-	//solid->setLinearVelocity({ 0,0,0 });
-	//solid->setAngularVelocity({ 0,0,0 });
-	//solid->attachShape(*shape);
+	solid = gPhysics->createRigidDynamic(PxTransform({ 0, 10, 0 }));
+	solid->setLinearVelocity({ 0,0,0 });
+	solid->setAngularVelocity({ 0,0,0 });
+	solid->attachShape(*shape);
 
-	//PxRigidBodyExt::updateMassAndInertia(*solid, 1);
-	//gScene->addActor(*solid);
-	//item = new RenderItem(shape, solid, { 1.0, 0.0, 0.0, 1.0 });
-
-
-	#ifdef P5
-		sys_ = new RigidCubesSystem(gPhysics, gScene);
-	#elif defined(Proyecto)
-		sys_ = new ProySys(gPhysics, gScene);
-
-	#endif
+	PxRigidBodyExt::updateMassAndInertia(*solid, 1);
+	gScene->addActor(*solid);
+	item = new RenderItem(shape, solid, { 1.0, 0.0, 0.0, 1.0 });
 #endif
+
+#ifndef Proyecto
+	#ifndef PracticasRigidos
+		#ifdef P1	
+			scMngr = new SceneP1();
+		#elif defined(P2)
+			scMngr = new SceneP2();
+		#elif defined(P3)
+			scMngr = new SceneP3();
+		#elif defined(P4)
+			scMngr = new SceneP4();
+		#endif	
+	#else
+		#ifdef P5
+			sys_ = new RigidCubesSystem(gPhysics, gScene);
+		#endif	
+	#endif
+#else
+	sys_ = new ProySys(gPhysics, gScene);
+#endif
+
 }
 
 
@@ -170,9 +180,12 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
-
-#ifndef PracticasRigidos
-	scMngr->update(t);
+#ifndef Proyecto
+	#ifndef PracticasRigidos
+		scMngr->update(t);
+	#else
+		sys_->update(t);
+	#endif
 #else
 	sys_->update(t);
 #endif
@@ -183,8 +196,12 @@ void stepPhysics(bool interactive, double t)
 void cleanupPhysics(bool interactive)
 {
 	// IMPORTANTE BORRARLO ANTES QUE LA ESCENA Y LAS FÍSICAS
-#ifndef PracticasRigidos
-	delete scMngr;
+#ifndef Proyecto
+	#ifndef PracticasRigidos
+		delete scMngr_;
+	#else
+		delete sys_;
+	#endif
 #else
 	delete sys_;
 #endif
@@ -218,9 +235,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 
-
-#ifndef PracticasRigidos
-	scMngr->keyPress(key);
+#ifndef Proyecto
+	#ifndef PracticasRigidos
+		scMngr->keyPress(key);
+	#else
+		sys_->keyPress(key);
+	#endif
 #else
 	sys_->keyPress(key);
 #endif

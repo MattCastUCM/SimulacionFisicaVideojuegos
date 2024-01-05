@@ -50,9 +50,8 @@ void SceneP1::keyPress(unsigned char key) {
 // Crea una partícula y la añade a la lista
 void SceneP1::addParticle(unsigned char key) {
 	Particle::visual v;
-	v.size = 1.0f;
-	//v.geometry = &physx::PxSphereGeometry(2.0f);
-	v.geometry = &physx::PxBoxGeometry(2.0f, 2.0f, 2.0f);
+	v.size = { 1.0f, 1.0f, 1.0f };
+	v.type = Particle::geomType::geomBox;
 
 
 	Particle::physics p;

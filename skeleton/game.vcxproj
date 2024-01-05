@@ -317,8 +317,6 @@
     <ClInclude Include="Proyecto\ImpulseForceGenerator.h" />
     <ClInclude Include="Proyecto\Pin.h" />
     <ClInclude Include="Proyecto\ProySystem.h" />
-    <ClInclude Include="Proyecto\RigidExplosionForceGenerator.h" />
-    <ClInclude Include="Proyecto\RotatedSpringForceGenerator.h" />
     <ClInclude Include="Proyecto\Smoke.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />

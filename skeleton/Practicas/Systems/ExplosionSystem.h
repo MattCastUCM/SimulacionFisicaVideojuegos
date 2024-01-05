@@ -25,6 +25,7 @@ public:
 		gen_->changeModelPart(p);
 		gen_->changeGenerateN(100);
 		gen_->setOrigin({ 0, 0, -100 });
+		generators_.insert({ "expl", gen_ });
 
 		delete p;
 	}
@@ -34,6 +35,7 @@ public:
 
 		if (active) {
 			expl_->resetTime();
+			expl_->setActive(true);
 			// Genera las N partículas solo al activar el generador, no hace 
 			// falta ir generando más conforme vaya pasando el tiempo.
 			// Luego las añade a la lista de partículas y al registro

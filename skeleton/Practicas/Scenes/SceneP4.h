@@ -6,8 +6,6 @@ class ParticleSystem;
 class SceneP4 {
 private:
 	ParticleSystem* springs_;
-	bool sprActive_;
-
 
 public:
 	SceneP4();

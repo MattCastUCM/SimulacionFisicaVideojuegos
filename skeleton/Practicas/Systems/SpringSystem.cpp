@@ -72,8 +72,8 @@ void SpringSystem::activatePartToStatic() {
 	toggleGravity(false);
 
 	Particle::visual v;
-	v.size = 1.0f;
-	v.geometry = new physx::PxBoxGeometry(v.size, v.size, v.size);
+	v.size = { 1.0f, 1.0f, 1.0f };
+	v.type = Particle::geomType::geomBox;
 	v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	Particle::physics p;
@@ -210,8 +210,8 @@ void SpringSystem::activateBuoyancy() {
 	toggleGravity(false);
 
 	Particle::visual v;
-	v.size = 30.0f;
-	v.geometry = new physx::PxBoxGeometry(v.size, 0.02f, v.size);
+	v.size = { 30.0f, 0.02f, 30.0f };
+	v.type = Particle::geomType::geomBox;
 	v.color = { 0.0f, 1.0f, 1.0f, 1.0f };
 
 	Particle::physics p;
@@ -224,8 +224,8 @@ void SpringSystem::activateBuoyancy() {
 	particles_.push_back(staticPart_);
 
 
-	v.size = 1.0f;
-	v.geometry = new physx::PxBoxGeometry(v.size, v.size, v.size);
+	v.size = { 1.0f, 1.0f, 1.0f };
+	v.type = Particle::geomType::geomBox;
 	v.color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
 	// Damping bajo para evitar que de saltos
@@ -238,9 +238,9 @@ void SpringSystem::activateBuoyancy() {
 	particles_.push_back(part);
 
 
-	float V = v.size * v.size * v.size;
+	float V = v.size.x * v.size.y * v.size.z;
 	float waterD = 1000.0f;
-	BuoyancyForceGenerator* b = new BuoyancyForceGenerator(v.size, V, waterD, staticPart_, g_);
+	BuoyancyForceGenerator* b = new BuoyancyForceGenerator(v.size.y, V, waterD, staticPart_, g_);
 	forces_.insert(b);
 	partForceReg_->addForce(b, part);
 

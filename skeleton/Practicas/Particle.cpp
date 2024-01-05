@@ -2,13 +2,14 @@
 #include "../checkMemLeaks.h"
 
 Particle::Particle(bool default, float maxLifetime) {
+	isRigid_ = false;
 	if (default) {
-		vis_.geometry = new physx::PxSphereGeometry(vis_.size);
 		init(vis_, phys_, maxLifetime);
 	}
 }
 
 Particle::Particle(visual vis, physics phys, float maxLifetime) {
+	isRigid_ = false;
 	init(vis, phys, maxLifetime); 
 }
 
@@ -18,11 +19,12 @@ Particle::~Particle() {
 		delete renderItem_;
 	}
 	if (tr_ != nullptr) delete tr_;
-	if (!vis_.clone && vis_.geometry != nullptr) delete vis_.geometry;
 }
 
 
 void Particle::init(visual vis, physics phys, float maxLifetime) {
+	isRigid_ = false;
+
 	vis_ = vis;
 	phys_ = phys;
 	maxLifetime_ = maxLifetime;
@@ -35,10 +37,22 @@ void Particle::init(visual vis, physics phys, float maxLifetime) {
 
 	accumForce_ = { 0, 0, 0 };
 
-	PxShape* shape = CreateShape(*vis_.geometry, vis_.material);
+	shape_ = makeShape();
 	tr_ = new physx::PxTransform(phys_.pos);
-	renderItem_ = new RenderItem(shape, tr_, vis_.color);
+	renderItem_ = new RenderItem(shape_, tr_, vis_.color);
+}
 
+PxShape* Particle::makeShape() {
+	PxShape* shape = nullptr;
+	
+	if (vis_.type == geomSphere)
+		shape = CreateShape(PxSphereGeometry(vis_.size.x), vis_.material);
+	else if (vis_.type == geomBox)
+		shape = CreateShape(PxBoxGeometry(vis_.size), vis_.material);
+	else
+		shape = CreateShape(PxCapsuleGeometry(vis_.size.x, vis_.size.y), vis_.material);
+
+	return shape;
 }
 
 void Particle::update(double t) {
@@ -78,11 +92,5 @@ void Particle::addForce(const Vector3& f) {
 
 
 Particle* Particle::clone() {
-	Particle::visual v;
-	v.size = vis_.size;
-	v.geometry = vis_.geometry;
-	v.color = vis_.color;
-	v.clone = true;
-
-	return new Particle(v, phys_, maxLifetime_);
+	return new Particle(vis_, phys_, maxLifetime_);
 }

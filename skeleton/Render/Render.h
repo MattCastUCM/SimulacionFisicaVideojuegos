@@ -52,18 +52,24 @@
 #include "../Definitions.h"
 
 
-#ifdef Explicaciones
-	#include <vector>
-	extern std::vector<std::string> display_text;
-#else
-	#ifdef Proyecto
-	#include <vector>
-	extern std::string score;
-	extern std::vector<std::string> display_text;
+#ifndef Proyecto
+	#ifndef Explicaciones
+		extern std::string display_text;
+
 	#else
-	extern std::string display_text;
-	#endif 
-#endif // Explicaciones
+		#ifdef P5
+			#include <vector>
+			extern std::vector<std::string> display_text;
+
+		#endif	
+	#endif
+
+#else
+	#include <vector>
+	extern std::vector<std::string> display_text;
+	extern std::string score;
+
+#endif
 
 
 namespace Snippets

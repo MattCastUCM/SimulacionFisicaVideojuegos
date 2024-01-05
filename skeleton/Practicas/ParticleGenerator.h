@@ -31,6 +31,10 @@ public:
 		: generateN_(3), genProb_(1.0), modelPart_(nullptr), time_(0), generationTime_(genTime), 
 		  changeX_(changeX), changeY_(changeY), changeZ_(changeZ), autoInactive_(autoInactive), active_(true), name_("") { };
 
+	~ParticleGenerator() {
+		if(modelPart_ != nullptr) delete modelPart_;
+	}
+
 	inline virtual std::list<Particle*> generateParticles() {
 		std::list<Particle*> generated;
 		Particle* p;

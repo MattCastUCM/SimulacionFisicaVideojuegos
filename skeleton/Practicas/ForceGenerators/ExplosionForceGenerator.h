@@ -2,6 +2,7 @@
 
 #include "../ForceGenerator.h"
 #include <cmath>
+#include "../Particles/DRigidBody.h"
 #include "../../checkMemLeaks.h"
 
 class ExplosionForceGenerator : public ForceGenerator {
@@ -27,9 +28,14 @@ public:
 				float eN = exp(-lifeTime_ / timeConstant_);	// exp(n) = e^n
 
 				auto f = intensity * dist * eN;
-				p->addForce(f);
+				
+				if (!p->isRigid()) p->addForce(f);
+				else ((DRigidBody*)p)->addForce(f);
 			}
 
 		}
 	};
+
+
+	inline void setOrigin(Vector3 o) { origin_ = o; }
 };

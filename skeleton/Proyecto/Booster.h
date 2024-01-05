@@ -19,7 +19,8 @@ private:
 public:
 	Booster(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos, std::function<void()>funct) : SRigidBody(false, -1, gPhysics, gScene) {
 		Particle::visual v;
-		v.geometry = new physx::PxBoxGeometry(SIZE_, SIZE_ / 5, SIZE_);
+		v.size = { SIZE_, SIZE_ / 5, SIZE_ };
+		v.type = Particle::geomType::geomBox;
 		v.color = COLOR_;
 		v.material = gPhysics->createMaterial(MAT_.x, MAT_.y, MAT_.z);
 
@@ -40,17 +41,13 @@ public:
 
 		accumForce_ = { 0, 0, 0 };
 
-		shape_ = CreateShape(*vis_.geometry);
+		shape_ = makeShape();
 
 		shape_->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 		shape_->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 		shape_->setFlag(PxShapeFlag::eVISUALIZATION, false);
 
 		tr_ = new physx::PxTransform(phys_.pos);
-
-		// MATRIZ DE COLISION (SE TIENE QUE CREAR ANTES DE CREAR EL RIGIDO)
-		shape_->setSimulationFilterData(PxFilterData(phys_.colGrp, phys_.colMask, 0, 0));
-
 		rigid_ = gPhysics_->createRigidStatic(*tr_);
 		rigidActor_ = rigid_;
 		rigidActor_->attachShape(*shape_);

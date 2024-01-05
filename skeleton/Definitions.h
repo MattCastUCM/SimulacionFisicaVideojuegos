@@ -1,6 +1,6 @@
 // Configuración de lo que va a usar el proyecto
-#define PracticasRigidos
-//#define P5
+//#define PracticasRigidos
+//#define P4
 #define Proyecto
 //#define CamaraTeclas
 //#define Explicaciones

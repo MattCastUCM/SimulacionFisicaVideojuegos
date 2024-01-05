@@ -7,25 +7,6 @@ ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 	: ParticleForceSystem({ 0.0f, -9.8f, 0.0f }, 100), gPhysics_(gPhysics), gScene_(gScene), barrels_()
 {
 	finish_ = false;
-
-	// Matrices de colisión
-	colGroups = {
-		colisions::ball,
-		colisions::spring,
-		colisions::floor,
-		colisions::walls,
-		colisions::items
-	};
-
-	colMasks = {
-		0,
-		/*0xFFFFFFFF,	*/														// (Pelota) colisiona con todo
-		((PxU32)1 << colGroups[floor]) | ((PxU32)1 << colGroups[ball]),		// (Muelle) colisiona solo con suelo y pelota
-		0xFFFFFFFF,															// (Suelos) colisionan con todo
-		~((PxU32)1 << colGroups[spring]),									// (Paredes) colisionan con todo menos el muelle
-		~((PxU32)1 << colGroups[spring])									// (Objetos) colisionan con todo menos el muelle
-	};
-
 	score_ = 0;
 	camera_ = GetCamera();
 	camera_->setPos({ 0, 10, 5 });
@@ -57,6 +38,9 @@ ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 
 void ProySys::keyPress(unsigned char key) {
 	auto k = tolower(key);
+	
+	if(k == 'p')
+		createBarrel({ 0, 3.0f, -20 });
 
 	if (!shot_) {
 		// Cargar
@@ -89,15 +73,17 @@ void ProySys::keyPress(unsigned char key) {
 	
 	// Rotar
 	if (k == 'd') {
-		rot_++;
-		rot_ %= 360;
-		camera_->rotate(false);
+		int newRot = rot_ += CAMROTSPD_;
+		newRot %= 360;
+		rot_ = newRot;
+		camera_->rotate(false, CAMROTSPD_);
 		rotating_ = true;
 	}
 	else if (k == 'a') {
-		rot_--;
-		rot_ %= 360;
-		camera_->rotate(true);
+		int newRot = rot_ -= CAMROTSPD_;
+		newRot %= 360;
+		rot_ = newRot;
+		camera_->rotate(true, CAMROTSPD_);
 		rotating_ = true;
 	}
 
@@ -119,6 +105,9 @@ void ProySys::update(double t) {
 	if ((spring_->getPos() - ball_->getPos()).normalize() < BALLSIZE_ + WALLW_ / 2) {
 		ball_->addForce(-throw_->getForce());
 		shot_ = true;
+		
+		/*spring_->setPos({ 1000, 1000, 1000 });
+		anchor_->setPos({ 1000, 1000, 1000 });*/
 	}
 
 	// Si la pelota ha sido disparada y la velocidad es inferior
@@ -175,7 +164,7 @@ void ProySys::onCollision(physx::PxActor* actor1, physx::PxActor* actor2) {
 					auto parts = explPartGen_->generateParticles();
 					for (auto part : parts) {
 						particles_.push_back(part);
-						//partForceReg_->addForce(expl_, part);
+						partForceReg_->addForce(expl_, part);
 
 						int rndMass = rand() % 15 + 1;
 						part->setInvMass(1.0f / rndMass);
@@ -189,8 +178,8 @@ void ProySys::onCollision(physx::PxActor* actor1, physx::PxActor* actor2) {
 
 void ProySys::createBall() {
 	Particle::visual v;
-	v.size = BALLSIZE_;
-	v.geometry = new physx::PxSphereGeometry(v.size);
+	v.size = { BALLSIZE_, BALLSIZE_, BALLSIZE_ };
+	v.type = Particle::geomType::geomSphere;
 	v.color = BALLCOLOR_;
 	v.material = gPhysics_->createMaterial(BALLFR_, BALLFR_, BALLRESTIT_);
 
@@ -200,10 +189,7 @@ void ProySys::createBall() {
 
 	// MASS GUARDA LA DENSIDAD
 	p.mass = BALLMASS_;
-	p.damp = 0.998;
-
-	p.colGrp = colGroups[colisions::ball];
-	p.colMask = colMasks[colisions::ball];
+	p.damp = BALLDAMP_;
 
 	ball_ = new DRigidBody(v, p, -1, gPhysics_, gScene_);
 	particles_.push_back(ball_);
@@ -234,7 +220,8 @@ void ProySys::resetBall() {
 
 void ProySys::createSprings() {
 	Particle::visual v;
-	v.geometry = new physx::PxBoxGeometry(WALLW_ / 2, WALLW_ / 4, WALLW_ / 4);
+	v.size = { WALLW_ / 2, WALLW_ / 4, WALLW_ / 4 };
+	v.type = Particle::geomType::geomBox;
 	v.color = SPRINGSSCOLOR_;
 	v.material = gPhysics_->createMaterial(0, 0, 0);
 
@@ -246,20 +233,19 @@ void ProySys::createSprings() {
 	particles_.push_back(anchor_);
 
 
-	v.geometry = new physx::PxBoxGeometry(BALLSIZE_ * 2, WALLW_, WALLW_);
+	v.size = { BALLSIZE_ * 2, WALLW_, WALLW_ };
+	v.type = Particle::geomType::geomBox;
 
 	p.damp = 0.5f;
 	p.mass = SPRINGMASS_;
 	p.pos += Vector3(0, 0, RESTINGLENGTH_);
-	p.colGrp = colGroups[colisions::spring];
-	p.colMask = colMasks[colisions::spring];
 
 	spring_ = new Particle(v, p, -1);
 	particles_.push_back(spring_);
 
 
 	// No hace falta añadir la partícula estática a las fuerzas
-	throw_ = new RotatedSpringForceGenerator(K_, RESTINGLENGTH_, anchor_);
+	throw_ = new SpringForceGenerator(K_, RESTINGLENGTH_, anchor_);
 	forces_.insert(throw_);
 	partForceReg_->addForce(throw_, spring_);
 	throw_->setActive(true);
@@ -267,11 +253,11 @@ void ProySys::createSprings() {
 }
 
 void ProySys::createExpl() {
-	expl_ = new RigidExplosionForceGenerator(EXPLK_, EXPLR_, EXPLT_, { 0, 0, 0 });
+	expl_ = new ExplosionForceGenerator(EXPLK_, EXPLR_, EXPLT_, { 0, 0, 0 });
 	forces_.insert(expl_);
 	partForceReg_->addForce(expl_, ball_);
 
-	
+
 	Particle* p = new Smoke();
 	explPartGen_ = new GaussianParticleGenerator(EXPLGENTIME_, EXPLGENMEAN_, EXPLGENDEV_, EXPLGENOFF_, true, true, true, true);
 	explPartGen_->changeModelPart(p);
@@ -354,14 +340,13 @@ void ProySys::createMap() {
 
 SRigidBody* ProySys::createFloor(Vector3 dims, Vector3 pos, PxQuat rot) {
 	Particle::visual v;
-	v.geometry = new physx::PxBoxGeometry(dims);
+	v.size = dims;
+	v.type = Particle::geomType::geomBox;
 	v.color = FLOORCOLOR_;
 	v.material = gPhysics_->createMaterial(FLOORFR_, FLOORFR_, FLOORRESTIT_);
 
 	Particle::physics p;
 	p.pos = pos;
-	p.colGrp = colGroups[colisions::floor];
-	p.colMask = colMasks[colisions::floor];
 
 	SRigidBody* floor = new SRigidBody(v, p, -1, gPhysics_, gScene_);
 	particles_.push_back(floor);
@@ -374,14 +359,13 @@ SRigidBody* ProySys::createFloor(Vector3 dims, Vector3 pos, PxQuat rot) {
 
 void ProySys::createWall(Vector3 dims, Vector3 pos, PxQuat rot) {
 	Particle::visual v;
-	v.geometry = new physx::PxBoxGeometry(dims);
+	v.size = dims;
+	v.type = Particle::geomType::geomBox;
 	v.color = BORDERSCOLOR_;
 	v.material = gPhysics_->createMaterial(WALLFR_, WALLFR_, WALLRESTIT_); 
 
 	Particle::physics p;
 	p.pos = pos;
-	p.colGrp = colGroups[colisions::walls];
-	p.colMask = colMasks[colisions::walls];
 
 	SRigidBody* wall = new SRigidBody(v, p, -1, gPhysics_, gScene_);
 	particles_.push_back(wall);
@@ -391,7 +375,7 @@ void ProySys::createWall(Vector3 dims, Vector3 pos, PxQuat rot) {
 }
 
 void ProySys::createPin(Vector3 pos) {
-	auto pin = new Pin(gPhysics_, gScene_, pos, colGroups[colisions::items], colMasks[colisions::items], [&](Pin* cb) {
+	auto pin = new Pin(gPhysics_, gScene_, pos, [&](Pin* cb) {
 		// Callback: cuando un bolo llama a esta función, se añade a la 
 		// lista de partículas a eliminar y se actualiza la puntuación
 		remove_.push_back(cb);

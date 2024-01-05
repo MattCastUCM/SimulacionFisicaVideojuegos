@@ -6,9 +6,9 @@
 #include "../Practicas/Particles/SRigidBody.h"
 #include "../Practicas/Particles/DRigidBody.h"
 
-#include "RotatedSpringForceGenerator.h"
+#include "../Practicas/ForceGenerators/SpringForceGenerator.h"
 #include "ImpulseForceGenerator.h"
-#include "RigidExplosionForceGenerator.h"
+#include "../Practicas/ForceGenerators/ExplosionForceGenerator.h"
 
 #include "Pin.h"
 #include "Booster.h"
@@ -26,12 +26,12 @@ protected:
 
 	// Pelota
 	const float BALLSIZE_ = 1.2f,
-				BALLFR_ = 1,
+				BALLDAMP_ = 0.3f,
+				BALLFR_ = 0.5f,
 				BALLRESTIT_ = 0.0f,
-				BALLMASS_ = 10.0f;
+				BALLMASS_ = 1.105f;
 	const Vector4 BALLCOLOR_ = { 46 / 255.0f, 163 / 255.0f, 57 / 255.0f, 1.0f };
 	const Vector3 INITPOS_ = { 0, 0, -10 };
-	//const Vector3 INITPOS_ = { -3, 3.0f, -20 };
 
 
 	// Suelo y paredes
@@ -40,7 +40,7 @@ protected:
 		WALLH_ = 3,
 		WALLW_ = 1,
 
-		FLOORFR_ = 1,
+		FLOORFR_ = 0.1f,
 		FLOORRESTIT_ = 0.0f,
 		WALLFR_ = 1.0f,
 		WALLRESTIT_ = 0.2f;
@@ -55,8 +55,8 @@ protected:
 
 				IMPULSEK_ = 1000,
 
-				EXPLK_ = 10000,
-				EXPLR_ = 50,
+				EXPLK_ = 3000,
+				EXPLR_ = 30,
 				EXPLT_ = 1,
 				EXPLGENTIME_ = 0,
 				EXPLGENMEAN_ = 0,
@@ -74,15 +74,11 @@ protected:
 				  EXPLRND_ = Vector3(5, -5, 5);
 
 
-	const int INITROT_ = 90;
-	const float TIMETOSTOP_ = 2.0f;
+	const float INITROT_ = 90,
+				TIMETOSTOP_ = 2.0f, 
+				CAMROTSPD_ = 2.0f;
 
 
-	enum colisions { ball = 0, spring, floor, walls, items };
-	std::vector<PxU32> colGroups;
-	std::vector<PxU32> colMasks;
-
-	
 	PxPhysics* gPhysics_;
 	PxScene* gScene_;
 
@@ -91,12 +87,12 @@ protected:
 	Particle* spring_, *anchor_;
 	Camera* camera_;
 
-	RotatedSpringForceGenerator* throw_;
+	SpringForceGenerator* throw_;
 	ImpulseForceGenerator* impulse_;
-	RigidExplosionForceGenerator* expl_;
+	ExplosionForceGenerator* expl_;
 
 	Vector3 lastPos_;
-	int rot_ = INITROT_;
+	float rot_ = INITROT_;
 	
 	float stopTimer_;
 	bool pushing_, rotating_, shot_, stop_, finish_;

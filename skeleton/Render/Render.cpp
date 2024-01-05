@@ -297,23 +297,26 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// PRACTICAS
+#ifndef Proyecto
 	// Display text
 	glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
-#ifdef Proyecto
-		drawText(score, 10, INIT_WINDOW_H - 20);
-
-		for (int i = 0; i < display_text.size(); i++) {
-			drawText(display_text[i], 10, INIT_WINDOW_H - 60 - (display_text.size() * 10 - i * 15) );
-		}
+	#ifndef Explicaciones
+		drawText(display_text, 0, 0);
 	#else
-	#ifdef Explicaciones
 		for (int i = 0; i < display_text.size(); i++) {
 			drawText(display_text[i], 10, display_text.size() * 10 - i * 15 + 10);
 		}
-	#else
-		drawText(display_text, 0, 0);
 	#endif
+#else
+	// Display text
+	glColor4f(0.2f, 0.2f, 0.2f, 1.0f);
+	
+	drawText(score, 10, INIT_WINDOW_H - 20);
+	for (int i = 0; i < display_text.size(); i++) {
+		drawText(display_text[i], 10, INIT_WINDOW_H - 60 - (display_text.size() * 10 - i * 15));
+	}
 #endif
+
 
 	// Setup camera
 	glMatrixMode(GL_PROJECTION);

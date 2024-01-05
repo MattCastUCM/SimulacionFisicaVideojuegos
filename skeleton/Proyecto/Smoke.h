@@ -6,9 +6,8 @@ class Smoke : public Particle {
 public:
 	Smoke(double lifetime = 1.0f) : Particle() {
 		Particle::visual v;
-		v.size = 1.0f;
-		v.geometry = new physx::PxSphereGeometry(v.size);
-
+		v.size = { 1.0f, 1.0f, 1.0f };
+		v.type = Particle::geomType::geomSphere;
 		v.color = { 81.0f / 255, 165.0f / 255, 219.0f / 255, 1.0f };
 
 		Particle::physics p;
@@ -17,7 +16,7 @@ public:
 		init(v, p, lifetime);
 	}
 
-	inline virtual Particle* clone() {
+	/*inline virtual Particle* clone() {
 		Particle::visual v;
 		v.size = vis_.size;
 		v.geometry = vis_.geometry;
@@ -25,5 +24,5 @@ public:
 		v.clone = true;
 
 		return new Particle(v, phys_, maxLifetime_);
-	};
+	};*/
 };

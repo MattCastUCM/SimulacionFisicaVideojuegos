@@ -94,7 +94,7 @@ void Camera::handleAnalogMove(float x, float y)
 
 void Camera::handleMotion(int x, int y)
 {
-#ifdef Proyecto
+#ifdef CamaraTeclas
 	int dx = mMouseX - x;
 	int dy = mMouseY - y;
 
@@ -127,13 +127,13 @@ void Camera::setPos(physx::PxVec3 pos) {
 	mEye = pos;
 }
 
-void Camera::rotate(bool clockwise) {
+void Camera::rotate(bool clockwise, float amt) {
 	if (clockwise) {
-		PxQuat qx(PxPi / 180.0f, PxVec3(0, 1, 0));
+		PxQuat qx(amt * PxPi / 180.0f, PxVec3(0, 1, 0));
 		mDir = qx.rotate(mDir);
 	}
 	else {
-		PxQuat qx(PxPi / 180.0f, PxVec3(0, -1, 0));
+		PxQuat qx(amt * PxPi / 180.0f, PxVec3(0, -1, 0));
 		mDir = qx.rotate(mDir);
 	}
 }

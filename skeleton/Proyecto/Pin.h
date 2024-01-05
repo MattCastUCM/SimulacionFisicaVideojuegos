@@ -22,12 +22,13 @@ private:
 	std::function<void(Pin* pin)> callback_;
 
 public:
-	Pin(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos, PxU32 colGroup, PxU32 colMask, std::function<void(Pin* pin)>funct)
+	Pin(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos, std::function<void(Pin* pin)>funct)
 		: DRigidBody(false, -1, gPhysics, gScene), remove_(false), removeDelay_(0), callback_(funct) 
 	{
 		Particle::visual v;
 
-		v.geometry = new physx::PxCapsuleGeometry(RADIUS_, HALFH_);
+		v.size = { RADIUS_, HALFH_, 1.0f };
+		v.type = Particle::geomType::geomCapsule;
 		v.color = COLOR_;
 		v.material = gPhysics->createMaterial(MAT_.x, MAT_.y, MAT_.z);
 
@@ -36,8 +37,6 @@ public:
 		p.damp = 0;
 		// Se guarda la densidad. De media, la masa de un bolo es de 1.66 kg
 		p.mass = DENS_;
-		p.colGrp = colGroup;
-		p.colMask = colMask;
 
 		init(v, p, -1);
 

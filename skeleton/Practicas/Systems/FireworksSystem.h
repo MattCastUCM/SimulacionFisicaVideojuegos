@@ -5,10 +5,12 @@
 #include "../ParticleGenerators/GaussianParticleGenerator.h"
 #include "../ParticleGenerators/CircleGenerator.h"
 #include "../ParticleGenerators/HeartGenerator.h"
+#include <time.h>
+
 #include "../../checkMemLeaks.h"
 
-
-#include <time.h>       /* time */
+#include <iostream>
+using namespace std;
 class FireworksSystem : public ParticleSystem {
 public:
 	FireworksSystem (const Vector3& g = { 0.0f, -10.0f, 0.0f }) : ParticleSystem(g) {
@@ -16,12 +18,13 @@ public:
 		
 		Firework* shotF = new Firework(g, 0, 0, 3.0);
 
-		
+		cout << "spheregen\n";
 		GaussianParticleGenerator* sphereGen = new GaussianParticleGenerator(0, 0, 0.1, 0, true, true, true, true);
 		sphereGen->changeGenerateN(50);
 		sphereGen->setName("sphereGen");
 		generators_.insert({ "sphereGen", sphereGen });
 		shotF->addGenerator(sphereGen);
+
 
 		CircleGenerator* circleGen = new CircleGenerator(0, 0, 0.05, 0, true);
 		circleGen->changeGenerateN(10);
@@ -34,12 +37,13 @@ public:
 		heartGen->setName("heartGen");
 		generators_.insert({ "heartGen", heartGen });
 		shotF->addGenerator(heartGen);
+		
 
-
-
+		cout << "shooter\n";
 		GaussianParticleGenerator* fireworkShooter = new GaussianParticleGenerator(5.0, 0, 0.1);
 		fireworkShooter->changeModelPart(shotF);
 		fireworkShooter->changeGenerateN(1);
+		fireworkShooter->setName("fireworkShooter");
 		generators_.insert({ "fireworkShooter", fireworkShooter });
 		fireworkShooter->setOrigin({ 0.0f, -60.0f, -150.0f });
 

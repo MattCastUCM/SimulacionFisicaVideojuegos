@@ -6,8 +6,8 @@ class Mist : public Particle {
 public:
 	Mist(const Vector3& g, double lifetime = 1.0f) : Particle() {
 		Particle::visual v;
-		v.size = 0.05f;
-		v.geometry = new physx::PxSphereGeometry(v.size);
+		v.size = { 0.05f, 0.05f, 0.05f };
+		v.type = Particle::geomType::geomSphere;
 		v.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		Particle::physics p;

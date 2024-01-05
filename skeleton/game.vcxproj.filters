@@ -102,11 +102,9 @@
     <ClInclude Include="Proyecto\ProySystem.h" />
     <ClInclude Include="Proyecto\Pin.h" />
     <ClInclude Include="Proyecto\ImpulseForceGenerator.h" />
-    <ClInclude Include="Proyecto\RotatedSpringForceGenerator.h" />
     <ClInclude Include="Proyecto\Booster.h" />
     <ClInclude Include="Proyecto\BoosterCallback.h" />
     <ClInclude Include="checkMemLeaks.h" />
-    <ClInclude Include="Proyecto\RigidExplosionForceGenerator.h" />
     <ClInclude Include="Proyecto\Barrel.h" />
     <ClInclude Include="Proyecto\Smoke.h" />
   </ItemGroup>

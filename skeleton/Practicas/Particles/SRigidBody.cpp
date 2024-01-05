@@ -1,19 +1,19 @@
 #include "SRigidBody.h"
 #include "../../checkMemLeaks.h"
 
-SRigidBody::SRigidBody(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) {
+SRigidBody::SRigidBody(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) : Particle() {
+	isRigid_ = true;
+	
 	rigidActor_ = nullptr;
 	rigid_ = nullptr;
 	shape_ = nullptr;
 	gPhysics_ = gPhys;
 	gScene_ = gScene;
-	if (default) {
-		vis_.geometry = new physx::PxSphereGeometry(vis_.size);
-		init(vis_, phys_, maxLifetime);
-	}
 }
 
-SRigidBody::SRigidBody(visual vis, physics phys, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) {
+SRigidBody::SRigidBody(visual vis, physics phys, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) : Particle() {
+	isRigid_ = true;
+	
 	rigidActor_ = nullptr;
 	rigid_ = nullptr;
 	shape_ = nullptr;
@@ -29,6 +29,8 @@ SRigidBody::~SRigidBody() {
 
 
 void SRigidBody::init(visual vis, physics phys, float maxLifetime) {
+	isRigid_ = true;
+	
 	vis_ = vis;
 	phys_ = phys;
 	maxLifetime_ = maxLifetime;
@@ -41,18 +43,16 @@ void SRigidBody::init(visual vis, physics phys, float maxLifetime) {
 
 	accumForce_ = { 0, 0, 0 };
 
-	shape_ = CreateShape(*vis_.geometry);
+	shape_ = makeShape();
 	tr_ = new physx::PxTransform(phys_.pos);
-
-	// MATRIZ DE COLISION (SE TIENE QUE CREAR ANTES DE CREAR EL RIGIDO)
-	shape_->setSimulationFilterData(PxFilterData(phys_.colGrp, phys_.colMask, 0, 0));
 
 	rigid_ = gPhysics_->createRigidStatic(*tr_);
 	rigidActor_ = rigid_;
 	rigidActor_->attachShape(*shape_);
 	gScene_->addActor(*rigidActor_);
-	renderItem_ = new RenderItem(shape_, rigidActor_, vis_.color);
 
+
+	renderItem_ = new RenderItem(shape_, rigidActor_, vis_.color);
 }
 
 void SRigidBody::update(double t) {
@@ -70,12 +70,6 @@ void SRigidBody::update(double t) {
 }
 
 
-
 Particle* SRigidBody::clone() {
-	SRigidBody::visual v;
-	v.size = vis_.size;
-	v.geometry = vis_.geometry;
-	v.color = vis_.color;
-
-	return new SRigidBody(v, phys_, maxLifetime_, gPhysics_, gScene_);
+	return new SRigidBody(vis_, phys_, maxLifetime_, gPhysics_, gScene_);
 }

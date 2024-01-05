@@ -16,7 +16,8 @@ public:
 	Barrel(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos) : DRigidBody(false, -1, gPhysics, gScene) {
 		Particle::visual v;
 
-		v.geometry = new physx::PxBoxGeometry(W_, H_, W_);
+		v.size = { W_, H_, W_ };
+		v.type = Particle::geomType::geomBox;
 		v.color = COLOR_;
 		v.material = gPhysics->createMaterial(MAT_.x, MAT_.y, MAT_.z);
 

@@ -51,7 +51,7 @@ public:
 
 	// PRACTICAS
 	void setPos(physx::PxVec3 pos);
-	void rotate(bool clockwise);
+	void rotate(bool clockwise, float amt);
 	void resetRot();
 private:
 	physx::PxVec3	initDir;

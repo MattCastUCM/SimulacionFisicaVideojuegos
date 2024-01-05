@@ -8,7 +8,6 @@ protected:
 	PxScene* gScene_;
 	PxRigidActor* rigidActor_;
 	PxRigidDynamic* rigid_;
-	PxShape* shape_;
 
 	virtual void init(visual vis, physics phys, float maxLifetime = 1.0f);
 
@@ -54,7 +53,7 @@ public:
 	}
 
 	inline PxRigidActor* getRigidActor() { return rigidActor_; }
-	inline PxShape* getShape() { return shape_; }
+	
 
 };
 

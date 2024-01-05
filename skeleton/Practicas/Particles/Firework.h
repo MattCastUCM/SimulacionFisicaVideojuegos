@@ -7,15 +7,15 @@ class Firework : public Particle {
 protected:
 	unsigned type_;		// del 0 al número de generadores que hay, siendo el último el que van a desaparecer al final
 	int nGens_;
-	std::vector<std::shared_ptr<ParticleGenerator>> generators_;
+	std::vector<ParticleGenerator*> generators_;
 
 
 public:
 	Firework(const Vector3& g, unsigned type, int nGens = 0, double lifetime = 1.0f) : Particle(), type_(type), nGens_(nGens) {
 		Particle::visual v;
-		v.size = 1.0f;
-		v.geometry = new physx::PxSphereGeometry(v.size);
-			//new physx::PxBoxGeometry(v.size, v.size, v.size);
+		v.size = { 1.0f, 1.0f, 1.0f };
+		v.type = Particle::geomType::geomSphere;
+			
 
 		if (type_ < nGens_) {
 			if (type_ == 0)
@@ -61,8 +61,6 @@ public:
 				}
 			}
 
-
-
 			generators_[safeIndex]->setActive(true);
 			generators_[safeIndex]->changeModelPart(model);
 
@@ -90,12 +88,12 @@ public:
 
 	// Añade un generador al vector de generadores
 	inline void addGenerator(ParticleGenerator* p) {
-		generators_.push_back((std::shared_ptr<ParticleGenerator>) p);
+		generators_.push_back(p);
 		p->setActive(false);
 		nGens_++;
 	}
 	// "Copia" el vector de generadores
-	inline void addGenerators(std::vector<std::shared_ptr<ParticleGenerator>> g) {
+	inline void addGenerators(std::vector<ParticleGenerator*> g) {
 		generators_ = g;
 		nGens_ = g.size();
 	}

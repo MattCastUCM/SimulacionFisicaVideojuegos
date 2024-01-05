@@ -1,19 +1,19 @@
 #include "DRigidBody.h"
 #include "../../checkMemLeaks.h"
 
-DRigidBody::DRigidBody(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) {
+DRigidBody::DRigidBody(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) : Particle() {
+	isRigid_ = true;
+
 	rigidActor_ = nullptr;
 	rigid_ = nullptr;
 	shape_ = nullptr;
 	gPhysics_ = gPhys;
 	gScene_ = gScene;
-	if (default) {
-		vis_.geometry = new physx::PxSphereGeometry(vis_.size);
-		init(vis_, phys_, maxLifetime);
-	}
 }
 
-DRigidBody::DRigidBody(visual vis, physics phys, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) {
+DRigidBody::DRigidBody(visual vis, physics phys, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) : Particle() {
+	isRigid_ = true;
+	
 	rigidActor_ = nullptr;
 	rigid_ = nullptr;
 	shape_ = nullptr;
@@ -29,6 +29,8 @@ DRigidBody::~DRigidBody() {
 
 
 void DRigidBody::init(visual vis, physics phys, float maxLifetime) {
+	isRigid_ = true;
+
 	vis_ = vis;
 	phys_ = phys;
 	maxLifetime_ = maxLifetime;
@@ -40,29 +42,29 @@ void DRigidBody::init(visual vis, physics phys, float maxLifetime) {
 	mass_ = phys_.mass;
 
 	accumForce_ = { 0, 0, 0 };
-
-	shape_ = CreateShape(*vis_.geometry, vis_.material);
+	
+	shape_ = makeShape();
 	tr_ = new physx::PxTransform(phys_.pos);
-
-	// MATRIZ DE COLISION (SE TIENE QUE CREAR ANTES DE CREAR EL RIGIDO)
-	shape_->setSimulationFilterData(PxFilterData(phys_.colGrp, phys_.colMask, 0, 0));
 
 	rigid_ = gPhysics_->createRigidDynamic(*tr_);
 	rigidActor_ = rigid_;
 	rigidActor_->attachShape(*shape_);
 	gScene_->addActor(*rigidActor_);
-	renderItem_ = new RenderItem(shape_, rigidActor_, vis_.color);
+	
 
-	// ASUMIENDO QUE EN mass_ SE GUARDA la densidad
+	// ASUMIENDO QUE EN mass_ SE GUARDA DENSIDAD
 	PxRigidBodyExt::updateMassAndInertia(*rigid_, mass_);		// NO USAR rigid_->setMass(1 / mass_);
+	rigid_->setLinearDamping(phys_.damp);
 	rigid_->setLinearVelocity(vel_);
 	rigid_->setAngularVelocity(vel_);
 
 
 	// Usar en otros casos?
-	//rigid_->setLinearDamping(phys_.damp);
 	//rigid_->setAngularVelocity();
 	//rigid_->setAngularDamping();	
+
+
+	renderItem_ = new RenderItem(shape_, rigidActor_, vis_.color);
 }
 
 void DRigidBody::update(double t) {
@@ -88,10 +90,5 @@ void DRigidBody::addForce(const Vector3& f, PxForceMode::Enum mode, bool autoawa
 
 
 Particle* DRigidBody::clone() {
-	DRigidBody::visual v;
-	v.size = vis_.size;
-	v.geometry = vis_.geometry;
-	v.color = vis_.color;
-
-	return new DRigidBody(v, phys_, maxLifetime_, gPhysics_, gScene_);
+	return new DRigidBody(vis_, phys_, maxLifetime_, gPhysics_, gScene_);
 }

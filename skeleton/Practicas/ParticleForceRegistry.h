@@ -18,11 +18,11 @@ public:
 		std::vector<ForceGenerator*> removeForces;
 		// Para cada fuerza, recorre cada partícula a la que afecta para actualizarla
 		for (auto f : forces_) {
-			for (auto p : f.second) {
-				if (f.first->isActive())
-					f.first->update(p, t);
-			}
 			f.first->updateTime(t);
+			if (f.first->isActive()) {
+				for (auto p : f.second) f.first->update(p, t);
+			}
+			f.first->updateAlive();
 		}
 	}
 
