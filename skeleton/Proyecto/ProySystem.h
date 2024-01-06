@@ -63,8 +63,8 @@ protected:
 	ExplosionForceGenerator* expl_;
 
 	const float G_ = -9.81f,
-				SPRINGMASS_ = 1 / 300.0f,
-				K_ = 30000,
+				SPRINGMASS_ = 1 / 20.0f,
+				K_ = 3000,
 				RESTINGLENGTH_ = WALLW_ * 4,
 				EXPLK_ = 5000,
 				EXPLR_ = 5,

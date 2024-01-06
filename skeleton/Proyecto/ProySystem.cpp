@@ -107,9 +107,9 @@ void ProySys::keyPress(unsigned char key) {
 	}
 
 
-	if (k == 'l') {
-		ball_->setPos(end_->getPos() + Vector3({ 0, 1, 0 }));
-	}
+	//if (k == 'l') {
+	//	ball_->setPos(end_->getPos() + Vector3({ 0, 1, 0 }));
+	//}
 }
 
 void ProySys::update(double t) {
