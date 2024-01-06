@@ -221,7 +221,7 @@ void cleanupPhysics(bool interactive)
 	// IMPORTANTE BORRARLO ANTES QUE LA ESCENA Y LAS FÍSICAS
 #ifndef Proyecto
 	#ifndef PracticasRigidos
-		delete scMngr_;
+		delete scMngr;
 	#else
 		delete sys_;
 	#endif

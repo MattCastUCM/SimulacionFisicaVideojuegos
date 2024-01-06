@@ -13,7 +13,7 @@ protected:
 
 public:
 	ForceGenerator(std::string name = "", double maxLifeTime = -1, bool autoInactive = false) 
-		: name_(name), lifeTime_(0.0), maxLifeTime_(maxLifeTime), autoInactive_(autoInactive), active_(false) { }
+		: name_(name), lifeTime_(0.0), maxLifeTime_(maxLifeTime), autoInactive_(autoInactive), active_(true) { }
 
 	virtual ~ForceGenerator() { }
 	

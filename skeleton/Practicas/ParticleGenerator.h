@@ -2,6 +2,7 @@
 
 #include <list>
 #include "Particle.h"
+#include "Particles/DRigidBody.h"
 #include <random>
 #include "../checkMemLeaks.h"
 
@@ -62,14 +63,17 @@ public:
 		else return { };
 	};
 
-	inline void changeModelPart(Particle* p, bool modifyPosVel = true) {
+	inline void changeModelPart(Particle* p, bool modifyPosVel = true, bool isRigid = false) {
 		delete modelPart_;
 		modelPart_ = p->clone();
 		if (modifyPosVel) {
 			origin_ = p->getInitPos();
 			vel_ = p->getInitVel();
 		}
-		modelPart_->setPos({ -1000.0f, -1000.0f, -1000.0f });
+		if(!isRigid) 
+			modelPart_->setPos({ -1000.0f, -1000.0f, -1000.0f });
+		else
+			((DRigidBody*)modelPart_)->setPos({ -1000.0f, -1000.0f, -1000.0f });
 	};
 
 	// Getters y setters

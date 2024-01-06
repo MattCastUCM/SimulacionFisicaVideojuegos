@@ -16,10 +16,11 @@ public:
 		if (fabs(p->getInvMass()) < 1e-10) return;
 		else {
 
-			auto f = dir_ * k_;
+			auto f = dir_ * k_ * p->getMass();
 			((DRigidBody*)p)->addForce(f, physx::PxForceMode::eIMPULSE);
 		}
 	};
 
 	inline void setDir(Vector3 d) { dir_ = d; }
+	inline void setK(float k) { k_ = k; }
 };

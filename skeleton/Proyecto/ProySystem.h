@@ -16,9 +16,9 @@
 #include "Barrel.h"
 #include "Debris.h"
 #include "Smoke.h"
+#include "FireworkNoAcc.h"
 
 #include "../Practicas/ParticleGenerators/GaussianParticleGenerator.h"
-#include "../Practicas/Particles/Firework.h"
 #include "../Practicas/ParticleGenerators/GaussianParticleGenerator.h"
 #include "../Practicas/ParticleGenerators/CircleGenerator.h"
 #include "../Practicas/ParticleGenerators/HeartGenerator.h"
@@ -66,9 +66,6 @@ protected:
 				SPRINGMASS_ = 1 / 300.0f,
 				K_ = 30000,
 				RESTINGLENGTH_ = WALLW_ * 4,
-
-				IMPULSEVEL_ = 150,
-
 				EXPLK_ = 5000,
 				EXPLR_ = 5,
 				EXPLT_ = 0.1f;
@@ -178,7 +175,7 @@ protected:
 	void createWall(Vector3 dims, Vector3 pos, PxQuat rot = PxQuat(0, Vector3(1, 0, 0)));
 	void createPin(Vector3 pos);
 	void createBarrel(Vector3 pos);
-	void createBooster(Vector3 pos, Vector3 dir, PxQuat rot = PxQuat(PxHalfPi / 2, Vector3(0, 1, 0)));
+	void createBooster(Vector3 pos, Vector3 dir, float k, PxQuat rot = PxQuat(PxHalfPi / 2, Vector3(0, 1, 0)));
 	void createDebris();
 
 

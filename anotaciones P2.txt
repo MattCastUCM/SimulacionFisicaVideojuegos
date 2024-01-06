@@ -1,3 +1,0 @@
-poner teclas para activar generadores
-las físicas simuladas eran solo para los proyectiles
-hacer que los fireworks exploten y generen otros que también generen

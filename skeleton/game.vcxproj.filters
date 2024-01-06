@@ -108,6 +108,7 @@
     <ClInclude Include="Proyecto\Barrel.h" />
     <ClInclude Include="Proyecto\Debris.h" />
     <ClInclude Include="Proyecto\Smoke.h" />
+    <ClInclude Include="Proyecto\FireworkNoAcc.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
@@ -128,5 +129,8 @@
     <Filter Include="Practicas\Systems">
       <UniqueIdentifier>{165c4f0b-579e-499a-8fef-8e3c72ac70e7}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@ using namespace std;
 #include "../checkMemLeaks.h"
 
 ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
-	: ParticleForceSystem({ 0.0f, -9.8f, 0.0f }, 100), gPhysics_(gPhysics), gScene_(gScene), barrels_()
+	: ParticleForceSystem({ 0.0f, -9.8f, 0.0f }, 100), gPhysics_(gPhysics), gScene_(gScene), barrels_(), fireworkShooters_()
 {
 	srand(time(NULL));
 
@@ -24,7 +24,7 @@ ProySys::ProySys(PxPhysics* gPhysics, PxScene* gScene)
 	gr_ = new GravityForceGenerator({ 0, G_ , 0 });
 	forces_.insert(gr_);
 
-	impulse_ = new ImpulseForceGenerator({ 0,0,1 }, IMPULSEVEL_);
+	impulse_ = new ImpulseForceGenerator({ 0,0,1 });
 	forces_.insert(impulse_);
 	partForceReg_->addForce(impulse_, ball_);
 
@@ -106,6 +106,10 @@ void ProySys::keyPress(unsigned char key) {
 		}
 	}
 
+
+	if (k == 'l') {
+		ball_->setPos(end_->getPos() + Vector3({ 0, 1, 0 }));
+	}
 }
 
 void ProySys::update(double t) {
@@ -182,7 +186,9 @@ void ProySys::update(double t) {
 			camera_->resetRot();
 			camera_->rotate(true, 45);
 
+#ifdef Proyecto
 			setFinish(true);
+#endif		
 			for (auto g : fireworkShooters_) g->setActive(true);
 
 		}
@@ -216,7 +222,9 @@ void ProySys::onCollision(physx::PxActor* actor1, physx::PxActor* actor2) {
 
 						remove_.push_back(b);
 						score_--;
+#ifdef Proyecto
 						changeScore(score_);
+#endif
 
 						debrisGen_->setOrigin(b->getPos() + Vector3(0, FLOORH_, 0));
 						genDebris_ = true;
@@ -357,7 +365,7 @@ void ProySys::createMap() {
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(-FLOORW_, 0, 0), PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 	createWall({ WALLW_, WALLH_, 20 }, nextPos + Vector3(FLOORW_, 0, 0), PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 	
-	createBooster(nextPos + Vector3(0, 5, -7), {0, 0, -1}, PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
+	createBooster(nextPos + Vector3(0, 5, -7), {0, 0, -1}, 20, PxQuat(PxHalfPi / 3, Vector3(1, 0, 0)));
 
 
 	nextPos.y += 9.85f;
@@ -459,7 +467,9 @@ void ProySys::createPin(Vector3 pos) {
 		// lista de partículas a eliminar y se actualiza la puntuación
 		remove_.push_back(cb);
 		score_++;
+#ifdef Proyecto
 		changeScore(score_);
+#endif
 		pinsFalling_ = false;
 		}, [&]() {
 			pinsFalling_ = true;
@@ -476,9 +486,10 @@ void ProySys::createBarrel(Vector3 pos) {
 	barrels_.push_back(barrel);
 }
 
-void ProySys::createBooster(Vector3 pos, Vector3 dir, PxQuat rot) {
+void ProySys::createBooster(Vector3 pos, Vector3 dir, float k, PxQuat rot) {
 	Booster* boost = new Booster(gPhysics_, gScene_, pos, [=]() {
 			if (ball_->getVel().normalize() >= MINVEL_) {
+				impulse_->setK(k);
 				impulse_->setDir(dir);
 				impulse_->setActive(true);
 			}
@@ -499,7 +510,7 @@ ParticleGenerator* ProySys::setupFireworks(Vector3 pos, int i) {
 	std::uniform_real_distribution<float> distribution1(FIREWORKLIFETIME_ * 0.25, FIREWORKLIFETIME_);
 	float rndLifetime = distribution1(generator);
 
-	Firework* shotF = new Firework(Vector3(0, G_, 0), 0, 0, rndLifetime, FIREWORKSIZE);
+	FireworkNoAcc* shotF = new FireworkNoAcc(partForceReg_, gr_, Vector3(0, G_, 0), 0, 0, rndLifetime, FIREWORKSIZE);
 
 	GaussianParticleGenerator* sphereGen = new GaussianParticleGenerator(SPHEREGENTIME_, SPHEREMEAN_, SPHEREDEV_, SPHEREOFF_, true, true, true, true);
 	sphereGen->changeGenerateN(50);
@@ -532,7 +543,7 @@ ParticleGenerator* ProySys::setupFireworks(Vector3 pos, int i) {
 
 	delete shotF;
 
-
+	if (i % 2 == 0) fireworkShooter->update(rndGentime - 0.001);
 	return fireworkShooter;
 }
 
