@@ -90,7 +90,7 @@ public:
 	}
 	inline Vector3 getVel() const { return vel_; }
 	inline void changeGenerateN(int n) { generateN_ = n; }
-	inline void changeLifetime(double t) { modelPart_->changeLifetime(t); }
+	inline void changeLifeTime(double t) { modelPart_->changeLifeTime(t); }
 	inline void setActive(bool a) { 
 		active_ = a; 
 		time_ = generationTime_;

@@ -4,8 +4,8 @@
 
 class Projectile : public Particle {
 public:
-	Projectile(Particle::visual v, Particle::physics p, float simSpd, const Vector3& g = { 0, 0, 0}, double lifetime = 1.0f) 
-		: Particle(v, p, lifetime)
+	Projectile(Particle::visual v, Particle::physics p, float simSpd, const Vector3& g = { 0, 0, 0}, double lifeTime = 1.0f) 
+		: Particle(v, p, lifeTime)
 	{
 		// Masa simulada
 		float coefMass = phys_.vel.magnitude() / simSpd;

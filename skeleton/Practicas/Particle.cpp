@@ -1,16 +1,16 @@
 #include "Particle.h"
 #include "../checkMemLeaks.h"
 
-Particle::Particle(bool default, float maxLifetime) {
+Particle::Particle(bool default, float maxLifeTime) {
 	isRigid_ = false;
 	if (default) {
-		init(vis_, phys_, maxLifetime);
+		init(vis_, phys_, maxLifeTime);
 	}
 }
 
-Particle::Particle(visual vis, physics phys, float maxLifetime) {
+Particle::Particle(visual vis, physics phys, float maxLifeTime) {
 	isRigid_ = false;
-	init(vis, phys, maxLifetime); 
+	init(vis, phys, maxLifeTime); 
 }
 
 Particle::~Particle() {
@@ -22,13 +22,13 @@ Particle::~Particle() {
 }
 
 
-void Particle::init(visual vis, physics phys, float maxLifetime) {
+void Particle::init(visual vis, physics phys, float maxLifeTime) {
 	isRigid_ = false;
 
 	vis_ = vis;
 	phys_ = phys;
-	maxLifetime_ = maxLifetime;
-	lifetime_ = 0;
+	maxLifeTime_ = maxLifeTime;
+	lifeTime_ = 0;
 	alive_ = true;
 
 	vel_ = phys_.vel;
@@ -59,11 +59,11 @@ void Particle::update(double t) {
 	// Si está viva, se actualiza
 	if (alive_) {
 		// Si se ha pasado su tiempo de vida, se pone alive a false
-		if (lifetime_ > maxLifetime_ && maxLifetime_ > 0) alive_ = false;
+		if (lifeTime_ > maxLifeTime_ && maxLifeTime_ > 0) alive_ = false;
 
 		// Si no, se actualiza su tiempo de vida y su pos, vel y acc
 		else {
-			lifetime_ += t;
+			lifeTime_ += t;
 			// MRU	(no haría falta normalizar la velocidad)
 			//tr_->p += SPD_ * vel_/*.getNormalized()*/ * t;
 
@@ -92,5 +92,5 @@ void Particle::addForce(const Vector3& f) {
 
 
 Particle* Particle::clone() {
-	return new Particle(vis_, phys_, maxLifetime_);
+	return new Particle(vis_, phys_, maxLifeTime_);
 }

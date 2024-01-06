@@ -9,12 +9,12 @@ protected:
 	PxRigidActor* rigidActor_;
 	PxRigidDynamic* rigid_;
 
-	virtual void init(visual vis, physics phys, float maxLifetime = 1.0f);
+	virtual void init(visual vis, physics phys, float maxLifeTime = 1.0f);
 
 
 public:
-	DRigidBody(bool default = false, float maxLifetime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr);
-	DRigidBody(visual vis, physics phys, float maxLifetime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr);
+	DRigidBody(bool default = false, float maxLifeTime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr);
+	DRigidBody(visual vis, physics phys, float maxLifeTime = 1.0f, PxPhysics* gPhys = nullptr, PxScene* gScene = nullptr);
 	virtual ~DRigidBody();
 
 	virtual void update(double t);

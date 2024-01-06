@@ -1,7 +1,7 @@
 #include "DRigidBody.h"
 #include "../../checkMemLeaks.h"
 
-DRigidBody::DRigidBody(bool default, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) : Particle() {
+DRigidBody::DRigidBody(bool default, float maxLifeTime, PxPhysics* gPhys, PxScene* gScene) : Particle() {
 	isRigid_ = true;
 
 	rigidActor_ = nullptr;
@@ -11,7 +11,7 @@ DRigidBody::DRigidBody(bool default, float maxLifetime, PxPhysics* gPhys, PxScen
 	gScene_ = gScene;
 }
 
-DRigidBody::DRigidBody(visual vis, physics phys, float maxLifetime, PxPhysics* gPhys, PxScene* gScene) : Particle() {
+DRigidBody::DRigidBody(visual vis, physics phys, float maxLifeTime, PxPhysics* gPhys, PxScene* gScene) : Particle() {
 	isRigid_ = true;
 	
 	rigidActor_ = nullptr;
@@ -20,7 +20,7 @@ DRigidBody::DRigidBody(visual vis, physics phys, float maxLifetime, PxPhysics* g
 	gPhysics_ = gPhys;
 	gScene_ = gScene;
 
-	init(vis, phys, maxLifetime);
+	init(vis, phys, maxLifeTime);
 }
 
 DRigidBody::~DRigidBody() {
@@ -28,13 +28,13 @@ DRigidBody::~DRigidBody() {
 }
 
 
-void DRigidBody::init(visual vis, physics phys, float maxLifetime) {
+void DRigidBody::init(visual vis, physics phys, float maxLifeTime) {
 	isRigid_ = true;
 
 	vis_ = vis;
 	phys_ = phys;
-	maxLifetime_ = maxLifetime;
-	lifetime_ = 0;
+	maxLifeTime_ = maxLifeTime;
+	lifeTime_ = 0;
 	alive_ = true;
 
 	vel_ = phys_.vel;
@@ -71,11 +71,11 @@ void DRigidBody::update(double t) {
 	// Si está viva, se actualiza
 	if (alive_) {
 		// Si se ha pasado su tiempo de vida, se pone alive a false
-		if (lifetime_ > maxLifetime_ && maxLifetime_ > 0) alive_ = false;
+		if (lifeTime_ > maxLifeTime_ && maxLifeTime_ > 0) alive_ = false;
 
 		// Si no, se actualiza su tiempo de vida y su pos, vel y acc
 		else {
-			lifetime_ += t;
+			lifeTime_ += t;
 			*tr_ = rigid_->getGlobalPose();
 			vel_ = rigid_->getLinearVelocity();
 		}
@@ -90,5 +90,5 @@ void DRigidBody::addForce(const Vector3& f, PxForceMode::Enum mode, bool autoawa
 
 
 Particle* DRigidBody::clone() {
-	return new DRigidBody(vis_, phys_, maxLifetime_, gPhysics_, gScene_);
+	return new DRigidBody(vis_, phys_, maxLifeTime_, gPhysics_, gScene_);
 }

@@ -4,7 +4,7 @@
 
 class Water : public Particle {
 public:
-	Water(const Vector3& g, double lifetime = 1.0f) : Particle() {
+	Water(const Vector3& g, double lifeTime = 1.0f) : Particle() {
 		Particle::visual v;
 		v.size = { 1.0f, 1.0f, 1.0f };
 		v.type = Particle::geomType::geomSphere;
@@ -19,7 +19,7 @@ public:
 		p.acc = g;
 		p.mass = 1.0f / 1000;
 
-		init(v, p, lifetime);
+		init(v, p, lifeTime);
 	}
 
 };

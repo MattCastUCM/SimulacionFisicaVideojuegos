@@ -25,13 +25,13 @@ public:
 		if(active) {
 			Particle* p = new Particle(true);
 			particles_.push_back(p);
-			p->changeLifetime(-1);
+			p->changeLifeTime(-1);
 			p->setPos({ -10, 50, -100 });
 			partForceReg_->addForce(gr1_, p);
 
 			p = new Particle(true);
 			particles_.push_back(p);
-			p->changeLifetime(-1);
+			p->changeLifeTime(-1);
 			p->setPos({ 10, 50, -100 });
 			partForceReg_->addForce(gr2_, p);
 		}

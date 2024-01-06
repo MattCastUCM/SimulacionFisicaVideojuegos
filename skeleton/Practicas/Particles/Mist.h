@@ -4,7 +4,7 @@
 
 class Mist : public Particle {
 public:
-	Mist(const Vector3& g, double lifetime = 1.0f) : Particle() {
+	Mist(const Vector3& g, double lifeTime = 1.0f) : Particle() {
 		Particle::visual v;
 		v.size = { 0.05f, 0.05f, 0.05f };
 		v.type = Particle::geomType::geomSphere;
@@ -17,7 +17,7 @@ public:
 		p.acc = g;
 		p.mass = 1.0f / 1000;
 
-		init(v, p, lifetime);
+		init(v, p, lifeTime);
 	}
 
 };

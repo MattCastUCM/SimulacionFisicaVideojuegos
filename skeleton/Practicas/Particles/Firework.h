@@ -11,7 +11,7 @@ protected:
 
 
 public:
-	Firework(const Vector3& g, unsigned type, int nGens = 0, double lifetime = 1.0f, float size = 1.0f) : Particle(), type_(type), nGens_(nGens) {
+	Firework(const Vector3& g, unsigned type, int nGens = 0, double lifeTime = 1.0f, float size = 1.0f) : Particle(), type_(type), nGens_(nGens) {
 		Particle::visual v;
 		v.size = { size, size, size};
 		v.type = Particle::geomType::geomSphere;
@@ -37,7 +37,7 @@ public:
 		p.acc = g;
 		p.mass = 5.4f;
 
-		init(v, p, lifetime);
+		init(v, p, lifeTime);
 	}
 
 
@@ -74,7 +74,7 @@ public:
 		unsigned rndType = nGens_;
 		if(type_ != nGens_) rndType = rand() % nGens_;
 
-		auto fw = new Firework(phys_.acc, rndType, nGens_, maxLifetime_);
+		auto fw = new Firework(phys_.acc, rndType, nGens_, maxLifeTime_);
 		fw->addGenerators(generators_);
 
 		// Hay que cambiar manualmente la posición y velocidad

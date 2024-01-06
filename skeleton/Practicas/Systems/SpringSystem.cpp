@@ -88,7 +88,7 @@ void SpringSystem::activatePartToStatic() {
 
 	Particle* part = new Particle(true);
 	particles_.push_back(part);
-	part->changeLifetime(-1);
+	part->changeLifeTime(-1);
 	//part->setPos({ 10, 0, -50 });
 	part->setPos({ 0, 10, -50 });
 	part->setInvMass(1 / 10.0f);
@@ -111,13 +111,13 @@ void SpringSystem::activatePartToPart() {
 
 	Particle* p1 = new Particle(true);
 	particles_.push_back(p1);
-	p1->changeLifetime(-1);
+	p1->changeLifeTime(-1);
 	p1->setPos({ -10, 0, -50 });
 	p1->setInvMass(1 / 10.0f);
 
 	Particle* p2 = new Particle(true);
 	particles_.push_back(p2);
-	p2->changeLifetime(-1);
+	p2->changeLifeTime(-1);
 	p2->setPos({ 10, 0, -50 });
 	p2->setInvMass(1 / 10.0f);
 
@@ -140,13 +140,13 @@ void SpringSystem::activateRubberBand() {
 
 	Particle* p1 = new Particle(true);
 	particles_.push_back(p1);
-	p1->changeLifetime(-1);
+	p1->changeLifeTime(-1);
 	p1->setPos({ -10, 0, -50 });
 	p1->setInvMass(1 / 1.0f);
 
 	Particle* p2 = new Particle(true);
 	particles_.push_back(p2);
-	p2->changeLifetime(-1);
+	p2->changeLifeTime(-1);
 	p2->setPos({ 10, 0, -50 });
 	p2->setInvMass(1 / 20.0f);
 	
@@ -173,14 +173,14 @@ void SpringSystem::activateSlinky() {
 
 	staticPart_ = new Particle(true);
 	particles_.push_back(staticPart_);
-	staticPart_->changeLifetime(-1);
+	staticPart_->changeLifeTime(-1);
 	staticPart_->setPos({ 0, 20, -50 });
 	staticPart_->setInvMass(1 / 10.0f);
 
 	std::vector<Particle*> parts;
 	for (int i = 0; i < 4; i++) {
 		Particle* p = new Particle(true);
-		p->changeLifetime(-1);
+		p->changeLifeTime(-1);
 		p->setPos({ 0.0f, 20.0f - (i + 1) * 3, -50 });
 		p->setInvMass(1 / 10.0f);
 		p->setDamp(0.1);

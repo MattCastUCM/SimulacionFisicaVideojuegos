@@ -31,8 +31,8 @@ public:
 
 		vis_ = v;
 		phys_ = p;
-		maxLifetime_ = -1;
-		lifetime_ = 0;
+		maxLifeTime_ = -1;
+		lifeTime_ = 0;
 		alive_ = true;
 
 		vel_ = phys_.vel;

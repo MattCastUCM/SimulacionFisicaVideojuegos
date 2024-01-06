@@ -292,6 +292,11 @@
     <ClInclude Include="Practicas\ParticleForceRegistry.h" />
     <ClInclude Include="Practicas\ParticleForceSystem.h" />
     <ClInclude Include="Practicas\ParticleGenerator.h" />
+    <ClInclude Include="Practicas\ParticleGenerators\CircleGenerator.h" />
+    <ClInclude Include="Practicas\ParticleGenerators\GaussianParticleGenerator.h" />
+    <ClInclude Include="Practicas\ParticleGenerators\HeartGenerator.h" />
+    <ClInclude Include="Practicas\ParticleGenerators\MistGenerator.h" />
+    <ClInclude Include="Practicas\ParticleGenerators\UniformParticleGenerator.h" />
     <ClInclude Include="Practicas\ParticleSystem.h" />
     <ClInclude Include="Practicas\Particles\DRigidBody.h" />
     <ClInclude Include="Practicas\Particles\Firework.h" />

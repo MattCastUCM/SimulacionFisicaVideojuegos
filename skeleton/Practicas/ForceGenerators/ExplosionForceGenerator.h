@@ -12,7 +12,7 @@ protected:
 	Vector3 origin_;
 
 public:
-	ExplosionForceGenerator(float k, float r, double t, Vector3 origin, double maxLifetime = -1) : ForceGenerator("", maxLifetime), k_(k), explR_(r), origin_(origin) {
+	ExplosionForceGenerator(float k, float r, double t, Vector3 origin, double maxLifeTime = -1) : ForceGenerator("", maxLifeTime), k_(k), explR_(r), origin_(origin) {
 		timeConstant_ = t;
 	};
 

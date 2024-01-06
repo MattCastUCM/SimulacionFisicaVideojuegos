@@ -40,16 +40,16 @@ protected:
 	float mass_;
 	Vector3 accumForce_;
 
-	float maxLifetime_, lifetime_;
+	float maxLifeTime_, lifeTime_;
 	bool alive_, isRigid_;
 
 
-	virtual void init(visual vis, physics phys, float maxLifetime = 1.0f);
+	virtual void init(visual vis, physics phys, float maxLifeTime = 1.0f);
 	PxShape* makeShape();
 
 public:
-	Particle(bool default = false, float maxLifetime = 1.0f);
-	Particle(visual vis, physics phys, float maxLifetime = 1.0f);
+	Particle(bool default = false, float maxLifeTime = 1.0f);
+	Particle(visual vis, physics phys, float maxLifeTime = 1.0f);
 	virtual ~Particle();
 	virtual void onDeath() { };
 
@@ -87,7 +87,7 @@ public:
 	inline bool isAlive() { return alive_; }
 	inline bool isRigid() { return isRigid_; }
 
-	inline void changeLifetime(float t) { maxLifetime_ = t; }
+	inline void changeLifeTime(float t) { maxLifeTime_ = t; }
 
 
 	// ASUMIENDO QUE LO QUE SE GUARDA COMO MASA ES SU INVERSO
